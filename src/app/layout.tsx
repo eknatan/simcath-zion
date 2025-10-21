@@ -17,18 +17,13 @@ export const metadata: Metadata = {
   description: "Family support management system",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
-  params
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }>) {
-  const { locale } = await params;
-  const dir = locale === 'he' ? 'rtl' : 'ltr';
-
   return (
-    <html lang={locale} dir={dir}>
+    <html suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
