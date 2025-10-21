@@ -1,0 +1,56 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "submit": "Submit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "cases": "Cases",
+    "wedding": "Weddings",
+    "cleaning": "Sick Children",
+    "calendar": "Calendar",
+    "applicants": "Applications",
+    "transfers": "Transfers",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Hello, {name}",
+    "stats": {
+      "totalCases": "Total Cases",
+      "pending": "Pending",
+      "active": "Active",
+      "transferred": "Transferred"
+    }
+  },
+  "status": {
+    "new": "New",
+    "pending": "Pending",
+    "pending_transfer": "Pending Transfer",
+    "transferred": "Transferred",
+    "rejected": "Rejected",
+    "expired": "Expired",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "validation": {
+    "required": "Required field",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Invalid phone number",
+    "invalidId": "Invalid ID number",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Cannot exceed {max} characters"
+  }
+}

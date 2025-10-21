@@ -1,0 +1,56 @@
+{
+  "common": {
+    "save": "שמור",
+    "cancel": "בטל",
+    "delete": "מחק",
+    "edit": "ערוך",
+    "loading": "טוען...",
+    "search": "חיפוש",
+    "filter": "סינון",
+    "export": "ייצוא",
+    "import": "ייבוא",
+    "submit": "שלח",
+    "close": "סגור",
+    "confirm": "אישור",
+    "back": "חזור"
+  },
+  "navigation": {
+    "dashboard": "לוח בקרה",
+    "cases": "תיקים",
+    "wedding": "חתונות",
+    "cleaning": "ילדים חולים",
+    "calendar": "לוח שנה",
+    "applicants": "בקשות",
+    "transfers": "העברות",
+    "settings": "הגדרות",
+    "logout": "התנתק"
+  },
+  "dashboard": {
+    "title": "לוח בקרה",
+    "welcome": "שלום, {name}",
+    "stats": {
+      "totalCases": "סה״כ תיקים",
+      "pending": "ממתינים",
+      "active": "פעילים",
+      "transferred": "הועברו"
+    }
+  },
+  "status": {
+    "new": "חדש",
+    "pending": "ממתין",
+    "pending_transfer": "ממתין להעברה",
+    "transferred": "הועבר",
+    "rejected": "נדחה",
+    "expired": "פג תוקף",
+    "active": "פעיל",
+    "inactive": "לא פעיל"
+  },
+  "validation": {
+    "required": "שדה חובה",
+    "invalidEmail": "כתובת מייל לא תקינה",
+    "invalidPhone": "מספר טלפון לא תקין",
+    "invalidId": "מספר תעודת זהות לא תקין",
+    "minLength": "חייב להיות לפחות {min} תווים",
+    "maxLength": "לא יכול להיות יותר מ-{max} תווים"
+  }
+}
