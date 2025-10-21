@@ -1,12 +1,14 @@
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
-const locales = ['he', 'en'];
+const locales = ["he", "en"];
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -23,13 +25,15 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   // Set direction based on locale
-  const dir = locale === 'he' ? 'rtl' : 'ltr';
+  const dir = locale === "he" ? "rtl" : "ltr";
 
   return (
     <html lang={locale} dir={dir}>
       <body>
         <NextIntlClientProvider messages={messages}>
           {children}
+          <Toaster />
+          <SpeedInsights />
         </NextIntlClientProvider>
       </body>
     </html>
