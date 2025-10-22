@@ -33,7 +33,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 shadow-sm">
       <div className="flex h-16 items-center px-4 w-full">
         {/* Mobile Menu */}
         <div className="flex items-center gap-4 lg:hidden">
@@ -51,13 +51,13 @@ export function Header() {
         </div>
 
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="text-lg font-bold">{locale === 'he' ? 'צח' : 'FS'}</span>
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md">
+            <span className="text-xl font-bold">{locale === 'he' ? 'צח' : 'FS'}</span>
           </div>
           <div className="hidden md:block">
-            <h1 className="text-lg font-semibold">{tHeader('systemName')}</h1>
-            <p className="text-xs text-muted-foreground">{tHeader('systemDescription')}</p>
+            <h1 className="text-lg font-bold text-slate-900">{tHeader('systemName')}</h1>
+            <p className="text-xs text-slate-600">{tHeader('systemDescription')}</p>
           </div>
         </div>
 
@@ -68,11 +68,13 @@ export function Header() {
           {/* User Info */}
           <div className="hidden items-center gap-3 md:flex">
             <div className="text-end text-sm">
-              <p className="font-medium">{user?.email}</p>
-              <p className="text-xs text-muted-foreground">{t('dashboard')}</p>
+              <p className="font-semibold text-slate-900">{user?.email}</p>
+              <p className="text-xs text-slate-600">{t('dashboard')}</p>
             </div>
-            <Avatar>
-              <AvatarFallback>{getUserInitials()}</AvatarFallback>
+            <Avatar className="h-9 w-9 border-2 border-blue-100">
+              <AvatarFallback className="bg-blue-100 text-blue-700 font-semibold text-sm">
+                {getUserInitials()}
+              </AvatarFallback>
             </Avatar>
           </div>
 

@@ -79,12 +79,13 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex h-full flex-col border-e bg-background">
+    <div className="flex h-full flex-col border-e border-slate-200 bg-white shadow-sm">
       <div className={cn(
-        "p-6",
+        "p-6 border-b border-slate-100",
         locale === 'he' ? 'text-end' : 'text-start'
       )}>
-        <h2 className="text-lg font-semibold">{t('dashboard')}</h2>
+        <h2 className="text-lg font-bold text-slate-900">{t('dashboard')}</h2>
+        <p className="text-xs text-slate-600 mt-1">תפריט ניווט</p>
       </div>
 
       <ScrollArea className="flex-1 px-3">
@@ -95,8 +96,9 @@ export function Sidebar() {
                 <Button
                   variant={isActive(item.href) ? 'secondary' : 'ghost'}
                   className={cn(
-                    'w-full gap-3',
-                    isActive(item.href) && 'bg-secondary font-medium',
+                    'w-full gap-3 transition-all duration-200',
+                    isActive(item.href) && 'bg-blue-50 text-blue-700 font-semibold border border-blue-100 shadow-sm',
+                    !isActive(item.href) && 'text-slate-700 hover:bg-slate-50',
                     locale === 'he' ? 'justify-end flex-row-reverse' : 'justify-start'
                   )}
                 >
@@ -120,8 +122,8 @@ export function Sidebar() {
               {/* Children */}
               {item.children && isActive(item.href) && (
                 <div className={cn(
-                  'mt-1 flex flex-col gap-1',
-                  locale === 'he' ? 'me-4 border-e-2 pe-4' : 'ms-4 border-s-2 ps-4'
+                  'mt-1 flex flex-col gap-1 bg-slate-50/50 rounded-lg p-2',
+                  locale === 'he' ? 'me-2 border-e-2 border-blue-200 pe-3' : 'ms-2 border-s-2 border-blue-200 ps-3'
                 )}>
                   {item.children.map((child) => (
                     <Link key={child.href} href={child.href}>
@@ -130,12 +132,14 @@ export function Sidebar() {
                         size="sm"
                         className={cn(
                           'w-full gap-2',
-                          isActive(child.href) && 'bg-secondary font-medium',
+                          isActive(child.href) && 'bg-blue-100 text-blue-700 font-semibold',
+                          !isActive(child.href) && 'text-slate-600 hover:bg-white hover:text-slate-900',
                           locale === 'he' ? 'justify-end' : 'justify-start'
                         )}
                       >
                         {child.icon}
                         <span className={cn(
+                          'flex-1',
                           locale === 'he' ? 'text-end' : 'text-start'
                         )}>{child.title}</span>
                       </Button>
@@ -149,8 +153,8 @@ export function Sidebar() {
       </ScrollArea>
 
       {/* Footer */}
-      <div className="border-t p-4">
-        <p className="text-xs text-muted-foreground text-center">
+      <div className="border-t border-slate-200 p-4 bg-slate-50/50">
+        <p className="text-xs text-slate-600 text-center font-medium">
           {locale === 'he' ? 'מערכת תמיכה למשפחות © 2025' : 'Family Support System © 2025'}
         </p>
       </div>
