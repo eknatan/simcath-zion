@@ -13,10 +13,17 @@ const intlMiddleware = createIntlMiddleware({
 const publicRoutes = ['/login', '/public-forms'];
 
 export async function middleware(request: NextRequest) {
-  // First, apply internationalization
-  let response = intlMiddleware(request);
+  // Parse locale from pathname
+  const pathname = request.nextUrl.pathname;
+  const locale = pathname.match(/^\/(he|en)/)?.[1] || 'he';
 
-  // Create Supabase client
+  // Remove locale prefix to check route
+  const pathnameWithoutLocale = pathname.replace(/^\/(he|en)/, '');
+
+  // First, apply internationalization and create response
+  const response = intlMiddleware(request);
+
+  // Create Supabase client with proper cookie handling
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -26,12 +33,7 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          response = NextResponse.next({
-            request,
-          });
+          // Only set cookies on the response object
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
@@ -45,11 +47,6 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const pathname = request.nextUrl.pathname;
-
-  // Remove locale prefix to check route
-  const pathnameWithoutLocale = pathname.replace(/^\/(he|en)/, '');
-
   // Check if current route is public
   const isPublicRoute = publicRoutes.some(route =>
     pathnameWithoutLocale.startsWith(route)
@@ -57,14 +54,12 @@ export async function middleware(request: NextRequest) {
 
   // Redirect to login if not authenticated and not on public route
   if (!session && !isPublicRoute) {
-    const locale = request.nextUrl.locale || 'he';
     const loginUrl = new URL(`/${locale}/login`, request.url);
     return NextResponse.redirect(loginUrl);
   }
 
   // Redirect to dashboard if authenticated and on login page
   if (session && pathnameWithoutLocale === '/login') {
-    const locale = request.nextUrl.locale || 'he';
     const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
     return NextResponse.redirect(dashboardUrl);
   }

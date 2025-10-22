@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LayoutDashboard, FileText, Users, DollarSign } from 'lucide-react';
 
-export default function DashboardPage() {
-  const t = useTranslations('dashboard');
+export default async function DashboardPage() {
+  const t = await getTranslations('dashboard');
 
   const stats = [
     {
@@ -34,7 +34,7 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground">
-          מעקב אחר כל התיקים והתשלומים במערכת
+          {t('description')}
         </p>
       </div>
 
@@ -58,11 +58,11 @@ export default function DashboardPage() {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle>פעילות אחרונה</CardTitle>
+          <CardTitle>{t('recentActivity.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            אין פעילות אחרונה להצגה
+            {t('recentActivity.noActivity')}
           </p>
         </CardContent>
       </Card>

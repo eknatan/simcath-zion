@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import MonthNavigation from './MonthNavigation';
 import HebrewMonthGrid from './HebrewMonthGrid';
 import CalendarLegend from './CalendarLegend';
@@ -16,6 +17,8 @@ export default function HebrewCalendar({
   language = 'he',
   showBothLanguages = true,
 }: CalendarProps) {
+  const t = useTranslations('calendar');
+
   // State for current month/year
   const [currentDate, setCurrentDate] = useState(getCurrentHebrewDate());
   const [currentLanguage, setCurrentLanguage] = useState<Language>(language);
@@ -49,7 +52,7 @@ export default function HebrewCalendar({
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-lg text-gray-600 dark:text-gray-400">
-          {language === 'he' ? 'טוען...' : 'Loading...'}
+          {t('loading')}
         </div>
       </div>
     );
@@ -63,7 +66,7 @@ export default function HebrewCalendar({
           onClick={handleLanguageToggle}
           className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors text-sm font-medium"
         >
-          {currentLanguage === 'he' ? 'English' : 'עברית'}
+          {t('switchLanguage')}
         </button>
       </div>
 
@@ -92,9 +95,7 @@ export default function HebrewCalendar({
         className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400"
         dir={currentLanguage === 'he' ? 'rtl' : 'ltr'}
       >
-        {currentLanguage === 'he'
-          ? 'לחץ על כל יום לצפייה במידע נוסף (בקרוב)'
-          : 'Click any day for more information (coming soon)'}
+        {t('clickForInfo')}
       </div>
     </div>
   );

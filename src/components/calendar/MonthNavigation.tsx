@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import type { MonthNavigationProps } from './types';
 import { HDate } from '@hebcal/core';
 import { getHebrewMonthName } from '@/lib/hebcal-utils';
@@ -9,6 +12,7 @@ export default function MonthNavigation({
   onPrevMonth,
   onNextMonth,
 }: MonthNavigationProps) {
+  const t = useTranslations('calendar.navigation');
   const isLeap = HDate.isLeapYear(currentYear);
   const monthNameHe = getHebrewMonthName(currentMonth, isLeap, 'he');
   const monthNameEn = getHebrewMonthName(currentMonth, isLeap, 'en');
@@ -19,7 +23,7 @@ export default function MonthNavigation({
       <button
         onClick={onPrevMonth}
         className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        aria-label={language === 'he' ? 'חודש קודם' : 'Previous month'}
+        aria-label={t('previousMonth')}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +61,7 @@ export default function MonthNavigation({
       <button
         onClick={onNextMonth}
         className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        aria-label={language === 'he' ? 'חודש הבא' : 'Next month'}
+        aria-label={t('nextMonth')}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

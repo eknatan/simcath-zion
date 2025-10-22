@@ -1,8 +1,8 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useRef, ReactNode } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 
 interface AuthContextType {
   user: User | null;
@@ -23,7 +23,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClient();
+  const subscriptionRef = useRef<ReturnType<typeof supabase.auth.onAuthStateChange> | null>(null);
 
   useEffect(() => {
     // Check active session on mount
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     initializeAuth();
 
-    // Listen for auth changes
+    // Listen for auth changes - only subscribe once
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, currentSession) => {
         setSession(currentSession);
@@ -59,10 +59,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     );
 
+    subscriptionRef.current = { data: { subscription } };
+
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase.auth]);
+  }, []); // Empty dependency array - only run once
 
   const signIn = async (email: string, password: string) => {
     try {

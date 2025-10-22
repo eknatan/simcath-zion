@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -49,7 +49,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Redirect to dashboard on success
+      // Redirect to dashboard on success (locale is automatically added)
       router.push('/dashboard');
     } catch (err) {
       console.error('Login error:', err);

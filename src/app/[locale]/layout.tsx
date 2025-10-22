@@ -2,8 +2,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { RootProviders } from "@/lib/providers";
 
 const locales = ["he", "en"];
 
@@ -32,11 +31,10 @@ export default async function LocaleLayout({
     <html lang={locale} dir={dir}>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <AuthProvider>
+          <RootProviders>
             {children}
-            <Toaster />
             <SpeedInsights />
-          </AuthProvider>
+          </RootProviders>
         </NextIntlClientProvider>
       </body>
     </html>

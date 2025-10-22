@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import type { Language } from './types';
 
 interface CalendarLegendProps {
@@ -5,23 +8,22 @@ interface CalendarLegendProps {
 }
 
 export default function CalendarLegend({ language }: CalendarLegendProps) {
+  const t = useTranslations('calendar.legend');
+
   const legends = [
     {
       color: 'bg-blue-50 dark:bg-blue-900/20',
-      labelHe: 'שבת',
-      labelEn: 'Shabbat',
+      labelKey: 'shabbat',
       border: 'border-blue-200 dark:border-blue-700',
     },
     {
       color: 'bg-purple-50 dark:bg-purple-900/20',
-      labelHe: 'חג',
-      labelEn: 'Holiday',
+      labelKey: 'holiday',
       border: 'border-purple-200 dark:border-purple-700',
     },
     {
       color: 'bg-amber-50 dark:bg-amber-900/20',
-      labelHe: 'ראש חודש',
-      labelEn: 'Rosh Chodesh',
+      labelKey: 'roshChodesh',
       border: 'border-amber-200 dark:border-amber-700',
     },
   ];
@@ -37,7 +39,7 @@ export default function CalendarLegend({ language }: CalendarLegendProps) {
             className={`w-6 h-6 rounded border ${legend.color} ${legend.border}`}
           />
           <span className="text-sm text-gray-700 dark:text-gray-300">
-            {language === 'he' ? legend.labelHe : legend.labelEn}
+            {t(legend.labelKey)}
           </span>
         </div>
       ))}

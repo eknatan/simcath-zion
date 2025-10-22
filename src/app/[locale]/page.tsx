@@ -1,4 +1,5 @@
-import { redirect } from 'next/navigation';
+import { redirect as nextRedirect } from 'next/navigation';
+import { routing } from '@/i18n/routing';
 
 export default async function LocaleRootPage({
   params,
@@ -6,6 +7,10 @@ export default async function LocaleRootPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+
+  // Validate locale
+  const validLocale = routing.locales.includes(locale as 'he' | 'en') ? locale : routing.defaultLocale;
+
   // Redirect to login page
-  redirect(`/${locale}/login`);
+  nextRedirect(`/${validLocale}/login`);
 }

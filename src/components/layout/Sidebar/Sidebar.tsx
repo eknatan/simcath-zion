@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { useLocale, useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
@@ -37,39 +37,39 @@ export function Sidebar() {
     },
     {
       title: t('cases'),
-      href: `/${locale}/dashboard/cases`,
+      href: `/${locale}/cases`,
       icon: <FileText className="h-5 w-5" />,
       children: [
         {
           title: t('wedding'),
-          href: `/${locale}/dashboard/cases/wedding`,
+          href: `/${locale}/cases/wedding`,
           icon: <Heart className="h-4 w-4" />,
         },
         {
           title: t('cleaning'),
-          href: `/${locale}/dashboard/cases/cleaning`,
+          href: `/${locale}/cases/cleaning`,
           icon: <Users className="h-4 w-4" />,
         },
       ],
     },
     {
       title: t('calendar'),
-      href: `/${locale}/dashboard/calendar`,
+      href: `/${locale}/calendar`,
       icon: <Calendar className="h-5 w-5" />,
     },
     {
       title: t('applicants'),
-      href: `/${locale}/dashboard/applicants`,
+      href: `/${locale}/applicants`,
       icon: <Users className="h-5 w-5" />,
     },
     {
       title: t('transfers'),
-      href: `/${locale}/dashboard/transfers`,
+      href: `/${locale}/transfers`,
       icon: <DollarSign className="h-5 w-5" />,
     },
     {
       title: t('settings'),
-      href: `/${locale}/dashboard/settings`,
+      href: `/${locale}/settings`,
       icon: <Settings className="h-5 w-5" />,
     },
   ];
@@ -80,8 +80,11 @@ export function Sidebar() {
 
   return (
     <div className="flex h-full flex-col border-e bg-background">
-      <div className="p-6">
-        <h2 className="text-lg font-semibold text-start">{t('dashboard')}</h2>
+      <div className={cn(
+        "p-6",
+        locale === 'he' ? 'text-end' : 'text-start'
+      )}>
+        <h2 className="text-lg font-semibold">{t('dashboard')}</h2>
       </div>
 
       <ScrollArea className="flex-1 px-3">
@@ -92,13 +95,16 @@ export function Sidebar() {
                 <Button
                   variant={isActive(item.href) ? 'secondary' : 'ghost'}
                   className={cn(
-                    'w-full justify-start gap-3',
+                    'w-full gap-3',
                     isActive(item.href) && 'bg-secondary font-medium',
-                    locale === 'he' ? 'flex-row' : 'flex-row'
+                    locale === 'he' ? 'justify-end flex-row-reverse' : 'justify-start'
                   )}
                 >
                   {item.icon}
-                  <span className="flex-1 text-start">{item.title}</span>
+                  <span className={cn(
+                    "flex-1",
+                    locale === 'he' ? 'text-end' : 'text-start'
+                  )}>{item.title}</span>
                   {item.children && (
                     <ChevronRight
                       className={cn(
@@ -123,12 +129,15 @@ export function Sidebar() {
                         variant={isActive(child.href) ? 'secondary' : 'ghost'}
                         size="sm"
                         className={cn(
-                          'w-full justify-start gap-2',
-                          isActive(child.href) && 'bg-secondary font-medium'
+                          'w-full gap-2',
+                          isActive(child.href) && 'bg-secondary font-medium',
+                          locale === 'he' ? 'justify-end' : 'justify-start'
                         )}
                       >
                         {child.icon}
-                        <span className="text-start">{child.title}</span>
+                        <span className={cn(
+                          locale === 'he' ? 'text-end' : 'text-start'
+                        )}>{child.title}</span>
                       </Button>
                     </Link>
                   ))}

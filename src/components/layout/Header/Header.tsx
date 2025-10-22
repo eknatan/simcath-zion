@@ -8,7 +8,7 @@ import { LogOut, Menu } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Sidebar } from '@/components/layout/Sidebar';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 
 export function Header() {
   const t = useTranslations('navigation');
@@ -25,8 +25,8 @@ export function Header() {
   const handleLogout = async () => {
     try {
       await signOut();
-      // Redirect to login page after successful logout
-      router.push(`/${locale}/login`);
+      // Redirect to login page after successful logout (locale automatically added)
+      router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -34,7 +34,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
+      <div className="flex h-16 items-center px-4 w-full">
         {/* Mobile Menu */}
         <div className="flex items-center gap-4 lg:hidden">
           <Sheet>
@@ -62,7 +62,7 @@ export function Header() {
         </div>
 
         {/* Right Side - User Info & Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ms-auto">
           <LanguageSwitcher />
 
           {/* User Info */}

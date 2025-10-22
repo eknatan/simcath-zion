@@ -36,12 +36,17 @@
   },
   "dashboard": {
     "title": "לוח בקרה",
+    "description": "מעקב אחר כל התיקים והתשלומים במערכת",
     "welcome": "שלום, {name}",
     "stats": {
       "totalCases": "סה״כ תיקים",
       "pending": "ממתינים",
       "active": "פעילים",
       "transferred": "הועברו"
+    },
+    "recentActivity": {
+      "title": "פעילות אחרונה",
+      "noActivity": "אין פעילות אחרונה להצגה"
     }
   },
   "status": {
@@ -88,5 +93,26 @@
     "exchangeRate": "שער החליפין",
     "updateRate": "עדכן שער",
     "convert": "המר"
+  },
+  "calendar": {
+    "title": "יומן עברי",
+    "subtitle": "Hebrew Calendar",
+    "backToDashboard": "חזרה ללוח הבקרה",
+    "footer": {
+      "title": "שמחת ציון - יומן עברי עם מעקב מסים",
+      "subtitle": "Simchat Zion - Hebrew Calendar with Tax Tracking"
+    },
+    "legend": {
+      "shabbat": "שבת",
+      "holiday": "חג",
+      "roshChodesh": "ראש חודש"
+    },
+    "loading": "טוען...",
+    "switchLanguage": "English",
+    "clickForInfo": "לחץ על כל יום לצפייה במידע נוסף (בקרוב)",
+    "navigation": {
+      "previousMonth": "חודש קודם",
+      "nextMonth": "חודש הבא"
+    }
   }
 }

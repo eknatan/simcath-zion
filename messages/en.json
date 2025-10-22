@@ -36,12 +36,17 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "description": "Track all cases and payments in the system",
     "welcome": "Hello, {name}",
     "stats": {
       "totalCases": "Total Cases",
       "pending": "Pending",
       "active": "Active",
       "transferred": "Transferred"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity to display"
     }
   },
   "status": {
@@ -88,5 +93,26 @@
     "exchangeRate": "Exchange Rate",
     "updateRate": "Update Rate",
     "convert": "Convert"
+  },
+  "calendar": {
+    "title": "Hebrew Calendar",
+    "subtitle": "יומן עברי",
+    "backToDashboard": "Back to Dashboard",
+    "footer": {
+      "title": "Simchat Zion - Hebrew Calendar with Tax Tracking",
+      "subtitle": "שמחת ציון - יומן עברי עם מעקב מסים"
+    },
+    "legend": {
+      "shabbat": "Shabbat",
+      "holiday": "Holiday",
+      "roshChodesh": "Rosh Chodesh"
+    },
+    "loading": "Loading...",
+    "switchLanguage": "עברית",
+    "clickForInfo": "Click any day for more information (coming soon)",
+    "navigation": {
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month"
+    }
   }
 }
