@@ -22,7 +22,7 @@ export type DesignVersion = 'A' | 'B';
  * A = Rich & Dynamic (גרדיאנטים חזקים, צבעים עשירים)
  * B = Elegant & Soft (צבעים רכים, עומק עדין) - ברירת מחדל
  */
-export const ACTIVE_DESIGN_VERSION: DesignVersion = 'B';
+export const ACTIVE_DESIGN_VERSION = 'B' as DesignVersion;
 
 // ==================== VERSION A: RICH & DYNAMIC ====================
 
@@ -310,7 +310,7 @@ export type TailwindColorName = 'blue' | 'green' | 'amber' | 'purple' | 'red' | 
 
 // ==================== EXPORT DEFAULT ====================
 
-export default {
+const designSystem = {
   version: ACTIVE_DESIGN_VERSION,
   tokens: ActiveDesignTokens,
   versionA: DesignTokensA,
@@ -322,3 +322,5 @@ export default {
     getBadgeClasses,
   },
 };
+
+export default designSystem;

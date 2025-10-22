@@ -63,9 +63,19 @@
     "required": "Required field",
     "invalidEmail": "Invalid email address",
     "invalidPhone": "Invalid phone number",
-    "invalidId": "Invalid ID number",
+    "invalidId": "Invalid ID number (9 digits)",
+    "invalidIdChecksum": "Invalid ID number (checksum failed)",
+    "invalidHebrewDate": "Invalid Hebrew date",
+    "pastDate": "Date cannot be in the past",
     "minLength": "Must be at least {min} characters",
-    "maxLength": "Cannot exceed {max} characters"
+    "maxLength": "Cannot exceed {max} characters",
+    "invalidNumber": "Must be a valid number",
+    "mustBeInteger": "Must be a whole number",
+    "minGuests": "Number of guests must be at least 1",
+    "maxGuests": "Number of guests cannot exceed 5000",
+    "minCost": "Cost must be at least 0",
+    "maxCost": "Cost cannot exceed ₪10,000,000",
+    "maxBackgroundLength": "Background description is too long (maximum 2000 characters)"
   },
   "auth": {
     "login": {
@@ -113,6 +123,147 @@
     "navigation": {
       "previousMonth": "Previous month",
       "nextMonth": "Next month"
+    }
+  },
+  "wedding_form": {
+    "title": "Wedding Support Application",
+    "description": "Please fill in all required details",
+    "progress_indicator": "Step {current} of {total}",
+    "section_wedding_info": {
+      "title": "Wedding Information",
+      "description": "General event details",
+      "date_hebrew": "Hebrew Date",
+      "date_hebrew_placeholder": "Example: 20th of Tishrei 5785",
+      "date_hebrew_helper": "Enter the complete Hebrew date",
+      "date_gregorian": "Gregorian Date",
+      "city": "City",
+      "city_placeholder": "Example: Jerusalem",
+      "guests_count": "Estimated Number of Guests",
+      "guests_count_placeholder": "300",
+      "total_cost": "Total Wedding Cost",
+      "total_cost_placeholder": "50000",
+      "total_cost_helper": "Including catering, and venue"
+    },
+    "section_groom_info": {
+      "title": "Groom Information",
+      "description": "Complete information about the groom and his family",
+      "first_name": "First Name",
+      "first_name_placeholder": "David",
+      "last_name": "Last Name",
+      "last_name_placeholder": "Cohen",
+      "id": "ID Number",
+      "id_placeholder": "123456789",
+      "school": "School/Yeshiva",
+      "school_placeholder": "Kotel Yeshiva",
+      "parents_title": "Parents Information",
+      "father_name": "Father's Name",
+      "father_name_placeholder": "Moshe Cohen",
+      "father_occupation": "Father's Occupation",
+      "father_occupation_placeholder": "Engineer",
+      "mother_name": "Mother's Name",
+      "mother_name_placeholder": "Rachel Cohen",
+      "mother_occupation": "Mother's Occupation",
+      "mother_occupation_placeholder": "Teacher",
+      "address": "Full Address",
+      "address_placeholder": "10 Herzl Street",
+      "city": "City",
+      "city_placeholder": "Tel Aviv",
+      "phone": "Phone",
+      "phone_placeholder": "050-1234567",
+      "email": "Email",
+      "email_placeholder": "david@example.com",
+      "memorial_day": "Memorial Day (Optional)",
+      "memorial_day_placeholder": "9th of Av",
+      "memorial_day_helper": "Memorial day of deceased parent",
+      "background": "Background Documentation (Optional)",
+      "background_placeholder": "Tell us a bit about the family background...",
+      "background_helper": "Additional information to help us better understand the application"
+    },
+    "section_bride_info": {
+      "title": "Bride Information",
+      "description": "Complete information about the bride and her family",
+      "first_name": "First Name",
+      "first_name_placeholder": "Sarah",
+      "last_name": "Last Name",
+      "last_name_placeholder": "Levi",
+      "id": "ID Number",
+      "id_placeholder": "987654321",
+      "school": "School",
+      "school_placeholder": "Beit Yaakov",
+      "parents_title": "Parents Information",
+      "father_name": "Father's Name",
+      "father_name_placeholder": "Yosef Levi",
+      "father_occupation": "Father's Occupation",
+      "father_occupation_placeholder": "Doctor",
+      "mother_name": "Mother's Name",
+      "mother_name_placeholder": "Miriam Levi",
+      "mother_occupation": "Mother's Occupation",
+      "mother_occupation_placeholder": "Nurse",
+      "address": "Full Address",
+      "address_placeholder": "5 Prophets Street",
+      "city": "City",
+      "city_placeholder": "Jerusalem",
+      "phone": "Phone",
+      "phone_placeholder": "050-9876543",
+      "email": "Email",
+      "email_placeholder": "sarah@example.com",
+      "memorial_day": "Memorial Day (Optional)",
+      "memorial_day_placeholder": "20th of Shevat",
+      "memorial_day_helper": "Memorial day of deceased parent",
+      "background": "Background Documentation (Optional)",
+      "background_placeholder": "Tell us a bit about the family background...",
+      "background_helper": "Additional information to help us better understand the application"
+    },
+    "marital_status": {
+      "single": "Single",
+      "married": "Married",
+      "divorced": "Divorced",
+      "widowed": "Widowed"
+    },
+    "buttons": {
+      "next": "Continue",
+      "previous": "Back",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "save_draft": "Save Draft"
+    },
+    "success": {
+      "title": "Application Submitted Successfully!",
+      "message": "Thank you for your application. We will contact you soon.",
+      "reference": "Reference Number: {reference}"
+    },
+    "errors": {
+      "submission_failed": "Application submission failed. Please try again.",
+      "network_error": "Network error. Please check your internet connection."
+    },
+    "public_page": {
+      "header": {
+        "system_name": "Family Support System",
+        "system_subtitle": "Orphan Weddings and Sick Children"
+      },
+      "footer_info": {
+        "title": "Important Information",
+        "privacy_note": "All details are stored in an encrypted and secure database",
+        "usage_note": "Information will be used solely for reviewing the application",
+        "response_time": "A representative will contact you within 3 business days",
+        "contact": "Questions? Contact us at: 02-1234567"
+      },
+      "footer": {
+        "copyright": "© {year} Family Support System - All Rights Reserved",
+        "description": "Secure system for managing cases and payments"
+      }
+    },
+    "internal_page": {
+      "title_suffix": "Internal System",
+      "breadcrumb": {
+        "applicants": "Applications",
+        "new_application": "New Application"
+      },
+      "description": "Form for manually entering an application on behalf of a family",
+      "form_opens_new_window": "The form will open in a new window",
+      "cleaning_coming_soon": "Coming Soon...",
+      "cleaning_in_development": "Form in development",
+      "cleaning_title": "Sick Child Support Application"
     }
   }
 }

@@ -63,9 +63,19 @@
     "required": "שדה חובה",
     "invalidEmail": "כתובת מייל לא תקינה",
     "invalidPhone": "מספר טלפון לא תקין",
-    "invalidId": "מספר תעודת זהות לא תקין",
+    "invalidId": "מספר תעודת זהות לא תקין (9 ספרות)",
+    "invalidIdChecksum": "תעודת זהות לא תקינה (ספרת ביקורת שגויה)",
+    "invalidHebrewDate": "תאריך עברי לא תקין",
+    "pastDate": "התאריך לא יכול להיות בעבר",
     "minLength": "חייב להיות לפחות {min} תווים",
-    "maxLength": "לא יכול להיות יותר מ-{max} תווים"
+    "maxLength": "לא יכול להיות יותר מ-{max} תווים",
+    "invalidNumber": "חייב להיות מספר תקין",
+    "mustBeInteger": "חייב להיות מספר שלם",
+    "minGuests": "מספר מוזמנים חייב להיות לפחות 1",
+    "maxGuests": "מספר מוזמנים לא יכול להיות יותר מ-5000",
+    "minCost": "העלות חייבת להיות לפחות 0",
+    "maxCost": "העלות לא יכולה להיות יותר מ-10,000,000 ₪",
+    "maxBackgroundLength": "תיעוד הרקע ארוך מדי (מקסימום 2000 תווים)"
   },
   "auth": {
     "login": {
@@ -113,6 +123,147 @@
     "navigation": {
       "previousMonth": "חודש קודם",
       "nextMonth": "חודש הבא"
+    }
+  },
+  "wedding_form": {
+    "title": "בקשה לתמיכה בחתונה",
+    "description": "אנא מלא את כל הפרטים הנדרשים",
+    "progress_indicator": "שלב {current} מתוך {total}",
+    "section_wedding_info": {
+      "title": "מידע על החתונה",
+      "description": "פרטים כלליים על האירוע",
+      "date_hebrew": "תאריך עברי",
+      "date_hebrew_placeholder": "לדוגמה: כ' בתשרי תשפ\"ה",
+      "date_hebrew_helper": "הזן את התאריך העברי במלואו",
+      "date_gregorian": "תאריך לועזי",
+      "city": "עיר",
+      "city_placeholder": "לדוגמה: ירושלים",
+      "guests_count": "מספר מוזמנים משוער",
+      "guests_count_placeholder": "300",
+      "total_cost": "עלות כוללת של החתונה",
+      "total_cost_placeholder": "50000",
+      "total_cost_helper": "כולל קטרינג, ואולם   "
+    },
+    "section_groom_info": {
+      "title": "פרטי החתן",
+      "description": "מידע מלא על החתן ומשפחתו",
+      "first_name": "שם פרטי",
+      "first_name_placeholder": "דוד",
+      "last_name": "שם משפחה",
+      "last_name_placeholder": "כהן",
+      "id": "תעודת זהות",
+      "id_placeholder": "123456789",
+      "school": "ישיבה",
+      "school_placeholder": "ישיבת הכותל",
+      "parents_title": "פרטי הורים",
+      "father_name": "שם האב",
+      "father_name_placeholder": "משה כהן",
+      "father_occupation": "עיסוק האב",
+      "father_occupation_placeholder": "מהנדס",
+      "mother_name": "שם האם",
+      "mother_name_placeholder": "רחל כהן",
+      "mother_occupation": "עיסוק האם",
+      "mother_occupation_placeholder": "מורה",
+      "address": "כתובת מלאה",
+      "address_placeholder": "רחוב הרצל 10",
+      "city": "עיר",
+      "city_placeholder": "תל אביב",
+      "phone": "טלפון",
+      "phone_placeholder": "050-1234567",
+      "email": "דוא\"ל",
+      "email_placeholder": "david@example.com",
+      "memorial_day": "יום זיכרון (אופציונלי)",
+      "memorial_day_placeholder": "ט' באב",
+      "memorial_day_helper": "יום זיכרון של ההורה שנפטר",
+      "background": "תיעוד רקע (אופציונלי)",
+      "background_placeholder": "ספר לנו קצת על רקע המשפחה...",
+      "background_helper": "מידע נוסף שיעזור לנו להבין את הבקשה טוב יותר"
+    },
+    "section_bride_info": {
+      "title": "פרטי הכלה",
+      "description": "מידע מלא על הכלה ומשפחתה",
+      "first_name": "שם פרטי",
+      "first_name_placeholder": "שרה",
+      "last_name": "שם משפחה",
+      "last_name_placeholder": "לוי",
+      "id": "תעודת זהות",
+      "id_placeholder": "987654321",
+      "school": "סמינר",
+      "school_placeholder": "בית יעקב",
+      "parents_title": "פרטי הורים",
+      "father_name": "שם האב",
+      "father_name_placeholder": "יוסף לוי",
+      "father_occupation": "עיסוק האב",
+      "father_occupation_placeholder": "רופא",
+      "mother_name": "שם האם",
+      "mother_name_placeholder": "מרים לוי",
+      "mother_occupation": "עיסוק האם",
+      "mother_occupation_placeholder": "אחות",
+      "address": "כתובת מלאה",
+      "address_placeholder": "רחוב הנביאים 5",
+      "city": "עיר",
+      "city_placeholder": "ירושלים",
+      "phone": "טלפון",
+      "phone_placeholder": "050-9876543",
+      "email": "דוא\"ל",
+      "email_placeholder": "sarah@example.com",
+      "memorial_day": "יום זיכרון (אופציונלי)",
+      "memorial_day_placeholder": "כ' בשבט",
+      "memorial_day_helper": "יום זיכרון של ההורה שנפטר",
+      "background": "תיעוד רקע (אופציונלי)",
+      "background_placeholder": "ספר לנו קצת על רקע המשפחה...",
+      "background_helper": "מידע נוסף שיעזור לנו להבין את הבקשה טוב יותר"
+    },
+    "marital_status": {
+      "single": "רווק/ה",
+      "married": "נשוי/אה",
+      "divorced": "גרוש/ה",
+      "widowed": "אלמן/ה"
+    },
+    "buttons": {
+      "next": "המשך",
+      "previous": "חזור",
+      "submit": "שלח בקשה",
+      "submitting": "שולח...",
+      "save_draft": "שמור טיוטה"
+    },
+    "success": {
+      "title": "הבקשה נשלחה בהצלחה!",
+      "message": "תודה רבה על הבקשה. ניצור איתך קשר בהקדם.",
+      "reference": "מספר אסמכתא: {reference}"
+    },
+    "errors": {
+      "submission_failed": "שליחת הבקשה נכשלה. אנא נסה שוב.",
+      "network_error": "בעיית תקשורת. בדוק את החיבור לאינטרנט."
+    },
+    "public_page": {
+      "header": {
+        "system_name": "מערכת תמיכה למשפחות",
+        "system_subtitle": "חתונות יתומים וילדים חולים"
+      },
+      "footer_info": {
+        "title": "מידע חשוב",
+        "privacy_note": "כל הפרטים נשמרים במאגר מוצפן ומאובטח",
+        "usage_note": "המידע ישמש אך ורק לצורך בחינת הבקשה",
+        "response_time": "נציג מטעמנו יצור איתך קשר תוך 3 ימי עסקים",
+        "contact": "שאלות? צור קשר בטלפון: 02-1234567"
+      },
+      "footer": {
+        "copyright": "© {year} מערכת תמיכה למשפחות - כל הזכויות שמורות",
+        "description": "מערכת מאובטחת לניהול תיקים ותשלומים"
+      }
+    },
+    "internal_page": {
+      "title_suffix": "מערכת פנימית",
+      "breadcrumb": {
+        "applicants": "בקשות",
+        "new_application": "בקשה חדשה"
+      },
+      "description": "טופס להזנת בקשה ידנית מטעם משפחה",
+      "form_opens_new_window": "הטופס ייפתח בחלון נפרד",
+      "cleaning_coming_soon": "בקרוב...",
+      "cleaning_in_development": "הטופס בפיתוח",
+      "cleaning_title": "בקשה לתמיכה בניקיון"
     }
   }
 }

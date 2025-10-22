@@ -1,9 +1,7 @@
-import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  LayoutDashboard,
   FileText,
   Users,
   DollarSign,
@@ -18,7 +16,6 @@ import {
 } from 'lucide-react';
 
 export default async function DesignPreviewPage() {
-  const t = await getTranslations('dashboard');
 
   return (
     <div className="space-y-8 pb-16">
