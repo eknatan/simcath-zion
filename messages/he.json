@@ -12,7 +12,11 @@
     "submit": "שלח",
     "close": "סגור",
     "confirm": "אישור",
-    "back": "חזור"
+    "back": "חזור",
+    "noResults": "אין תוצאות",
+    "dropHere": "שחרר את הקבצים כאן",
+    "dragOrClick": "גרור קבצים לכאן או לחץ לבחירה",
+    "maxSize": "גודל מקסימלי: {size}MB"
   },
   "navigation": {
     "dashboard": "לוח בקרה",
@@ -24,6 +28,11 @@
     "transfers": "העברות",
     "settings": "הגדרות",
     "logout": "התנתק"
+  },
+  "header": {
+    "systemName": "מערכת תמיכה למשפחות",
+    "systemDescription": "חתונות יתומים וילדים חולים",
+    "toggleMenu": "פתח תפריט"
   },
   "dashboard": {
     "title": "לוח בקרה",
@@ -52,5 +61,32 @@
     "invalidId": "מספר תעודת זהות לא תקין",
     "minLength": "חייב להיות לפחות {min} תווים",
     "maxLength": "לא יכול להיות יותר מ-{max} תווים"
+  },
+  "auth": {
+    "login": {
+      "systemName": "מערכת תמיכה למשפחות",
+      "systemDescription": "תמיכה לחתונות יתומים וילדים חולים",
+      "title": "כניסה למערכת",
+      "description": "הזן את פרטי ההתחברות שלך",
+      "email": "דוא״ל",
+      "emailPlaceholder": "הזן כתובת דוא״ל",
+      "password": "סיסמה",
+      "passwordPlaceholder": "הזן סיסמה",
+      "submit": "התחבר",
+      "loggingIn": "מתחבר...",
+      "footer": "מערכת מאובטחת לניהול תיקים ותשלומים"
+    },
+    "errors": {
+      "invalidCredentials": "שם משתמש או סיסמה שגויים",
+      "somethingWentWrong": "משהו השתבש, נסה שוב מאוחר יותר",
+      "unauthorized": "אין לך הרשאה לגשת לדף זה"
+    }
+  },
+  "payments": {
+    "usdAmount": "סכום בדולר",
+    "ilsAmount": "סכום בשקלים",
+    "exchangeRate": "שער החליפין",
+    "updateRate": "עדכן שער",
+    "convert": "המר"
   }
 }

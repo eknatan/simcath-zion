@@ -12,7 +12,11 @@
     "submit": "Submit",
     "close": "Close",
     "confirm": "Confirm",
-    "back": "Back"
+    "back": "Back",
+    "noResults": "No results",
+    "dropHere": "Drop files here",
+    "dragOrClick": "Drag files here or click to select",
+    "maxSize": "Maximum size: {size}MB"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -24,6 +28,11 @@
     "transfers": "Transfers",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "header": {
+    "systemName": "Family Support System",
+    "systemDescription": "Orphan Weddings and Sick Children",
+    "toggleMenu": "Toggle menu"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -52,5 +61,32 @@
     "invalidId": "Invalid ID number",
     "minLength": "Must be at least {min} characters",
     "maxLength": "Cannot exceed {max} characters"
+  },
+  "auth": {
+    "login": {
+      "systemName": "Family Support System",
+      "systemDescription": "Support for orphan weddings and sick children",
+      "title": "Sign In",
+      "description": "Enter your credentials to access the system",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Sign In",
+      "loggingIn": "Signing in...",
+      "footer": "Secure system for managing cases and payments"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "somethingWentWrong": "Something went wrong, please try again later",
+      "unauthorized": "You don't have permission to access this page"
+    }
+  },
+  "payments": {
+    "usdAmount": "Amount in USD",
+    "ilsAmount": "Amount in ILS",
+    "exchangeRate": "Exchange Rate",
+    "updateRate": "Update Rate",
+    "convert": "Convert"
   }
 }
