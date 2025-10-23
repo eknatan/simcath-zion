@@ -75,7 +75,6 @@ export function FormProgressBar({ currentStep, steps, className }: FormProgressB
           {steps.map((step, index) => {
             const isCompleted = index < currentStep || step.completed;
             const isCurrent = index === currentStep;
-            const isPending = index > currentStep;
             const status = isCurrent ? 'active' : isCompleted ? 'complete' : 'inactive';
             const isNotLastStep = index < steps.length - 1;
 
