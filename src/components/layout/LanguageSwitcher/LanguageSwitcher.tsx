@@ -3,7 +3,6 @@
 import { useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
-import { Languages } from 'lucide-react';
 
 export function LanguageSwitcher() {
   const locale = useLocale();
@@ -11,14 +10,13 @@ export function LanguageSwitcher() {
 
   return (
     <div className="flex items-center gap-2">
-      <Languages className="h-4 w-4 text-muted-foreground" />
       <div className="flex gap-1">
         <Link href={pathname} locale="he">
           <Button
             variant={locale === 'he' ? 'default' : 'ghost'}
             size="sm"
           >
-            עברית
+            עב
           </Button>
         </Link>
         <Link href={pathname} locale="en">
@@ -26,7 +24,7 @@ export function LanguageSwitcher() {
             variant={locale === 'en' ? 'default' : 'ghost'}
             size="sm"
           >
-            English
+            En
           </Button>
         </Link>
       </div>

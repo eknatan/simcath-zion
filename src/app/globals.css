@@ -197,3 +197,28 @@
 .animate-ping-slow {
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+/* RTL Support for Tables */
+[dir="rtl"] table {
+  direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+/* RTL Support for Flex/Grid containers */
+[dir="rtl"] .flex,
+[dir="rtl"] [class*="flex"] {
+  direction: rtl;
+}
+
+/* Fix specific UI components that need special handling in RTL */
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}

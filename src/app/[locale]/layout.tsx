@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { RootProviders } from "@/lib/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const locales = ["he", "en"];
 
@@ -34,6 +35,7 @@ export default async function LocaleLayout({
           <RootProviders>
             {children}
             <SpeedInsights />
+            <Toaster />
           </RootProviders>
         </NextIntlClientProvider>
       </body>

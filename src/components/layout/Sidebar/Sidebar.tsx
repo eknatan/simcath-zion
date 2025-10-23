@@ -13,6 +13,7 @@ import {
   DollarSign,
   Settings,
   ChevronRight,
+  ChevronLeft,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -79,71 +80,73 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex h-full flex-col border-e border-slate-200 bg-white shadow-sm">
-      <div className={cn(
-        "p-6 border-b border-slate-100",
-        locale === 'he' ? 'text-end' : 'text-start'
-      )}>
-        <h2 className="text-lg font-bold text-slate-900">{t('dashboard')}</h2>
-        <p className="text-xs text-slate-600 mt-1">תפריט ניווט</p>
+    <div className="flex h-full flex-col border-e border-slate-200 bg-gradient-to-b from-slate-50/50 to-white shadow-sm">
+      <div className="p-6 border-b border-slate-100 bg-white/80">
+        <h2 className="text-xl font-bold text-slate-900">{t('dashboard')}</h2>
+        <p className="text-sm text-slate-600 mt-1">תפריט ניווט</p>
       </div>
 
-      <ScrollArea className="flex-1 px-3">
-        <nav className="flex flex-col gap-1">
-          {navItems.map((item) => (
+      <ScrollArea className="flex-1 px-4 py-3">
+        <nav className="flex flex-col gap-2">
+          {navItems.map((item, index) => (
             <div key={item.href}>
-              <Link href={item.href}>
+              {index > 0 && (
+                <div className="my-2 h-px bg-gradient-to-r from-transparent via-slate-200/60 to-transparent shadow-sm" />
+              )}
+              <Link href={item.href} className="cursor-pointer">
                 <Button
                   variant={isActive(item.href) ? 'secondary' : 'ghost'}
                   className={cn(
-                    'w-full gap-3 transition-all duration-200',
-                    isActive(item.href) && 'bg-blue-50 text-blue-700 font-semibold border border-blue-100 shadow-sm',
-                    !isActive(item.href) && 'text-slate-700 hover:bg-slate-50',
-                    locale === 'he' ? 'justify-end flex-row-reverse' : 'justify-start'
+                    'w-full justify-start gap-4 py-6 px-5 transition-all duration-300 cursor-pointer text-start h-auto rounded-xl',
+                    isActive(item.href) && 'bg-gradient-to-br from-white to-blue-50/40 text-blue-700 font-semibold border border-slate-200 shadow-md',
+                    !isActive(item.href) && 'text-slate-700 hover:bg-white/80 hover:shadow-md hover:border hover:border-slate-200'
                   )}
                 >
-                  {item.icon}
-                  <span className={cn(
-                    "flex-1",
-                    locale === 'he' ? 'text-end' : 'text-start'
-                  )}>{item.title}</span>
+                  <div className="flex items-center justify-center w-6 h-6">{item.icon}</div>
+                  <span className="flex-1 text-start text-base font-medium leading-relaxed">{item.title}</span>
                   {item.children && (
-                    <ChevronRight
-                      className={cn(
-                        'h-4 w-4 transition-transform',
-                        isActive(item.href) && 'rotate-90',
-                        locale === 'he' && 'rotate-180'
-                      )}
-                    />
+                    locale === 'he' ? (
+                      <ChevronLeft
+                        className={cn(
+                          'h-4 w-4 transition-transform duration-300',
+                          isActive(item.href) && 'rotate-90'
+                        )}
+                      />
+                    ) : (
+                      <ChevronRight
+                        className={cn(
+                          'h-4 w-4 transition-transform duration-300',
+                          isActive(item.href) && 'rotate-90'
+                        )}
+                      />
+                    )
                   )}
                 </Button>
               </Link>
 
               {/* Children */}
               {item.children && isActive(item.href) && (
-                <div className={cn(
-                  'mt-1 flex flex-col gap-1 bg-slate-50/50 rounded-lg p-2',
-                  locale === 'he' ? 'me-2 border-e-2 border-blue-200 pe-3' : 'ms-2 border-s-2 border-blue-200 ps-3'
-                )}>
-                  {item.children.map((child) => (
-                    <Link key={child.href} href={child.href}>
-                      <Button
-                        variant={isActive(child.href) ? 'secondary' : 'ghost'}
-                        size="sm"
-                        className={cn(
-                          'w-full gap-2',
-                          isActive(child.href) && 'bg-blue-100 text-blue-700 font-semibold',
-                          !isActive(child.href) && 'text-slate-600 hover:bg-white hover:text-slate-900',
-                          locale === 'he' ? 'justify-end' : 'justify-start'
-                        )}
-                      >
-                        {child.icon}
-                        <span className={cn(
-                          'flex-1',
-                          locale === 'he' ? 'text-end' : 'text-start'
-                        )}>{child.title}</span>
-                      </Button>
-                    </Link>
+                <div className="mt-3 ms-4 flex flex-col gap-2 bg-gradient-to-br from-slate-50/60 to-white/50 rounded-xl p-4 border-s-2 border-blue-200/50 shadow-sm">
+                  {item.children.map((child, childIndex) => (
+                    <div key={child.href}>
+                      {childIndex > 0 && (
+                        <div className="my-1.5 h-px bg-gradient-to-r from-slate-200/40 via-slate-300/40 to-transparent" />
+                      )}
+                      <Link href={child.href} className="cursor-pointer">
+                        <Button
+                          variant={isActive(child.href) ? 'secondary' : 'ghost'}
+                          size="sm"
+                          className={cn(
+                            'w-full justify-start gap-3 py-5 px-4 transition-all duration-300 cursor-pointer text-start h-auto rounded-lg',
+                            isActive(child.href) && 'bg-gradient-to-br from-blue-50 to-blue-100/50 text-blue-700 font-semibold shadow-sm border border-blue-200/50',
+                            !isActive(child.href) && 'text-slate-600 hover:bg-white/90 hover:text-slate-900 hover:shadow-sm hover:border hover:border-slate-100'
+                          )}
+                        >
+                          <div className="flex items-center justify-center w-5 h-5">{child.icon}</div>
+                          <span className="flex-1 text-start text-[15px] font-medium leading-relaxed">{child.title}</span>
+                        </Button>
+                      </Link>
+                    </div>
                   ))}
                 </div>
               )}

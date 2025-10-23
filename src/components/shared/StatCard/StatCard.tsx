@@ -113,7 +113,7 @@ export function StatCard({
         className
       )}
     >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+      <CardHeader className="flex items-center justify-between space-y-0 pb-3">
         <CardTitle className={cn('text-sm font-semibold', colors.titleColor)}>
           {title}
         </CardTitle>

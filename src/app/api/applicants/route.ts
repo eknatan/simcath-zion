@@ -58,15 +58,15 @@ export async function POST(request: NextRequest) {
         email_sent_to_secretary: false, // Will be updated after email is sent
         created_at: new Date().toISOString(),
       })
-      .select()
+      .select('*')
       .single();
 
-    if (error) {
+    if (error || !data) {
       console.error('Supabase error:', error);
       return NextResponse.json(
         {
           error: 'Failed to save application',
-          details: error.message,
+          details: error?.message || 'No data returned',
         },
         { status: 500 }
       );

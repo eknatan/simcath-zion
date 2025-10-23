@@ -265,5 +265,110 @@
       "cleaning_in_development": "Form in development",
       "cleaning_title": "Sick Child Support Application"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage system settings",
+    "tabs": {
+      "general": "General",
+      "users": "User Management",
+      "notifications": "Notifications",
+      "system": "System"
+    }
+  },
+  "users": {
+    "title": "User Management",
+    "description": "Manage system users and permissions",
+    "addUser": "Add User",
+    "inviteUser": "Invite User",
+    "editUser": "Edit User",
+    "deleteUser": "Delete User",
+    "suspendUser": "Suspend User",
+    "activateUser": "Activate User",
+    "sendResetPassword": "Send Password Reset Link",
+    "confirmDelete": "Are you sure you want to delete user {name}?",
+    "confirmDeleteDescription": "This action cannot be undone. All user data will be permanently deleted.",
+    "confirmSuspend": "Are you sure you want to suspend user {name}?",
+    "confirmSuspendDescription": "The user will not be able to log in until reactivated.",
+    "confirmActivate": "Are you sure you want to activate user {name}?",
+    "noUsers": "No users to display",
+    "searchPlaceholder": "Search by name or email...",
+    "filterByRole": "Filter by role",
+    "filterByStatus": "Filter by status",
+    "allRoles": "All Roles",
+    "allStatuses": "All Statuses",
+    "fields": {
+      "name": "Full Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "phone": "Phone",
+      "notes": "Notes",
+      "createdAt": "Join Date",
+      "actions": "Actions"
+    },
+    "placeholders": {
+      "name": "Enter full name",
+      "email": "user@example.com",
+      "phone": "050-1234567",
+      "notes": "Additional notes (optional)"
+    },
+    "helpers": {
+      "email": "User will receive an invitation email to set password",
+      "role": "Select the appropriate role for the user",
+      "phone": "Contact phone number",
+      "notes": "Internal notes (not visible to user)"
+    },
+    "roles": {
+      "secretary": "Secretary",
+      "manager": "Manager"
+    },
+    "roleDescriptions": {
+      "secretary": "Access to all system, no user management permissions",
+      "manager": "Full permissions including user management"
+    },
+    "statuses": {
+      "active": "Active",
+      "suspended": "Suspended"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "suspend": "Suspend",
+      "activate": "Activate",
+      "resetPassword": "Reset Password",
+      "viewDetails": "View Details"
+    },
+    "messages": {
+      "userInvited": "User invited successfully",
+      "inviteEmailSent": "Invitation email sent to user",
+      "userCreated": "User created successfully",
+      "userUpdated": "User updated successfully",
+      "userDeleted": "User deleted successfully",
+      "userSuspended": "User suspended successfully",
+      "userActivated": "User activated successfully",
+      "resetPasswordSent": "Password reset link sent",
+      "error": "An error occurred",
+      "cannotDeleteLastManager": "Cannot delete the last manager in the system",
+      "cannotSuspendLastManager": "Cannot suspend the last active manager in the system",
+      "userAlreadyExists": "User with this email already exists in the system"
+    },
+    "dialog": {
+      "invite": {
+        "title": "Invite New User",
+        "description": "Fill in the details to invite a new user. The user will receive an email with a link to set their password."
+      },
+      "edit": {
+        "title": "Edit User",
+        "description": "Update user details"
+      }
+    },
+    "table": {
+      "showing": "Showing {from} - {to} of {total} users",
+      "rowsPerPage": "Rows per page:",
+      "page": "Page {current} of {total}",
+      "previousPage": "Previous page",
+      "nextPage": "Next page"
+    }
   }
 }

@@ -26,18 +26,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const subscriptionRef = useRef<ReturnType<typeof supabase.auth.onAuthStateChange> | null>(null);
 
   useEffect(() => {
-    // Check active session on mount
+    // Check active session on mount (using getUser for security)
     const initializeAuth = async () => {
       try {
-        const { data: { session: currentSession }, error } = await supabase.auth.getSession();
+        const { data: { user: currentUser }, error } = await supabase.auth.getUser();
 
         if (error) {
-          console.error('Error getting session:', error);
+          console.error('Error getting user:', error);
           setSession(null);
           setUser(null);
         } else {
+          // Get the session after validating the user
+          const { data: { session: currentSession } } = await supabase.auth.getSession();
           setSession(currentSession);
-          setUser(currentSession?.user ?? null);
+          setUser(currentUser);
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
@@ -75,6 +77,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (error) {
         return { error };
+      }
+
+      // Sync user_metadata with profile role
+      if (data.user) {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', data.user.id)
+            .single();
+
+          if (profile?.role && data.user.user_metadata?.role !== profile.role) {
+            // Update user metadata to match profile
+            await supabase.auth.updateUser({
+              data: { role: profile.role }
+            });
+          }
+        } catch (metadataError) {
+          console.error('Error syncing user metadata:', metadataError);
+          // Don't fail login if metadata sync fails
+        }
       }
 
       setSession(data.session);

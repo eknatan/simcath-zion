@@ -27,7 +27,8 @@
     "applicants": "בקשות",
     "transfers": "העברות",
     "settings": "הגדרות",
-    "logout": "התנתק"
+    "logout": "התנתק",
+    "users": "משתמשים"
   },
   "header": {
     "systemName": "מערכת תמיכה למשפחות",
@@ -62,7 +63,10 @@
   "validation": {
     "required": "שדה חובה",
     "invalidEmail": "כתובת מייל לא תקינה",
+    "emailTooLong": "כתובת מייל ארוכה מדי (מקסימום 255 תווים)",
     "invalidPhone": "מספר טלפון לא תקין",
+    "phoneTooShort": "מספר טלפון קצר מדי (מינימום 9 תווים)",
+    "phoneTooLong": "מספר טלפון ארוך מדי (מקסימום 20 תווים)",
     "invalidId": "מספר תעודת זהות לא תקין (9 ספרות)",
     "invalidIdChecksum": "תעודת זהות לא תקינה (ספרת ביקורת שגויה)",
     "invalidHebrewDate": "תאריך עברי לא תקין",
@@ -75,7 +79,12 @@
     "maxGuests": "מספר מוזמנים לא יכול להיות יותר מ-5000",
     "minCost": "העלות חייבת להיות לפחות 0",
     "maxCost": "העלות לא יכולה להיות יותר מ-10,000,000 ₪",
-    "maxBackgroundLength": "תיעוד הרקע ארוך מדי (מקסימום 2000 תווים)"
+    "maxBackgroundLength": "תיעוד הרקע ארוך מדי (מקסימום 2000 תווים)",
+    "nameTooShort": "השם קצר מדי (מינימום 2 תווים)",
+    "nameTooLong": "השם ארוך מדי (מקסימום 100 תווים)",
+    "notesTooLong": "ההערות ארוכות מדי (מקסימום 1000 תווים)",
+    "invalidRole": "תפקיד לא חוקי",
+    "invalidStatus": "סטטוס לא חוקי"
   },
   "auth": {
     "login": {
@@ -238,8 +247,8 @@
     },
     "public_page": {
       "header": {
-        "system_name": "מערכת תמיכה למשפחות",
-        "system_subtitle": "חתונות יתומים וילדים חולים"
+        "system_name": "שמחת ציון",
+        "system_subtitle": "מערכת תמיכה למשפחות"
       },
       "footer_info": {
         "title": "מידע חשוב",
@@ -264,6 +273,111 @@
       "cleaning_coming_soon": "בקרוב...",
       "cleaning_in_development": "הטופס בפיתוח",
       "cleaning_title": "בקשה לתמיכה בניקיון"
+    }
+  },
+  "settings": {
+    "title": "הגדרות",
+    "description": "ניהול הגדרות המערכת",
+    "tabs": {
+      "general": "כללי",
+      "users": "ניהול משתמשים",
+      "notifications": "התראות",
+      "system": "מערכת"
+    }
+  },
+  "users": {
+    "title": "ניהול משתמשים",
+    "description": "ניהול משתמשי המערכת והרשאותיהם",
+    "addUser": "הוסף משתמש",
+    "inviteUser": "הזמן משתמש",
+    "editUser": "ערוך משתמש",
+    "deleteUser": "מחק משתמש",
+    "suspendUser": "השהה משתמש",
+    "activateUser": "הפעל משתמש",
+    "sendResetPassword": "שלח לינק לאיפוס סיסמה",
+    "confirmDelete": "האם אתה בטוח שברצונך למחוק את המשתמש {name}?",
+    "confirmDeleteDescription": "פעולה זו לא ניתנת לביטול. כל הנתונים של המשתמש יימחקו לצמיתות.",
+    "confirmSuspend": "האם אתה בטוח שברצונך להשהות את המשתמש {name}?",
+    "confirmSuspendDescription": "המשתמש לא יוכל להתחבר למערכת עד להפעלה מחדש.",
+    "confirmActivate": "האם אתה בטוח שברצונך להפעיל את המשתמש {name}?",
+    "noUsers": "אין משתמשים להצגה",
+    "searchPlaceholder": "חיפוש לפי שם או אימייל...",
+    "filterByRole": "סינון לפי תפקיד",
+    "filterByStatus": "סינון לפי סטטוס",
+    "allRoles": "כל התפקידים",
+    "allStatuses": "כל הסטטוסים",
+    "fields": {
+      "name": "שם מלא",
+      "email": "אימייל",
+      "role": "תפקיד",
+      "status": "סטטוס",
+      "phone": "טלפון",
+      "notes": "הערות",
+      "createdAt": "תאריך הצטרפות",
+      "actions": "פעולות"
+    },
+    "placeholders": {
+      "name": "הזן שם מלא",
+      "email": "user@example.com",
+      "phone": "050-1234567",
+      "notes": "הערות נוספות (אופציונלי)"
+    },
+    "helpers": {
+      "email": "המשתמש יקבל הזמנה באימייל להגדרת סיסמה",
+      "role": "בחר את התפקיד המתאים למשתמש",
+      "phone": "מספר טלפון ליצירת קשר",
+      "notes": "הערות פנימיות (לא נראות למשתמש)"
+    },
+    "roles": {
+      "secretary": "מזכירה",
+      "manager": "מנהל"
+    },
+    "roleDescriptions": {
+      "secretary": "גישה לכל המערכת, ללא הרשאות ניהול משתמשים",
+      "manager": "הרשאות מלאות כולל ניהול משתמשים"
+    },
+    "statuses": {
+      "active": "פעיל",
+      "suspended": "מושהה"
+    },
+    "actions": {
+      "edit": "ערוך",
+      "delete": "מחק",
+      "suspend": "השהה",
+      "activate": "הפעל",
+      "resetPassword": "איפוס סיסמה",
+      "viewDetails": "הצג פרטים"
+    },
+    "messages": {
+      "userInvited": "המשתמש הוזמן בהצלחה",
+      "inviteEmailSent": "נשלח אימייל הזמנה למשתמש",
+      "userCreated": "המשתמש נוצר בהצלחה",
+      "userUpdated": "המשתמש עודכן בהצלחה",
+      "userDeleted": "המשתמש נמחק בהצלחה",
+      "userSuspended": "המשתמש הושהה בהצלחה",
+      "userActivated": "המשתמש הופעל בהצלחה",
+      "resetPasswordSent": "נשלח לינק לאיפוס סיסמה",
+      "error": "אירעה שגיאה",
+      "cannotDeleteLastManager": "לא ניתן למחוק את המנהל האחרון במערכת",
+      "cannotSuspendLastManager": "לא ניתן להשהות את המנהל הפעיל האחרון במערכת",
+      "userAlreadyExists": "משתמש עם אימייל זה כבר קיים במערכת"
+    },
+    "dialog": {
+      "invite": {
+        "title": "הזמנת משתמש חדש",
+        "description": "מלא את הפרטים להזמנת משתמש חדש. המשתמש יקבל אימייל עם לינק להגדרת סיסמה."
+      },
+      "edit": {
+        "title": "עריכת משתמש",
+        "description": "עדכן את פרטי המשתמש"
+      }
+    },
+    "table": {
+      "showing": "מציג {from} - {to} מתוך {total} משתמשים",
+      "rowsPerPage": "שורות לעמוד:",
+      "page": "עמוד {current} מתוך {total}",
+      "previousPage": "עמוד קודם",
+      "nextPage": "עמוד הבא"
     }
   }
 }

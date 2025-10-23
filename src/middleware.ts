@@ -42,10 +42,10 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Check if user is authenticated
+  // Check if user is authenticated (using getUser for security)
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Check if current route is public
   const isPublicRoute = publicRoutes.some(route =>
@@ -53,13 +53,13 @@ export async function middleware(request: NextRequest) {
   );
 
   // Redirect to login if not authenticated and not on public route
-  if (!session && !isPublicRoute) {
+  if (!user && !isPublicRoute) {
     const loginUrl = new URL(`/${locale}/login`, request.url);
     return NextResponse.redirect(loginUrl);
   }
 
   // Redirect to dashboard if authenticated and on login page
-  if (session && pathnameWithoutLocale === '/login') {
+  if (user && pathnameWithoutLocale === '/login') {
     const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
     return NextResponse.redirect(dashboardUrl);
   }
