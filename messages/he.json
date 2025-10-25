@@ -379,5 +379,101 @@
       "previousPage": "עמוד קודם",
       "nextPage": "עמוד הבא"
     }
+  },
+  "email": {
+    "common": {
+      "send": "שלח מייל",
+      "sending": "שולח...",
+      "sent": "נשלח בהצלחה",
+      "failed": "שליחה נכשלה",
+      "retry": "נסה שוב",
+      "subject": "נושא",
+      "recipient": "נמען",
+      "recipients": "נמענים",
+      "message": "הודעה",
+      "preview": "תצוגה מקדימה"
+    },
+    "status": {
+      "sent": "נשלח",
+      "failed": "נכשל",
+      "bounced": "חזר",
+      "pending": "ממתין"
+    },
+    "templates": {
+      "welcome": "ברוכים הבאים",
+      "caseCreated": "תיק חדש נוצר",
+      "applicantNotification": "הודעה למבקש",
+      "custom": "מותאם אישית"
+    },
+    "fields": {
+      "to": "אל",
+      "cc": "עותק",
+      "bcc": "עותק סמוי",
+      "replyTo": "השב אל",
+      "attachments": "קבצים מצורפים",
+      "locale": "שפה"
+    },
+    "messages": {
+      "emailSentSuccess": "המייל נשלח בהצלחה",
+      "emailSentFailed": "שליחת המייל נכשלה",
+      "noRecipients": "יש להזין לפחות נמען אחד",
+      "invalidEmail": "כתובת מייל לא תקינה",
+      "attachmentTooLarge": "הקובץ גדול מדי",
+      "maxAttachments": "ניתן לצרף עד {max} קבצים",
+      "unauthorized": "אין הרשאה לשלוח מיילים",
+      "serviceUnavailable": "שירות המייל אינו זמין כרגע"
+    },
+    "history": {
+      "title": "היסטוריית מיילים",
+      "noHistory": "אין היסטוריית מיילים",
+      "sentAt": "נשלח ב",
+      "sentTo": "נשלח ל",
+      "type": "סוג",
+      "status": "סטטוס",
+      "viewDetails": "צפה בפרטים"
+    },
+    "composer": {
+      "title": "כתיבת מייל",
+      "selectTemplate": "בחר תבנית",
+      "useTemplate": "השתמש בתבנית",
+      "customEmail": "מייל מותאם",
+      "fillRecipients": "מלא נמענים",
+      "fillSubject": "מלא נושא",
+      "fillContent": "כתוב את תוכן המייל",
+      "attachFiles": "צרף קבצים",
+      "sendEmail": "שלח מייל",
+      "cancel": "בטל"
+    },
+    "validation": {
+      "recipientRequired": "נמען הוא שדה חובה",
+      "subjectRequired": "נושא הוא שדה חובה",
+      "contentRequired": "תוכן המייל הוא חובה",
+      "invalidEmailFormat": "פורמט מייל לא תקין",
+      "emailRequired": "כתובת מייל נדרשת",
+      "invalidEmail": "כתובת מייל לא תקינה"
+    },
+    "settings": {
+      "title": "הגדרות אימייל",
+      "description": "ניהול רשימת מיילי מזכירות וקבלת התראות",
+      "emailsCount": "מיילים",
+      "addEmail": "הוסף מייל",
+      "addEmailPlaceholder": "הזן כתובת מייל חדשה",
+      "currentEmails": "רשימת מיילים נוכחית",
+      "noEmails": "אין מיילים ברשימה",
+      "emailExists": "כתובת מייל זו כבר קיימת ברשימה",
+      "cannotDeleteLast": "לא ניתן למחוק",
+      "cannotDeleteLastDescription": "חייב להישאר לפחות מייל אחד ברשימה",
+      "confirmDelete": "מחיקת מייל",
+      "confirmDeleteDescription": "האם אתה בטוח שברצונך למחוק את המייל {email}?",
+      "emailAdded": "מייל נוסף בהצלחה",
+      "emailAddedDescription": "כתובת המייל נוספה לרשימת המזכירות",
+      "emailDeleted": "מייל נמחק בהצלחה",
+      "emailDeletedDescription": "כתובת המייל הוסרה מרשימת המזכירות",
+      "addError": "שגיאה בהוספת מייל",
+      "deleteError": "שגיאה במחיקת מייל",
+      "fetchError": "שגיאה בטעינת מיילים",
+      "fetchErrorDescription": "לא ניתן לטעון את רשימת המיילים. נסה שוב מאוחר יותר",
+      "infoMessage": "מיילים אלו יקבלו התראות על בקשות חדשות וחשובות במערכת"
+    }
   }
 }

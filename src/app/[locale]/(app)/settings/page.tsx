@@ -14,6 +14,7 @@ import { getTranslations } from 'next-intl/server';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings as SettingsIcon, Users, Bell, Server } from 'lucide-react';
 import { UsersTab } from './_components/UsersTab';
+import { EmailSettingsCard } from './_components/EmailSettingsCard';
 
 export async function generateMetadata({
   params,
@@ -108,12 +109,7 @@ export default async function SettingsPage({
 
         {/* System Tab */}
         <TabsContent value="system" className="space-y-6">
-          <div className="rounded-lg border-2 bg-card p-6 shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">{t('settings.tabs.system')}</h2>
-            <p className="text-muted-foreground">
-              הגדרות מערכת יתווספו בהמשך...
-            </p>
-          </div>
+          <EmailSettingsCard />
         </TabsContent>
       </Tabs>
     </div>

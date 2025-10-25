@@ -9,16 +9,92 @@ import { z } from 'zod';
  * מטפל בשליחת טפסים חיצוניים (חתונות וניקיון)
  *
  * עקרונות SOLID:
- * - Single Responsibility: מטפל רק בקבלת וש מירת בקשות
+ * - Single Responsibility: מטפל רק בקבלת ושמירת בקשות
  * - Dependency Inversion: משתמש ב-Supabase דרך abstraction
  * - Interface Segregation: מקבל רק את הנתונים הנדרשים
  *
  * תהליך:
  * 1. Validation של הנתונים עם Zod
  * 2. שמירה ב-DB (טבלת applicants)
- * 3. שליחת מייל למזכירות (TODO)
- * 4. החזרת תגובה למשתמש
+ * 3. שליחת מייל אוטומטי למזכירות (case-created)
+ * 4. שליחת מייל אישור למבקש (applicant-notification)
+ * 5. החזרת תגובה למשתמש
  */
+
+/**
+ * Helper: Send notification emails for new applicant
+ */
+async function sendApplicantEmails(data: {
+  applicantId: string;
+  caseType: string;
+  formData: any;
+  locale: 'he' | 'en';
+}): Promise<{ secretaryEmailSent: boolean; applicantEmailSent: boolean }> {
+  const { applicantId, caseType, formData, locale } = data;
+
+  let secretaryEmailSent = false;
+  let applicantEmailSent = false;
+
+  try {
+    // 1. Send email to secretary (case-created template)
+    // The /api/email/send will automatically use secretary emails from DB
+    const secretaryResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/email/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-internal-api-key': process.env.INTERNAL_EMAIL_API_KEY || '',
+      },
+      body: JSON.stringify({
+        type: 'case-created',
+        // to: undefined, // Let it use default secretary emails
+        data: {
+          caseNumber: applicantId.substring(0, 8).toUpperCase(), // Short reference code
+          caseType: caseType, // Send original value: 'wedding' or 'cleaning'
+          applicantName: formData.personal_info?.full_name || 'לא צוין',
+          applicantEmail: formData.personal_info?.email || undefined,
+          applicantPhone: formData.personal_info?.phone || undefined,
+          caseUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/applicants/${applicantId}`,
+        },
+        locale,
+      }),
+    });
+
+    secretaryEmailSent = secretaryResponse.ok;
+    if (!secretaryEmailSent) {
+      console.error('Failed to send secretary email:', await secretaryResponse.text());
+    }
+
+    // 2. Send confirmation email to applicant (applicant-notification template)
+    if (formData.personal_info?.email) {
+      const applicantResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/email/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-api-key': process.env.INTERNAL_EMAIL_API_KEY || '',
+        },
+        body: JSON.stringify({
+          type: 'applicant-notification',
+          to: [formData.personal_info.email],
+          data: {
+            applicantName: formData.personal_info.full_name || 'שלום',
+            caseType: caseType === 'wedding' ? 'חתונה' : 'ילד חולה',
+            referenceNumber: applicantId.substring(0, 8).toUpperCase(),
+          },
+          locale,
+        }),
+      });
+
+      applicantEmailSent = applicantResponse.ok;
+      if (!applicantEmailSent) {
+        console.error('Failed to send applicant email:', await applicantResponse.text());
+      }
+    }
+  } catch (error) {
+    console.error('Error sending emails:', error);
+  }
+
+  return { secretaryEmailSent, applicantEmailSent };
+}
 
 // Schema לבקשה
 const applicantRequestSchema = z.object({
@@ -72,8 +148,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Send email to secretary
-    // await sendEmailToSecretary(data);
+    // Send notification emails (non-blocking)
+    const locale = (form_data.locale || 'he') as 'he' | 'en';
+    const emailResults = await sendApplicantEmails({
+      applicantId: data.id,
+      caseType: case_type,
+      formData: form_data,
+      locale,
+    });
+
+    // Update email_sent_to_secretary flag
+    if (emailResults.secretaryEmailSent) {
+      await supabase
+        .from('applicants')
+        .update({ email_sent_to_secretary: true })
+        .eq('id', data.id);
+    }
 
     // Success response
     return NextResponse.json(
@@ -83,6 +173,10 @@ export async function POST(request: NextRequest) {
         data: {
           id: data.id,
           reference: data.id.substring(0, 8).toUpperCase(),
+        },
+        emails: {
+          secretaryNotified: emailResults.secretaryEmailSent,
+          applicantNotified: emailResults.applicantEmailSent,
         },
       },
       { status: 201 }

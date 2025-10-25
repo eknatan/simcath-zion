@@ -370,5 +370,101 @@
       "previousPage": "Previous page",
       "nextPage": "Next page"
     }
+  },
+  "email": {
+    "common": {
+      "send": "Send Email",
+      "sending": "Sending...",
+      "sent": "Sent Successfully",
+      "failed": "Send Failed",
+      "retry": "Retry",
+      "subject": "Subject",
+      "recipient": "Recipient",
+      "recipients": "Recipients",
+      "message": "Message",
+      "preview": "Preview"
+    },
+    "status": {
+      "sent": "Sent",
+      "failed": "Failed",
+      "bounced": "Bounced",
+      "pending": "Pending"
+    },
+    "templates": {
+      "welcome": "Welcome",
+      "caseCreated": "Case Created",
+      "applicantNotification": "Applicant Notification",
+      "custom": "Custom"
+    },
+    "fields": {
+      "to": "To",
+      "cc": "CC",
+      "bcc": "BCC",
+      "replyTo": "Reply To",
+      "attachments": "Attachments",
+      "locale": "Language"
+    },
+    "messages": {
+      "emailSentSuccess": "Email sent successfully",
+      "emailSentFailed": "Failed to send email",
+      "noRecipients": "At least one recipient is required",
+      "invalidEmail": "Invalid email address",
+      "attachmentTooLarge": "File is too large",
+      "maxAttachments": "Maximum {max} files allowed",
+      "unauthorized": "No permission to send emails",
+      "serviceUnavailable": "Email service is currently unavailable"
+    },
+    "history": {
+      "title": "Email History",
+      "noHistory": "No email history",
+      "sentAt": "Sent At",
+      "sentTo": "Sent To",
+      "type": "Type",
+      "status": "Status",
+      "viewDetails": "View Details"
+    },
+    "composer": {
+      "title": "Compose Email",
+      "selectTemplate": "Select Template",
+      "useTemplate": "Use Template",
+      "customEmail": "Custom Email",
+      "fillRecipients": "Enter Recipients",
+      "fillSubject": "Enter Subject",
+      "fillContent": "Write Email Content",
+      "attachFiles": "Attach Files",
+      "sendEmail": "Send Email",
+      "cancel": "Cancel"
+    },
+    "validation": {
+      "recipientRequired": "Recipient is required",
+      "subjectRequired": "Subject is required",
+      "contentRequired": "Email content is required",
+      "invalidEmailFormat": "Invalid email format",
+      "emailRequired": "Email address is required",
+      "invalidEmail": "Invalid email address"
+    },
+    "settings": {
+      "title": "Email Settings",
+      "description": "Manage secretary email list and notifications",
+      "emailsCount": "emails",
+      "addEmail": "Add Email",
+      "addEmailPlaceholder": "Enter new email address",
+      "currentEmails": "Current Email List",
+      "noEmails": "No emails in the list",
+      "emailExists": "This email address already exists in the list",
+      "cannotDeleteLast": "Cannot Delete",
+      "cannotDeleteLastDescription": "At least one email must remain in the list",
+      "confirmDelete": "Delete Email",
+      "confirmDeleteDescription": "Are you sure you want to delete the email {email}?",
+      "emailAdded": "Email Added Successfully",
+      "emailAddedDescription": "The email address has been added to the secretary list",
+      "emailDeleted": "Email Deleted Successfully",
+      "emailDeletedDescription": "The email address has been removed from the secretary list",
+      "addError": "Error Adding Email",
+      "deleteError": "Error Deleting Email",
+      "fetchError": "Error Loading Emails",
+      "fetchErrorDescription": "Unable to load email list. Please try again later",
+      "infoMessage": "These emails will receive notifications about new and important requests in the system"
+    }
   }
 }
