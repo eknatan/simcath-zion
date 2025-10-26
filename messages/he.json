@@ -84,7 +84,12 @@
     "nameTooLong": "השם ארוך מדי (מקסימום 100 תווים)",
     "notesTooLong": "ההערות ארוכות מדי (מקסימום 1000 תווים)",
     "invalidRole": "תפקיד לא חוקי",
-    "invalidStatus": "סטטוס לא חוקי"
+    "invalidStatus": "סטטוס לא חוקי",
+    "passwordMinLength": "הסיסמה חייבת להכיל לפחות 8 תווים",
+    "passwordUppercase": "הסיסמה חייבת להכיל לפחות אות גדולה אחת",
+    "passwordLowercase": "הסיסמה חייבת להכיל לפחות אות קטנה אחת",
+    "passwordNumber": "הסיסמה חייבת להכיל לפחות ספרה אחת",
+    "passwordsDoNotMatch": "הסיסמאות אינן תואמות"
   },
   "auth": {
     "login": {
@@ -100,10 +105,38 @@
       "loggingIn": "מתחבר...",
       "footer": "מערכת מאובטחת לניהול תיקים ותשלומים"
     },
+    "invitation": {
+      "title": "ברוכים הבאים למערכת",
+      "description": "הוזמנת להצטרף למערכת. אנא הגדר סיסמה להמשך.",
+      "welcomeUser": "שלום {name}!",
+      "email": "אימייל",
+      "submit": "הגדר סיסמה והתחבר"
+    },
+    "resetPassword": {
+      "title": "איפוס סיסמה",
+      "description": "הזן סיסמה חדשה עבור חשבונך",
+      "emailLabel": "איפוס סיסמה עבור:",
+      "submit": "אפס סיסמה",
+      "success": "הסיסמה אופסה בהצלחה! מועבר לדף התחברות...",
+      "successRedirect": "מועבר..."
+    },
+    "password": "סיסמה",
+    "newPassword": "סיסמה חדשה",
+    "confirmPassword": "אימות סיסמה",
+    "passwordPlaceholder": "הזן סיסמה בת 8 תווים לפחות",
+    "newPasswordPlaceholder": "הזן סיסמה חדשה",
+    "confirmPasswordPlaceholder": "הזן שוב את הסיסמה",
+    "passwordRequirements": "לפחות 8 תווים, אות גדולה, אות קטנה ומספר",
+    "backToLogin": "חזרה להתחברות",
     "errors": {
       "invalidCredentials": "שם משתמש או סיסמה שגויים",
       "somethingWentWrong": "משהו השתבש, נסה שוב מאוחר יותר",
-      "unauthorized": "אין לך הרשאה לגשת לדף זה"
+      "unauthorized": "אין לך הרשאה לגשת לדף זה",
+      "invalidToken": "הקישור לא תקף או פג תוקפו",
+      "noSession": "לא נמצאה סשן פעיל",
+      "passwordMismatch": "הסיסמאות אינן תואמות",
+      "weakPassword": "הסיסמה חלשה מדי",
+      "serverError": "שגיאת שרת, נסה שוב מאוחר יותר"
     }
   },
   "payments": {

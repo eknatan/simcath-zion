@@ -10,7 +10,12 @@ const intlMiddleware = createIntlMiddleware({
 });
 
 // Public routes that don't require authentication
-const publicRoutes = ['/login', '/public-forms'];
+const publicRoutes = [
+  '/login',
+  '/public-forms',
+  '/auth/callback',      // User invitation & email confirmation
+  '/auth/reset-password' // Password reset
+];
 
 export async function middleware(request: NextRequest) {
   // Parse locale from pathname

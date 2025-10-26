@@ -75,7 +75,12 @@
     "maxGuests": "Number of guests cannot exceed 5000",
     "minCost": "Cost must be at least 0",
     "maxCost": "Cost cannot exceed ₪10,000,000",
-    "maxBackgroundLength": "Background description is too long (maximum 2000 characters)"
+    "maxBackgroundLength": "Background description is too long (maximum 2000 characters)",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "passwordUppercase": "Password must contain at least one uppercase letter",
+    "passwordLowercase": "Password must contain at least one lowercase letter",
+    "passwordNumber": "Password must contain at least one number",
+    "passwordsDoNotMatch": "Passwords do not match"
   },
   "auth": {
     "login": {
@@ -91,10 +96,38 @@
       "loggingIn": "Signing in...",
       "footer": "Secure system for managing cases and payments"
     },
+    "invitation": {
+      "title": "Welcome to the System",
+      "description": "You've been invited to join the system. Please set a password to continue.",
+      "welcomeUser": "Hello {name}!",
+      "email": "Email",
+      "submit": "Set Password and Login"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Enter a new password for your account",
+      "emailLabel": "Resetting password for:",
+      "submit": "Reset Password",
+      "success": "Password reset successfully! Redirecting to login...",
+      "successRedirect": "Redirecting..."
+    },
+    "password": "Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "passwordPlaceholder": "Enter at least 8 characters",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPasswordPlaceholder": "Re-enter password",
+    "passwordRequirements": "At least 8 characters, uppercase, lowercase and number",
+    "backToLogin": "Back to Login",
     "errors": {
       "invalidCredentials": "Invalid email or password",
       "somethingWentWrong": "Something went wrong, please try again later",
-      "unauthorized": "You don't have permission to access this page"
+      "unauthorized": "You don't have permission to access this page",
+      "invalidToken": "Invalid or expired link",
+      "noSession": "No active session found",
+      "passwordMismatch": "Passwords do not match",
+      "weakPassword": "Password is too weak",
+      "serverError": "Server error, please try again later"
     }
   },
   "payments": {
