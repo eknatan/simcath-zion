@@ -7,7 +7,7 @@
     "loading": "טוען...",
     "search": "חיפוש",
     "filter": "סינון",
-    "export": "ייצוא",
+    "exportLabel": "ייצוא",
     "import": "ייבוא",
     "submit": "שלח",
     "close": "סגור",
@@ -16,7 +16,14 @@
     "noResults": "אין תוצאות",
     "dropHere": "שחרר את הקבצים כאן",
     "dragOrClick": "גרור קבצים לכאן או לחץ לבחירה",
-    "maxSize": "גודל מקסימלי: {size}MB"
+    "maxSize": "גודל מקסימלי: {size}MB",
+    "export": {
+      "exportPDF": "ייצא PDF",
+      "exportWord": "ייצא Word",
+      "exporting": "מייצא...",
+      "success": "המסמך יוצא בהצלחה",
+      "error": "שגיאה בייצוא המסמך"
+    }
   },
   "navigation": {
     "dashboard": "לוח בקרה",
@@ -507,6 +514,124 @@
       "fetchError": "שגיאה בטעינת מיילים",
       "fetchErrorDescription": "לא ניתן לטעון את רשימת המיילים. נסה שוב מאוחר יותר",
       "infoMessage": "מיילים אלו יקבלו התראות על בקשות חדשות וחשובות במערכת"
+    }
+  },
+  "applicants": {
+    "page_title": "בקשות ממתינות",
+    "page_description": "ניהול בקשות חתונה שהתקבלו ממשפחות",
+    "site_name": "מערכת תמיכה",
+    "stats": {
+      "title": "סיכום בקשות",
+      "pending": "ממתינות לאישור",
+      "approved_this_week": "אושרו השבוע",
+      "rejected": "נדחו"
+    },
+    "tabs": {
+      "pending": "ממתינות לאישור",
+      "rejected": "בקשות נדחות"
+    },
+    "table": {
+      "date_received": "תאריך קבלה",
+      "groom_name": "שם החתן",
+      "bride_name": "שם הכלה",
+      "wedding_date": "תאריך חתונה",
+      "city": "עיר",
+      "guests_count": "מוזמנים",
+      "status": "סטטוס",
+      "days_left": "ימים נותרים",
+      "actions": "פעולות"
+    },
+    "status": {
+      "pending": "ממתין לאישור",
+      "approved": "אושר",
+      "rejected": "נדחה"
+    },
+    "actions": {
+      "view": "צפייה",
+      "approve": "אשר",
+      "reject": "דחה",
+      "restore": "שחזר"
+    },
+    "days": "ימים",
+    "search_placeholder": "חיפוש לפי שם חתן/כלה או עיר...",
+    "view_dialog": {
+      "title": "בקשה",
+      "status": {
+        "pending": "ממתין לאישור",
+        "rejected": "נדחה"
+      },
+      "wedding_info": {
+        "title": "מידע על החתונה",
+        "date_hebrew": "תאריך עברי",
+        "date_gregorian": "תאריך לועזי",
+        "city": "עיר",
+        "guests_count": "כמות מוזמנים",
+        "total_cost": "עלות כוללת"
+      },
+      "groom_info": {
+        "title": "פרטי החתן",
+        "name": "שם",
+        "id": "ת.ז.",
+        "phone": "טלפון",
+        "email": "מייל",
+        "address": "כתובת",
+        "memorial_day": "יום זיכרון"
+      },
+      "bride_info": {
+        "title": "פרטי הכלה",
+        "name": "שם",
+        "id": "ת.ז.",
+        "phone": "טלפון",
+        "email": "מייל",
+        "address": "כתובת",
+        "memorial_day": "יום זיכרון"
+      },
+      "description": "פרטי הבקשה המלאים",
+      "close": "סגור"
+    },
+    "approve_dialog": {
+      "title": "אישור יצירת תיק",
+      "question": "האם לאשר את הבקשה של:",
+      "and": "ו",
+      "description": "בקשה זו תהפוך לתיק רשמי במערכת",
+      "case_number_label": "מספר תיק",
+      "automatic": "אוטומטי",
+      "cancel": "ביטול",
+      "confirm": "כן, אשר",
+      "approving": "מאשר...",
+      "success_title": "תיק נוצר בהצלחה!",
+      "success_description": "עכשיו אתה מועבר לתיק החדש...",
+      "error_title": "שגיאה באישור בקשה",
+      "error_description": "לא ניתן לאשר את הבקשה. נסה שוב מאוחר יותר."
+    },
+    "reject_dialog": {
+      "title": "דחיית בקשה",
+      "question": "האם לדחות את הבקשה של:",
+      "and": "ו",
+      "reason_label": "סיבת דחייה (אופציונלי)",
+      "reason_placeholder": "הזן סיבה לדחייה...",
+      "warning": "ניתן לשחזר בקשה נדחית תוך 30 יום",
+      "cancel": "ביטול",
+      "confirm": "כן, דחה",
+      "rejecting": "דוחה...",
+      "success_title": "הבקשה נדחתה",
+      "success_description": "ניתן לשחזר את הבקשה תוך 30 יום",
+      "error_title": "שגיאה בדחיית בקשה",
+      "error_description": "לא ניתן לדחות את הבקשה. נסה שוב מאוחר יותר."
+    },
+    "restore_dialog": {
+      "title": "שחזור בקשה",
+      "question": "האם לשחזר את הבקשה של:",
+      "and": "ו",
+      "description_prefix": "הבקשה תחזור למצב",
+      "pending_status": "ממתין לאישור",
+      "cancel": "ביטול",
+      "confirm": "כן, שחזר",
+      "restoring": "משחזר...",
+      "success_title": "הבקשה שוחזרה בהצלחה",
+      "success_description": "כעת ניתן לאשר את הבקשה",
+      "error_title": "שגיאה בשחזור בקשה",
+      "error_description": "לא ניתן לשחזר את הבקשה. נסה שוב מאוחר יותר."
     }
   }
 }

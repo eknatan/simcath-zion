@@ -1,8 +1,8 @@
 # 🎨 מערכת עיצוב - Family Support System
 
-**תאריך עדכון:** 2025-10-22
+**תאריך עדכון:** 2025-10-28
 **סטטוס:** מסמך מחייב לכל הפיתוח
-**גרסה:** 1.0
+**גרסה:** 2.0 - Version B (Elegant & Soft) ⭐
 
 ---
 
@@ -34,22 +34,22 @@
 
 ## 🎨 פלטת צבעים
 
-### גרסה A - עשיר ודינמי (נבחרה)
+### גרסה B - אלגנטי ורך (נבחרה) ⭐
 
 #### צבעים עיקריים (Primary Colors)
 
 ```css
-/* כחול מקצועי - צבע המותג */
---primary-50: oklch(0.97 0.02 252);
---primary-100: oklch(0.95 0.04 252);
---primary-200: oklch(0.90 0.08 252);
---primary-300: oklch(0.82 0.12 252);
---primary-400: oklch(0.70 0.18 252);
---primary-500: oklch(0.60 0.20 252); /* עיקרי */
---primary-600: oklch(0.55 0.22 252);
---primary-700: oklch(0.48 0.20 252);
---primary-800: oklch(0.40 0.16 252);
---primary-900: oklch(0.32 0.12 252);
+/* כחול רך ומקצועי - צבע המותג */
+--primary-50: oklch(0.98 0.01 230);
+--primary-100: oklch(0.95 0.02 230);
+--primary-200: oklch(0.88 0.05 230);
+--primary-300: oklch(0.78 0.08 230);
+--primary-400: oklch(0.65 0.12 230);
+--primary-500: oklch(0.55 0.14 230); /* עיקרי */
+--primary-600: oklch(0.50 0.15 230);
+--primary-700: oklch(0.43 0.13 230);
+--primary-800: oklch(0.35 0.10 230);
+--primary-900: oklch(0.28 0.08 230);
 ```
 
 **שימוש:**
@@ -61,33 +61,33 @@
 #### צבעי סטטוס (Status Colors)
 
 ```css
-/* Success - ירוק */
---success-50: oklch(0.96 0.03 145);
---success-100: oklch(0.92 0.06 145);
---success-500: oklch(0.65 0.18 145); /* עיקרי */
---success-600: oklch(0.58 0.20 145);
---success-700: oklch(0.50 0.18 145);
+/* Success - ירוק עדין */
+--success-50: oklch(0.97 0.01 150);
+--success-100: oklch(0.93 0.04 150);
+--success-500: oklch(0.62 0.14 150); /* עיקרי */
+--success-600: oklch(0.56 0.15 150);
+--success-700: oklch(0.48 0.13 150);
 
-/* Warning - כתום/צהוב */
---warning-50: oklch(0.97 0.02 85);
---warning-100: oklch(0.94 0.05 85);
---warning-500: oklch(0.75 0.15 85); /* עיקרי */
---warning-600: oklch(0.68 0.17 85);
---warning-700: oklch(0.60 0.16 85);
+/* Warning - כתום רך */
+--warning-50: oklch(0.98 0.01 75);
+--warning-100: oklch(0.94 0.04 75);
+--warning-500: oklch(0.72 0.12 75); /* עיקרי */
+--warning-600: oklch(0.65 0.13 75);
+--warning-700: oklch(0.58 0.12 75);
 
-/* Error/Destructive - אדום */
---error-50: oklch(0.96 0.03 25);
---error-100: oklch(0.92 0.08 25);
---error-500: oklch(0.60 0.22 25); /* עיקרי */
---error-600: oklch(0.55 0.24 25);
---error-700: oklch(0.48 0.22 25);
+/* Error/Destructive - אדום עדין */
+--error-50: oklch(0.97 0.02 20);
+--error-100: oklch(0.93 0.05 20);
+--error-500: oklch(0.58 0.18 20); /* עיקרי */
+--error-600: oklch(0.52 0.19 20);
+--error-700: oklch(0.45 0.17 20);
 
-/* Info - סגול/אינדיגו */
---info-50: oklch(0.96 0.02 260);
---info-100: oklch(0.92 0.05 260);
---info-500: oklch(0.60 0.18 260); /* עיקרי */
---info-600: oklch(0.55 0.20 260);
---info-700: oklch(0.48 0.18 260);
+/* Info - אינדיגו רך */
+--info-50: oklch(0.97 0.01 255);
+--info-100: oklch(0.93 0.03 255);
+--info-500: oklch(0.58 0.14 255); /* עיקרי */
+--info-600: oklch(0.52 0.15 255);
+--info-700: oklch(0.45 0.13 255);
 ```
 
 **שימוש:**
@@ -100,42 +100,42 @@
 
 ```css
 /* Light Mode */
---background: oklch(0.98 0.01 252); /* לבן חם מעט */
---foreground: oklch(0.20 0.01 252); /* שחור עם גוון כחול */
+--background: oklch(0.98 0.01 230); /* לבן חם מעט */
+--foreground: oklch(0.20 0.01 230); /* שחור עם גוון כחול עדין */
 
 --card: oklch(1 0 0); /* לבן נקי */
---card-foreground: oklch(0.20 0.01 252);
+--card-foreground: oklch(0.20 0.01 230);
 
---muted: oklch(0.96 0.01 252); /* רקע עדין */
---muted-foreground: oklch(0.50 0.01 252); /* טקסט משני */
+--muted: oklch(0.96 0.01 230); /* רקע עדין */
+--muted-foreground: oklch(0.50 0.01 230); /* טקסט משני */
 
---border: oklch(0.88 0.01 252);
---input: oklch(0.88 0.01 252);
+--border: oklch(0.88 0.01 230);
+--input: oklch(0.88 0.01 230);
 
 /* Dark Mode */
 .dark {
-  --background: oklch(0.18 0.01 252);
+  --background: oklch(0.18 0.01 230);
   --foreground: oklch(0.98 0 0);
 
-  --card: oklch(0.22 0.01 252);
+  --card: oklch(0.22 0.01 230);
   --card-foreground: oklch(0.98 0 0);
 
-  --muted: oklch(0.26 0.01 252);
-  --muted-foreground: oklch(0.65 0.01 252);
+  --muted: oklch(0.26 0.01 230);
+  --muted-foreground: oklch(0.65 0.01 230);
 
-  --border: oklch(0.30 0.01 252);
-  --input: oklch(0.30 0.01 252);
+  --border: oklch(0.30 0.01 230);
+  --input: oklch(0.30 0.01 230);
 }
 ```
 
 #### צבעי גרפים (Charts)
 
 ```css
---chart-1: oklch(0.60 0.20 252); /* כחול */
---chart-2: oklch(0.65 0.18 145); /* ירוק */
---chart-3: oklch(0.75 0.15 85);  /* כתום */
---chart-4: oklch(0.60 0.20 310); /* סגול */
---chart-5: oklch(0.60 0.22 25);  /* אדום */
+--chart-1: oklch(0.55 0.14 230); /* כחול רך */
+--chart-2: oklch(0.62 0.14 150); /* ירוק עדין */
+--chart-3: oklch(0.72 0.12 75);  /* כתום רך */
+--chart-4: oklch(0.58 0.14 255); /* אינדיגו */
+--chart-5: oklch(0.58 0.18 20);  /* אדום עדין */
 ```
 
 ---
@@ -357,7 +357,7 @@ const borderRadius = {
 
 ### Cards (כרטיסים)
 
-#### גרסה רגילה
+#### גרסה רגילה (Version B)
 
 ```tsx
 <Card className="shadow-md border border-slate-200">
@@ -371,17 +371,16 @@ const borderRadius = {
 </Card>
 ```
 
-#### גרסה עם גרדיאנט (Stat Card)
+#### גרסה עם גרדיאנט עדין (Stat Card - Version B)
 
 ```tsx
-<Card className="relative overflow-hidden border-2 border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-blue-50/50 to-transparent opacity-60" />
+<Card className="relative overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-blue-50/30">
   <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
     <CardTitle className="text-sm font-semibold text-blue-900">
       כותרת
     </CardTitle>
-    <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-      <Icon className="h-6 w-6 text-white" />
+    <div className="h-11 w-11 rounded-lg bg-blue-100 border border-blue-200 flex items-center justify-center">
+      <Icon className="h-6 w-6 text-blue-600" />
     </div>
   </CardHeader>
   <CardContent className="relative">
@@ -391,80 +390,141 @@ const borderRadius = {
 </Card>
 ```
 
-### Buttons (כפתורים)
+### Buttons (כפתורים) - **חדש!** שימוש ב-ActionButton
 
-#### Primary Button
+**⚠️ חשוב:** במקום להשתמש ישירות ב-`Button` עם classes ידניים, השתמש ב-`ActionButton` המשותף!
 
-```tsx
-<Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all">
-  <Icon className="h-4 w-4 me-2" />
-  טקסט הכפתור
-</Button>
-```
-
-#### Secondary Button (Outline)
+#### ActionButton - רכיב משותף למערכת
 
 ```tsx
-<Button variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold">
-  <Icon className="h-4 w-4 me-2" />
-  טקסט הכפתור
-</Button>
+import { ActionButton } from '@/components/shared/ActionButton';
 ```
 
-#### Status Buttons
+#### Variants זמינים:
+
+##### 1. כפתורי Outline (לשימוש ברשימות/טבלאות) - **גרסה B: עדין ומאטי**
 
 ```tsx
-// Success
-<Button variant="outline" className="border-2 border-green-600 text-green-600 hover:bg-green-50 font-semibold">
-  אישור
-</Button>
+// צפייה - אפור עדין (slate)
+<ActionButton variant="view" size="sm">
+  <Eye className="h-4 w-4 me-1" />
+  צפה
+</ActionButton>
 
-// Warning
-<Button variant="outline" className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50 font-semibold">
-  המתנה
-</Button>
+// אישור - ירוק רך (emerald)
+<ActionButton variant="approve" size="sm">
+  <CheckCircle2 className="h-4 w-4 me-1" />
+  אשר
+</ActionButton>
 
-// Destructive
-<Button variant="outline" className="border-2 border-red-600 text-red-600 hover:bg-red-50 font-semibold">
-  מחיקה
-</Button>
+// דחייה - אדום רך (rose)
+<ActionButton variant="reject" size="sm">
+  <XCircle className="h-4 w-4 me-1" />
+  דחה
+</ActionButton>
+
+// שחזור - כחול רך (sky)
+<ActionButton variant="restore" size="sm">
+  <RotateCcw className="h-4 w-4 me-1" />
+  שחזר
+</ActionButton>
+
+// ביטול - אפור עדין (slate)
+<ActionButton variant="cancel">
+  <X className="h-4 w-4 me-2" />
+  ביטול
+</ActionButton>
 ```
 
-### Badges (תגיות)
+**סגנון:**
+- `border-slate-300` (לא `border-2`) - גבולות עדינים ודקים
+- צבעי טקסט `text-*-700` - לא בהירים מדי, לא כהים מדי
+- hover: `hover:bg-*-50` - רקע עדין בהובר
+- **ללא shadow-lg** - רק shadow-sm או בכלל בלי
+
+##### 2. כפתורי Primary (לשימוש בדיאלוגים - עם רקע) - **גרסה B: מאטי**
+
+```tsx
+// אישור ראשי - ירוק רך (emerald)
+<ActionButton variant="approve-primary">
+  <CheckCircle2 className="h-4 w-4 me-2" />
+  אשר
+</ActionButton>
+
+// דחייה ראשית - אדום רך (rose)
+<ActionButton variant="reject-primary">
+  <XCircle className="h-4 w-4 me-2" />
+  דחה
+</ActionButton>
+
+// שחזור ראשי - כחול רך (sky)
+<ActionButton variant="restore-primary">
+  <RotateCcw className="h-4 w-4 me-2" />
+  שחזר
+</ActionButton>
+
+// כפתור ראשי רגיל - כחול רך (sky)
+<ActionButton variant="primary">
+  שמור
+</ActionButton>
+```
+
+**סגנון:**
+- `bg-emerald-600` / `bg-rose-600` / `bg-sky-600` - צבעים רכים יותר
+- `shadow-sm` בלבד - ללא shadow-lg או shadow-xl
+- מאטי, לא מבריק
+
+#### ✅ יתרונות ActionButton:
+
+1. **שליטה מרכזית** - העיצוב מוגדר במקום אחד (`ActionButton.tsx`)
+2. **התאמה אוטומטית** - משתמש ב-`ActiveDesignTokens` לגרסה הפעילה
+3. **עקביות** - כל הכפתורים במערכת נראים אותו דבר
+4. **קל לתחזוקה** - שינוי עיצוב במקום אחד משפיע על כל המערכת
+
+#### 🎨 עיצוב גרסה B - Soft & Matte:
+
+**פילוסופיה:**
+- צבעים **עדינים** (emerald, rose, sky, slate) במקום חזקים (green, red, blue)
+- גבולות **דקים** (`border` לא `border-2`)
+- צללים **מינימליים** (`shadow-sm` לא `shadow-lg`)
+- סגנון **מאטי** - ללא ברק, עדין לעין
+- **פחות צבעוני** - יותר מקצועי ורגוע
+
+### Badges (תגיות - Version B)
 
 ```tsx
 // Primary
-<Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1">
+<Badge className="bg-blue-100 text-blue-700 border border-blue-200 px-3 py-1 font-medium">
   חדש
 </Badge>
 
 // Success
-<Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1">
+<Badge className="bg-green-100 text-green-700 border border-green-200 px-3 py-1 font-medium">
   אושר
 </Badge>
 
 // Warning
-<Badge className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-3 py-1">
+<Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1 font-medium">
   ממתין
 </Badge>
 
 // Error
-<Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1">
+<Badge className="bg-red-100 text-red-700 border border-red-200 px-3 py-1 font-medium">
   דחוף
 </Badge>
 
 // Info
-<Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-3 py-1">
+<Badge className="bg-purple-100 text-purple-700 border border-purple-200 px-3 py-1 font-medium">
   VIP
 </Badge>
 ```
 
-### Icons (אייקונים)
+### Icons (אייקונים - Version B)
 
 ```tsx
-// אייקון בכרטיס Stat
-<div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-  <FileText className="h-6 w-6 text-white" />
+// אייקון בכרטיס Stat (Version B)
+<div className="h-11 w-11 rounded-lg bg-blue-100 border border-blue-200 flex items-center justify-center">
+  <FileText className="h-6 w-6 text-blue-600" />
 </div>
 
 // אייקון בטקסט
@@ -672,8 +732,9 @@ src/
 
 למעבר על מסמך זה בכל פעם שמתחילים feature חדש או component חדש.
 
-**תאריך אחרון עודכן:** 2025-10-22
+**תאריך אחרון עודכן:** 2025-10-28
 **מטפל:** Claude Code Assistant
+**שינויים:** תוקן באג בלוגיקה של design-tokens.ts, עודכן כל התיעוד לגרסה B
 
 ---
 

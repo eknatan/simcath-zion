@@ -50,10 +50,17 @@ async function sendApplicantEmails(data: {
         data: {
           caseNumber: applicantId.substring(0, 8).toUpperCase(), // Short reference code
           caseType: caseType, // Send original value: 'wedding' or 'cleaning'
-          applicantName: formData.personal_info?.full_name || 'לא צוין',
-          applicantEmail: formData.personal_info?.email || undefined,
-          applicantPhone: formData.personal_info?.phone || undefined,
+          applicantName: caseType === 'wedding'
+            ? `${formData.groom_info?.first_name || ''} ${formData.groom_info?.last_name || ''}`.trim() || 'לא צוין'
+            : formData.personal_info?.full_name || 'לא צוין',
+          applicantEmail: caseType === 'wedding'
+            ? formData.groom_info?.email
+            : formData.personal_info?.email,
+          applicantPhone: caseType === 'wedding'
+            ? formData.groom_info?.phone
+            : formData.personal_info?.phone,
           caseUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/applicants/${applicantId}`,
+          fullFormData: formData, // Send entire form data for detailed email
         },
         locale,
       }),
@@ -131,6 +138,7 @@ export async function POST(request: NextRequest) {
       .insert({
         case_type,
         form_data,
+        status: 'pending_approval', // Explicitly set status
         email_sent_to_secretary: false, // Will be updated after email is sent
         created_at: new Date().toISOString(),
       })

@@ -1,0 +1,1 @@
+export { ExportWord } from './ExportWord';

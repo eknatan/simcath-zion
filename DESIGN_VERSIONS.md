@@ -43,7 +43,7 @@ src/
 
 ---
 
-### גרסה B - Elegant & Soft (אלגנטי ורך) ⭐ **פעיל כרגע**
+### גרסה B - Elegant & Soft (אלגנטי ורך) ⭐ **פעיל כרגע** ✅
 
 **מאפיינים:**
 - צבעים פסטליים ורכים
@@ -51,6 +51,13 @@ src/
 - ללא אפקטי transform
 - גישה מינימליסטית
 - border רגיל (דק)
+
+**כפתורים (ActionButton) - עדכון חדש 2025-10-28:**
+- צבעים **עדינים ומאטיים**: emerald, rose, sky, slate
+- גבולות **דקים**: `border` (לא `border-2`)
+- shadows **מינימליים**: `shadow-sm`
+- **פחות צבעוני**, יותר מקצועי
+- סגנון **מט** - ללא ברק
 
 **מתאים ל:**
 - סביבות משרדיות מסורתיות
@@ -60,9 +67,17 @@ src/
 
 **קוד דוגמה:**
 ```tsx
+// Card
 <Card className="border border-slate-200 shadow-md hover:shadow-xl bg-gradient-to-br from-white to-blue-50/30">
   {/* Content */}
 </Card>
+
+// Button (חדש!)
+<ActionButton variant="approve">
+  אשר
+</ActionButton>
+// במקום:
+// <Button className="border-2 border-green-600 text-green-600">
 ```
 
 ---
@@ -268,6 +283,13 @@ export const ACTIVE_DESIGN_VERSION: DesignVersion = 'B';
 
 ---
 
-**עדכון אחרון:** 2025-10-22
-**גרסה פעילה:** B (Elegant & Soft)
+**עדכון אחרון:** 2025-10-28 (עודכן פעמיים)
+**גרסה פעילה:** B (Elegant & Soft) ✅
+**שינויים:**
+1. תוקן באג בלוגיקה (design-tokens.ts:202)
+2. **נוסף ActionButton** - כפתורים משותפים עם צבעים עדינים ומאטיים
+3. כפתורים עודכנו: emerald, rose, sky, slate (במקום green, red, blue)
+4. גבולות דקים (`border` לא `border-2`)
+5. shadows מינימליים (`shadow-sm`)
+
 **מסמך זה עודכן בכל פעם שמתבצע שינוי במערכת העיצוב**

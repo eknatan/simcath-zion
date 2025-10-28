@@ -7,7 +7,7 @@
     "loading": "Loading...",
     "search": "Search",
     "filter": "Filter",
-    "export": "Export",
+    "exportLabel": "Export",
     "import": "Import",
     "submit": "Submit",
     "close": "Close",
@@ -16,7 +16,14 @@
     "noResults": "No results",
     "dropHere": "Drop files here",
     "dragOrClick": "Drag files here or click to select",
-    "maxSize": "Maximum size: {size}MB"
+    "maxSize": "Maximum size: {size}MB",
+    "export": {
+      "exportPDF": "Export PDF",
+      "exportWord": "Export Word",
+      "exporting": "Exporting...",
+      "success": "Document exported successfully",
+      "error": "Error exporting document"
+    }
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -498,6 +505,124 @@
       "fetchError": "Error Loading Emails",
       "fetchErrorDescription": "Unable to load email list. Please try again later",
       "infoMessage": "These emails will receive notifications about new and important requests in the system"
+    }
+  },
+  "applicants": {
+    "page_title": "Pending Applications",
+    "page_description": "Manage wedding applications received from families",
+    "site_name": "Support System",
+    "stats": {
+      "title": "Applications Summary",
+      "pending": "Pending Approval",
+      "approved_this_week": "Approved This Week",
+      "rejected": "Rejected"
+    },
+    "tabs": {
+      "pending": "Pending Approval",
+      "rejected": "Rejected Applications"
+    },
+    "table": {
+      "date_received": "Date Received",
+      "groom_name": "Groom Name",
+      "bride_name": "Bride Name",
+      "wedding_date": "Wedding Date",
+      "city": "City",
+      "guests_count": "Guests",
+      "status": "Status",
+      "days_left": "Days Left",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "Pending Approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "actions": {
+      "view": "View",
+      "approve": "Approve",
+      "reject": "Reject",
+      "restore": "Restore"
+    },
+    "days": "days",
+    "search_placeholder": "Search by groom/bride name or city...",
+    "view_dialog": {
+      "title": "Application",
+      "status": {
+        "pending": "Pending Approval",
+        "rejected": "Rejected"
+      },
+      "wedding_info": {
+        "title": "Wedding Information",
+        "date_hebrew": "Hebrew Date",
+        "date_gregorian": "Gregorian Date",
+        "city": "City",
+        "guests_count": "Number of Guests",
+        "total_cost": "Total Cost"
+      },
+      "groom_info": {
+        "title": "Groom Details",
+        "name": "Name",
+        "id": "ID",
+        "phone": "Phone",
+        "email": "Email",
+        "address": "Address",
+        "memorial_day": "Memorial Day"
+      },
+      "bride_info": {
+        "title": "Bride Details",
+        "name": "Name",
+        "id": "ID",
+        "phone": "Phone",
+        "email": "Email",
+        "address": "Address",
+        "memorial_day": "Memorial Day"
+      },
+      "description": "Full application details",
+      "close": "Close"
+    },
+    "approve_dialog": {
+      "title": "Approve Case Creation",
+      "question": "Approve the application of:",
+      "and": "and",
+      "description": "This application will become an official case in the system",
+      "case_number_label": "Case Number",
+      "automatic": "automatic",
+      "cancel": "Cancel",
+      "confirm": "Yes, Approve",
+      "approving": "Approving...",
+      "success_title": "Case Created Successfully!",
+      "success_description": "You are being redirected to the new case...",
+      "error_title": "Error Approving Application",
+      "error_description": "Could not approve the application. Please try again later."
+    },
+    "reject_dialog": {
+      "title": "Reject Application",
+      "question": "Reject the application of:",
+      "and": "and",
+      "reason_label": "Reason for Rejection (Optional)",
+      "reason_placeholder": "Enter reason for rejection...",
+      "warning": "Rejected applications can be restored within 30 days",
+      "cancel": "Cancel",
+      "confirm": "Yes, Reject",
+      "rejecting": "Rejecting...",
+      "success_title": "Application Rejected",
+      "success_description": "The application can be restored within 30 days",
+      "error_title": "Error Rejecting Application",
+      "error_description": "Could not reject the application. Please try again later."
+    },
+    "restore_dialog": {
+      "title": "Restore Application",
+      "question": "Restore the application of:",
+      "and": "and",
+      "description_prefix": "The application will return to",
+      "pending_status": "Pending Approval",
+      "cancel": "Cancel",
+      "confirm": "Yes, Restore",
+      "restoring": "Restoring...",
+      "success_title": "Application Restored Successfully",
+      "success_description": "The application can now be approved",
+      "error_title": "Error Restoring Application",
+      "error_description": "Could not restore the application. Please try again later."
     }
   }
 }

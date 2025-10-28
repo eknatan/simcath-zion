@@ -177,8 +177,8 @@ export const DesignTokensB = {
     },
 
     button: {
-      primary: 'bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow-md',
-      outline: 'border-2',
+      primary: 'bg-sky-600 hover:bg-sky-700 shadow-sm',
+      outline: 'border',
     },
 
     badge: {
@@ -199,7 +199,7 @@ export const DesignTokensB = {
 /**
  * האסימונים הפעילים כרגע - משתנה לפי ACTIVE_DESIGN_VERSION
  */
-export const ActiveDesignTokens = ACTIVE_DESIGN_VERSION === 'A' ? DesignTokensA : DesignTokensB;
+export const ActiveDesignTokens = ACTIVE_DESIGN_VERSION === 'B' ? DesignTokensB : DesignTokensA;
 
 // ==================== TAILWIND COLOR MAPPINGS ====================
 
