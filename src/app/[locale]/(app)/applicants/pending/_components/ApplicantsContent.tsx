@@ -23,6 +23,7 @@ import { useApplicants } from '@/lib/hooks/useApplicants';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { ErrorDisplay } from '@/components/shared/ErrorDisplay';
 import { ActionButton } from '@/components/shared/ActionButton';
+import { ApplicantStatus } from '@/types/case.types';
 import Link from 'next/link';
 
 interface ApplicantsContentProps {
@@ -33,13 +34,18 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
   const t = useTranslations('applicants');
   const [activeTab, setActiveTab] = useState<'pending' | 'rejected'>('pending');
 
+  // Map tab value to ApplicantStatus
+  const statusFilter = activeTab === 'pending'
+    ? ApplicantStatus.PENDING_APPROVAL
+    : ApplicantStatus.REJECTED;
+
   // Fetch data
   const {
     data: applicants,
     isLoading,
     error,
     refetch,
-  } = useApplicants({ status: activeTab });
+  } = useApplicants({ status: statusFilter });
 
   // Calculate stats
   const stats = {

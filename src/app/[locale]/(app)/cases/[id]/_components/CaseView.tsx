@@ -3,6 +3,7 @@
 import { CaseWithRelations } from '@/types/case.types';
 import { CaseHeader } from '@/components/shared/CaseHeader/CaseHeader';
 import { Card, CardContent } from '@/components/ui/card';
+import { useTranslations } from 'next-intl';
 
 interface CaseViewProps {
   initialData: CaseWithRelations;
@@ -16,6 +17,7 @@ interface CaseViewProps {
  * It receives initial data from the server component and uses SWR for updates.
  */
 export function CaseView({ initialData, locale }: CaseViewProps) {
+  const t = useTranslations('case.view');
   const dir = locale === 'he' ? 'rtl' : 'ltr';
 
   return (
@@ -28,16 +30,16 @@ export function CaseView({ initialData, locale }: CaseViewProps) {
         <CardContent className="pt-6">
           <div className="flex flex-col items-center justify-center py-12">
             <p className="text-lg font-medium text-slate-900 mb-2">
-              Case #{initialData.case_number}
+              {t('caseNumber')}{initialData.case_number}
             </p>
             <p className="text-sm text-slate-600">
-              Type: {initialData.case_type}
+              {t('type')}: {initialData.case_type}
             </p>
             <p className="text-sm text-slate-600">
-              Status: {initialData.status}
+              {t('status')}: {initialData.status}
             </p>
             <p className="text-xs text-slate-500 mt-4">
-              Tabs will be implemented in Phase 2
+              {t('comingSoon')}
             </p>
           </div>
         </CardContent>

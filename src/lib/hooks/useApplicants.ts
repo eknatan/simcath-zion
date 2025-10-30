@@ -12,7 +12,7 @@
 'use client';
 
 import useSWR from 'swr';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Applicant, ApplicantStatus, CaseType } from '@/types/case.types';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -106,6 +106,14 @@ export function useApplicants(initialFilters: ApplicantsFilters = {}) {
     limit: 20,
     ...initialFilters,
   });
+
+  // Update filters when initialFilters change (e.g., when switching tabs)
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      ...initialFilters,
+    }));
+  }, [initialFilters.status, initialFilters.case_type]);
 
   const queryString = buildQueryString(filters);
   const { data, error, isLoading, mutate } = useSWR<ApplicantsResponse>(

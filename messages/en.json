@@ -624,5 +624,91 @@
       "error_title": "Error Restoring Application",
       "error_description": "Could not restore the application. Please try again later."
     }
+  },
+  "cases": {
+    "pageTitle": "Case Management",
+    "pageDescription": "List of all cases in the system - weddings and sick children",
+    "stats": {
+      "total": "Total Cases",
+      "totalDescription": "All cases in the system",
+      "wedding": "Weddings",
+      "weddingDescription": "Wedding cases",
+      "cleaning": "Sick Children",
+      "cleaningDescription": "Sick children cases",
+      "active": "Active",
+      "activeDescription": "Currently active cases",
+      "pendingTransfer": "Pending Transfer",
+      "pendingTransferDescription": "Waiting for bank transfer"
+    },
+    "tabs": {
+      "title": "Cases List",
+      "description": "View, search and filter cases",
+      "all": "All Cases",
+      "wedding": "Weddings",
+      "cleaning": "Sick Children"
+    },
+    "type": {
+      "wedding": "Wedding",
+      "cleaning": "Sick Child"
+    },
+    "table": {
+      "caseNumber": "Case Number",
+      "type": "Type",
+      "names": "Names",
+      "city": "City",
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "createdAt": "Created Date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View"
+    },
+    "searchPlaceholder": "Search by case number, name, city...",
+    "resultsCount": "{count, plural, =0 {No results} one {1 result} other {# results}}"
+  },
+  "case": {
+    "type": {
+      "wedding": "Wedding Case",
+      "cleaning": "Sick Child Case"
+    },
+    "guests": "guests",
+    "childName": "Child Name",
+    "approvedAmount": "Approved Amount",
+    "totalTransferred": "Total Transferred",
+    "startDate": "Start Date",
+    "activeMonths": "Active Months",
+    "months": "months",
+    "actions": {
+      "updateStatus": "Update Status",
+      "approveTransfer": "Approve Transfer",
+      "reject": "Reject Application",
+      "editDetails": "Edit Details",
+      "closeCase": "Close Case",
+      "restoreCase": "Restore Case",
+      "print": "Print Case",
+      "exportPdf": "Export PDF",
+      "delete": "Delete Case"
+    },
+    "tabs": {
+      "hebrew": "Application in Hebrew",
+      "english": "Application in English",
+      "files": "Files and Documents",
+      "payments": "Payments"
+    },
+    "view": {
+      "caseNumber": "Case #",
+      "type": "Type",
+      "status": "Status",
+      "comingSoon": "Tabs will be implemented in Phase 2"
+    },
+    "notFound": {
+      "title": "Case Not Found",
+      "description": "The case you are looking for does not exist or you don't have permission to view it",
+      "hint": "The case may have been deleted or the link is incorrect",
+      "backToCases": "Back to Cases List",
+      "backToDashboard": "Back to Dashboard"
+    }
   }
 }
