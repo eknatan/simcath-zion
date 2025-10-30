@@ -1,14 +1,14 @@
 /**
- * âŞÕÓ: ÑçéÕê ŞŞêÙàÕê
+ * Applicants Management Page
  *
- * ŞæÙÒ èéÙŞê ÑçéÕê ÜŞÖÛÙèÕê:
- * - ŞŞêÙàÕê ÜĞÙéÕè (pending_approval)
- * - àÓ×Õê (rejected)
+ * This page manages applicants with the following statuses:
+ * - Pending approval (pending_approval)
+ * - Rejected (rejected)
  *
- * âçèÕàÕê SOLID:
- * - Single Responsibility: èç àÙÔÕÜ êæÕÒê ÔÑçéÕê
- * - Open/Closed: àÙêß ÜÔè×ÑÔ ÜÜÕÒÙçÕê àÕáäÕê
- * - Dependency Inversion: êÜÕÙ Ñ-useApplicants hook
+ * SOLID Principles:
+ * - Single Responsibility: Each component has a single purpose
+ * - Open/Closed: Open for extension, closed for modification
+ * - Dependency Inversion: Depends on useApplicants hook
  */
 
 'use client';
@@ -30,10 +30,8 @@ export default function ApplicantsPage() {
   // Fetch data based on active tab
   const {
     applicants,
-    pagination,
     isLoading,
     error,
-    filters,
     updateFilters,
     refresh,
   } = useApplicants({
@@ -192,7 +190,7 @@ export default function ApplicantsPage() {
               {/* Table - TODO */}
               <Card className="p-4">
                 <p className="text-sm text-slate-600">
-                  àŞæĞ {applicants.length} ÑçéÕê
+                  Found {applicants.length} applicants
                 </p>
                 {/* Temporary list view */}
                 <div className="mt-4 space-y-2">
@@ -238,7 +236,7 @@ export default function ApplicantsPage() {
           ) : (
             <Card className="p-4">
               <p className="text-sm text-slate-600">
-                àŞæĞ {applicants.length} ÑçéÕê àÓ×Õê
+                Found {applicants.length} rejected applicants
               </p>
             </Card>
           )}

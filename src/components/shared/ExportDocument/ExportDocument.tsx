@@ -19,7 +19,7 @@
 import { useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/components/shared/ActionButton';
-import { Download, FileDown, Loader2 } from 'lucide-react';
+import { FileDown, Loader2 } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import { toast } from 'sonner';
 

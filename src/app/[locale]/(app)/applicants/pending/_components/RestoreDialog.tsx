@@ -35,7 +35,6 @@ export function RestoreDialog({
   open,
   onOpenChange,
   onSuccess,
-  locale,
 }: RestoreDialogProps) {
   const t = useTranslations('applicants.restore_dialog');
   const restoreMutation = useRestoreApplicant();

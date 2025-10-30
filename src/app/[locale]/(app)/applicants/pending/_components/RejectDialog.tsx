@@ -38,7 +38,6 @@ export function RejectDialog({
   open,
   onOpenChange,
   onSuccess,
-  locale,
 }: RejectDialogProps) {
   const t = useTranslations('applicants.reject_dialog');
   const rejectMutation = useRejectApplicant();
@@ -51,7 +50,7 @@ export function RejectDialog({
   const handleReject = async () => {
     try {
       await rejectMutation.mutateAsync({
-        id: applicant.id,
+        applicantId: applicant.id,
         reason: reason.trim() || undefined,
       });
 

@@ -13,7 +13,6 @@
  */
 
 import { useTranslations } from 'next-intl';
-import { FileText, CheckCircle2, XCircle } from 'lucide-react';
 import { ActiveDesignTokens } from '@/lib/design-tokens';
 
 interface ApplicantStatsProps {

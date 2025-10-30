@@ -7,7 +7,6 @@
  * לפי CASE_CREATION_SPEC.md סעיף 3.1.3
  */
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   AlertDialog,
@@ -36,7 +35,6 @@ export function ApproveDialog({
   open,
   onOpenChange,
   onSuccess,
-  locale,
 }: ApproveDialogProps) {
   const t = useTranslations('applicants.approve_dialog');
   const approveMutation = useApproveApplicant();

@@ -583,10 +583,81 @@
       "delete": "מחק תיק"
     },
     "tabs": {
-      "hebrew": "הבקשה בעברית",
+      "originalRequest": "מקור הבקשה",
+      "originalRequestShort": "מקור",
       "english": "הבקשה באנגלית",
+      "englishShort": "English",
       "files": "קבצים ומסמכים",
-      "payments": "תשלומים"
+      "filesShort": "קבצים",
+      "payments": "תשלומים",
+      "paymentsShort": "תשלומים",
+      "comingSoon": "בפיתוח..."
+    },
+    "originalRequest": {
+      "title": "מקור הבקשה - הטופס המקורי",
+      "editMode": "עבור למצב עריכה",
+      "cancel": "ביטול",
+      "save": "שמור שינויים",
+      "saving": "שומר...",
+      "saved": "נשמר",
+      "weddingInfo": {
+        "title": "מידע על החתונה",
+        "dateHebrew": "תאריך עברי",
+        "dateGregorian": "תאריך לועזי",
+        "city": "עיר",
+        "venue": "אולם",
+        "guestsCount": "כמות מוזמנים",
+        "totalCost": "עלות כוללת (₪)"
+      },
+      "groomInfo": {
+        "title": "פרטי החתן",
+        "firstName": "שם פרטי",
+        "lastName": "שם משפחה",
+        "id": "ת.ז.",
+        "school": "ישיבה",
+        "fatherName": "שם האב",
+        "motherName": "שם האם",
+        "fatherOccupation": "מקצוע האב",
+        "motherOccupation": "מקצוע האם",
+        "memorialDay": "יום זיכרון",
+        "background": "תיעוד רקע"
+      },
+      "brideInfo": {
+        "title": "פרטי הכלה",
+        "firstName": "שם פרטי",
+        "lastName": "שם משפחה",
+        "id": "ת.ז.",
+        "school": "סמינר",
+        "fatherName": "שם האב",
+        "motherName": "שם האם",
+        "fatherOccupation": "מקצוע האב",
+        "motherOccupation": "מקצוע האם",
+        "memorialDay": "יום זיכרון",
+        "background": "תיעוד רקע"
+      },
+      "contactInfo": {
+        "title": "פרטי קשר",
+        "address": "כתובת",
+        "phone": "טלפון",
+        "email": "מייל"
+      },
+      "familyInfo": {
+        "title": "פרטי המשפחה",
+        "familyName": "שם משפחה",
+        "childName": "שם הילד החולה",
+        "parent1Name": "שם הורה 1",
+        "parent1Id": "ת.ז. הורה 1",
+        "parent2Name": "שם הורה 2",
+        "parent2Id": "ת.ז. הורה 2",
+        "address": "כתובת מלאה",
+        "city": "עיר",
+        "phone1": "טלפון 1",
+        "phone2": "טלפון 2",
+        "phone3": "טלפון 3",
+        "email": "מייל",
+        "startDate": "תאריך התחלה"
+      },
+      "notSpecified": "לא צוין"
     },
     "view": {
       "caseNumber": "תיק מספר",

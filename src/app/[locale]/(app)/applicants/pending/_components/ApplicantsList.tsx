@@ -13,7 +13,7 @@
  * - שחזור (עבור נדחות)
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { ColumnDef } from '@tanstack/react-table';
@@ -26,9 +26,6 @@ import {
   CheckCircle2,
   XCircle,
   RotateCcw,
-  Calendar,
-  Users,
-  MapPin,
   Search,
 } from 'lucide-react';
 import { Applicant } from '@/lib/hooks/useApplicants';
@@ -79,7 +76,7 @@ export function ApplicantsList({
   }, [applicants, searchQuery]);
 
   // Helper: Format date
-  const formatDate = (dateString: string | null) => {
+  const formatDate = useCallback((dateString: string | null) => {
     if (!dateString) return '-';
     try {
       return format(new Date(dateString), 'dd/MM/yyyy HH:mm', {
@@ -88,7 +85,7 @@ export function ApplicantsList({
     } catch {
       return dateString;
     }
-  };
+  }, [locale]);
 
   // Helper: Get applicant names
   const getApplicantNames = (applicant: Applicant) => {
@@ -110,7 +107,7 @@ export function ApplicantsList({
   };
 
   // Helper: Get status badge (Version B - Soft)
-  const getStatusBadge = (applicant: Applicant) => {
+  const getStatusBadge = useCallback((applicant: Applicant) => {
     const appStatus = applicant.status || 'pending_approval';
 
     if (appStatus === 'pending_approval' || !applicant.status) {
@@ -138,7 +135,7 @@ export function ApplicantsList({
     }
 
     return null;
-  };
+  }, [t]);
 
   // Helper: Calculate days left (for rejected)
   const getDaysLeft = (applicant: Applicant) => {
@@ -306,7 +303,7 @@ export function ApplicantsList({
         ),
       },
     ],
-    [status, t, locale]
+    [status, t, formatDate, getStatusBadge]
   );
 
   return (

@@ -132,11 +132,13 @@ export type Database = {
           applicant_id: string | null
           bride_background: string | null
           bride_father_name: string | null
+          bride_father_occupation: string | null
           bride_first_name: string | null
           bride_id: string | null
           bride_last_name: string | null
           bride_memorial_day: string | null
           bride_mother_name: string | null
+          bride_mother_occupation: string | null
           bride_school: string | null
           case_number: number
           case_type: string
@@ -153,11 +155,13 @@ export type Database = {
           family_name: string | null
           groom_background: string | null
           groom_father_name: string | null
+          groom_father_occupation: string | null
           groom_first_name: string | null
           groom_id: string | null
           groom_last_name: string | null
           groom_memorial_day: string | null
           groom_mother_name: string | null
+          groom_mother_occupation: string | null
           groom_school: string | null
           guests_count: number | null
           id: string
@@ -179,11 +183,13 @@ export type Database = {
           applicant_id?: string | null
           bride_background?: string | null
           bride_father_name?: string | null
+          bride_father_occupation?: string | null
           bride_first_name?: string | null
           bride_id?: string | null
           bride_last_name?: string | null
           bride_memorial_day?: string | null
           bride_mother_name?: string | null
+          bride_mother_occupation?: string | null
           bride_school?: string | null
           case_number?: number
           case_type: string
@@ -200,11 +206,13 @@ export type Database = {
           family_name?: string | null
           groom_background?: string | null
           groom_father_name?: string | null
+          groom_father_occupation?: string | null
           groom_first_name?: string | null
           groom_id?: string | null
           groom_last_name?: string | null
           groom_memorial_day?: string | null
           groom_mother_name?: string | null
+          groom_mother_occupation?: string | null
           groom_school?: string | null
           guests_count?: number | null
           id?: string
@@ -226,11 +234,13 @@ export type Database = {
           applicant_id?: string | null
           bride_background?: string | null
           bride_father_name?: string | null
+          bride_father_occupation?: string | null
           bride_first_name?: string | null
           bride_id?: string | null
           bride_last_name?: string | null
           bride_memorial_day?: string | null
           bride_mother_name?: string | null
+          bride_mother_occupation?: string | null
           bride_school?: string | null
           case_number?: number
           case_type?: string
@@ -247,11 +257,13 @@ export type Database = {
           family_name?: string | null
           groom_background?: string | null
           groom_father_name?: string | null
+          groom_father_occupation?: string | null
           groom_first_name?: string | null
           groom_id?: string | null
           groom_last_name?: string | null
           groom_memorial_day?: string | null
           groom_mother_name?: string | null
+          groom_mother_occupation?: string | null
           groom_school?: string | null
           guests_count?: number | null
           id?: string
@@ -458,6 +470,39 @@ export type Database = {
         }
         Relationships: []
       }
+      system_settings: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_value: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       transfers_export: {
         Row: {
           cases_included: Json
@@ -573,7 +618,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_active_user: { Args: { user_id: string }; Returns: boolean }
+      is_manager: { Args: { user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

@@ -16,8 +16,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, User, MapPin, DollarSign, Users, Heart } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Calendar, User } from 'lucide-react';
 
 // Types
 export interface WeddingFormData {

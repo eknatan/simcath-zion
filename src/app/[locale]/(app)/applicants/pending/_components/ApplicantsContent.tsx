@@ -12,11 +12,10 @@
  * - Dependency Inversion: משתמש בקומפוננטות משותפות
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, CheckCircle2, XCircle, Clock, ExternalLink } from 'lucide-react';
+import { FileText, XCircle, Clock, ExternalLink } from 'lucide-react';
 import { ApplicantsList } from './ApplicantsList';
 import { ApplicantStats } from './ApplicantStats';
 import { useApplicants } from '@/lib/hooks/useApplicants';

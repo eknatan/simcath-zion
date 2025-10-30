@@ -692,10 +692,77 @@
       "delete": "Delete Case"
     },
     "tabs": {
-      "hebrew": "Application in Hebrew",
+      "originalRequest": "Source Application",
+      "originalRequestShort": "Hebrew",
       "english": "Application in English",
+      "englishShort": "English",
       "files": "Files and Documents",
-      "payments": "Payments"
+      "filesShort": "Files",
+      "payments": "Payments",
+      "paymentsShort": "Payments",
+      "comingSoon": "Coming soon..."
+    },
+    "originalRequest": {
+      "title": "Application in Hebrew",
+      "editMode": "Switch to Edit Mode",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "weddingInfo": {
+        "title": "Wedding Information",
+        "dateHebrew": "Hebrew Date",
+        "dateGregorian": "Gregorian Date",
+        "city": "City",
+        "venue": "Venue",
+        "guestsCount": "Number of Guests",
+        "totalCost": "Total Cost (₪)"
+      },
+      "groomInfo": {
+        "title": "Groom Details",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "id": "ID",
+        "school": "Yeshiva",
+        "fatherName": "Father's Name",
+        "motherName": "Mother's Name",
+        "memorialDay": "Memorial Day",
+        "background": "Background Documentation"
+      },
+      "brideInfo": {
+        "title": "Bride Details",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "id": "ID",
+        "school": "Seminary",
+        "fatherName": "Father's Name",
+        "motherName": "Mother's Name",
+        "memorialDay": "Memorial Day",
+        "background": "Background Documentation"
+      },
+      "contactInfo": {
+        "title": "Contact Information",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email"
+      },
+      "familyInfo": {
+        "title": "Family Information",
+        "familyName": "Family Name",
+        "childName": "Child's Name",
+        "parent1Name": "Parent 1 Name",
+        "parent1Id": "Parent 1 ID",
+        "parent2Name": "Parent 2 Name",
+        "parent2Id": "Parent 2 ID",
+        "address": "Full Address",
+        "city": "City",
+        "phone1": "Phone 1",
+        "phone2": "Phone 2",
+        "phone3": "Phone 3",
+        "email": "Email",
+        "startDate": "Start Date"
+      },
+      "notSpecified": "Not specified"
     },
     "view": {
       "caseNumber": "Case #",

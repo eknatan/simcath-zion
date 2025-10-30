@@ -113,7 +113,7 @@ export function useApplicants(initialFilters: ApplicantsFilters = {}) {
       ...prev,
       ...initialFilters,
     }));
-  }, [initialFilters.status, initialFilters.case_type]);
+  }, [initialFilters]);
 
   const queryString = buildQueryString(filters);
   const { data, error, isLoading, mutate } = useSWR<ApplicantsResponse>(
@@ -378,8 +378,6 @@ export function useApplicants(initialFilters: ApplicantsFilters = {}) {
  * Hook לאישור בקשה (backward compatible)
  */
 export function useApproveApplicant() {
-  const router = useRouter();
-
   const mutateAsync = async (applicantId: string) => {
     const res = await fetch(`/api/applicants/${applicantId}/approve`, {
       method: 'POST',

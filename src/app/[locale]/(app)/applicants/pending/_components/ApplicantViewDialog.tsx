@@ -21,10 +21,10 @@ import {
 } from '@/components/ui/dialog';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { Badge } from '@/components/ui/badge';
-import { X, FileDown } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Applicant } from '@/lib/hooks/useApplicants';
 import { FormRenderer, WeddingFormData } from '@/components/shared/FormRenderer';
-import { ExportDocument, ExportSection, ExportField } from '@/components/shared/ExportDocument';
+import { ExportDocument } from '@/components/shared/ExportDocument';
 import { ExportWord } from '@/components/shared/ExportWord';
 
 interface ApplicantViewDialogProps {
