@@ -516,6 +516,79 @@
       "infoMessage": "מיילים אלו יקבלו התראות על בקשות חדשות וחשובות במערכת"
     }
   },
+  "cases": {
+    "pageTitle": "ניהול תיקים",
+    "pageDescription": "רשימת כל התיקים במערכת - חתונות וילדים חולים",
+    "stats": {
+      "total": "סה\"כ תיקים",
+      "totalDescription": "כל התיקים במערכת",
+      "wedding": "חתונות",
+      "weddingDescription": "תיקי חתונות",
+      "cleaning": "ילדים חולים",
+      "cleaningDescription": "תיקי ילדים חולים",
+      "active": "פעילים",
+      "activeDescription": "תיקים פעילים כרגע",
+      "pendingTransfer": "ממתינים להעברה",
+      "pendingTransferDescription": "ממתינים להעברה בנקאית"
+    },
+    "tabs": {
+      "title": "רשימת תיקים",
+      "description": "צפה, חפש וסנן תיקים",
+      "all": "כל התיקים",
+      "wedding": "חתונות",
+      "cleaning": "ילדים חולים"
+    },
+    "type": {
+      "wedding": "חתונה",
+      "cleaning": "ילד חולה"
+    },
+    "table": {
+      "caseNumber": "מספר תיק",
+      "type": "סוג",
+      "names": "שמות",
+      "city": "עיר",
+      "date": "תאריך",
+      "amount": "סכום",
+      "status": "סטטוס",
+      "createdAt": "תאריך יצירה",
+      "actions": "פעולות"
+    },
+    "actions": {
+      "view": "צפה"
+    },
+    "searchPlaceholder": "חיפוש לפי מספר תיק, שם, עיר...",
+    "resultsCount": "{count, plural, =0 {אין תוצאות} one {תוצאה אחת} other {# תוצאות}}"
+  },
+  "case": {
+    "type": {
+      "wedding": "תיק חתונה",
+      "cleaning": "תיק ילד חולה"
+    },
+    "guests": "מוזמנים",
+    "childName": "שם הילד",
+    "approvedAmount": "סכום מאושר",
+    "totalTransferred": "סה\"כ הועבר",
+    "startDate": "תאריך התחלה",
+    "activeMonths": "חודשים פעילים",
+    "months": "חודשים",
+    "actions": {
+      "updateStatus": "עדכן סטטוס",
+      "approveTransfer": "אשר להעברה",
+      "reject": "דחה בקשה",
+      "editDetails": "ערוך פרטים",
+      "closeCase": "סגור תיק",
+      "restoreCase": "שחזר תיק",
+      "print": "הדפס תיק",
+      "exportPdf": "ייצא PDF",
+      "delete": "מחק תיק"
+    },
+    "tabs": {
+      "hebrew": "הבקשה בעברית",
+      "english": "הבקשה באנגלית",
+      "files": "קבצים ומסמכים",
+      "payments": "תשלומים"
+    }
+  },
   "applicants": {
     "page_title": "בקשות ממתינות",
     "page_description": "ניהול בקשות חתונה שהתקבלו ממשפחות",

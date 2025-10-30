@@ -204,33 +204,84 @@ export async function POST(request: NextRequest) {
 /**
  * GET /api/applicants
  *
- * מחזיר רשימת בקשות ממתינות (למזכירות בלבד)
- * TODO: Add authentication middleware
+ * מחזיר רשימת בקשות (למזכירות בלבד)
+ *
+ * Query Params:
+ * - case_type: 'wedding' | 'cleaning'
+ * - status: 'pending_approval' | 'rejected' | 'approved'
+ * - search: string (חיפוש טקסט חופשי)
+ * - city: string (סינון לפי עיר)
+ * - sort_by: 'created_at' | 'wedding_date_gregorian'
+ * - sort_order: 'asc' | 'desc'
+ * - page: number (pagination)
+ * - limit: number (default: 20)
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const caseType = searchParams.get('case_type');
-    const status = searchParams.get('status');
+    const status = searchParams.get('status') || 'pending_approval'; // Default to pending
+    const search = searchParams.get('search');
+    const city = searchParams.get('city');
+    const sortBy = searchParams.get('sort_by') || 'created_at';
+    const sortOrder = searchParams.get('sort_order') || 'desc';
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
 
     const supabase = await createClient();
+
+    // Authentication check
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     // Build query
     let query = supabase
       .from('applicants')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*', { count: 'exact' });
 
     // Apply filters
     if (caseType) {
       query = query.eq('case_type', caseType);
     }
 
-    if (status === 'pending') {
-      query = query.eq('email_sent_to_secretary', false);
+    if (status) {
+      query = query.eq('status', status);
     }
 
-    const { data, error } = await query;
+    if (city) {
+      query = query.ilike('form_data->wedding_info->>city', `%${city}%`);
+    }
+
+    // Search in groom/bride names (for wedding cases)
+    if (search && search.trim()) {
+      query = query.or(
+        `form_data->groom_info->>first_name.ilike.%${search}%,` +
+        `form_data->groom_info->>last_name.ilike.%${search}%,` +
+        `form_data->bride_info->>first_name.ilike.%${search}%,` +
+        `form_data->bride_info->>last_name.ilike.%${search}%`
+      );
+    }
+
+    // Sorting
+    const ascending = sortOrder === 'asc';
+    if (sortBy === 'wedding_date_gregorian') {
+      query = query.order('form_data->wedding_info->date_gregorian', { ascending });
+    } else {
+      query = query.order(sortBy as any, { ascending });
+    }
+
+    // Pagination
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
 
     if (error) {
       console.error('Supabase error:', error);
@@ -246,7 +297,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data,
-      count: data?.length || 0,
+      pagination: {
+        total: count || 0,
+        page,
+        limit,
+        totalPages: Math.ceil((count || 0) / limit),
+      },
     });
   } catch (error) {
     console.error('API error:', error);
