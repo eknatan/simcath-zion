@@ -4,7 +4,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { RootProviders } from "@/lib/providers";
 import { Toaster } from "@/components/ui/sonner";
-import { geistSans, geistMono } from "@/app/layout";
+import { geistSans, geistMono } from "@/app/fonts";
 
 const locales = ["he", "en"];
 
