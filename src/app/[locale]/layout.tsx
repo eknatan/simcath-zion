@@ -4,6 +4,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { RootProviders } from "@/lib/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { geistSans, geistMono } from "@/app/layout";
 
 const locales = ["he", "en"];
 
@@ -29,8 +30,10 @@ export default async function LocaleLayout({
   const dir = locale === "he" ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir}>
-      <body>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <NextIntlClientProvider messages={messages}>
           <RootProviders>
             {children}
