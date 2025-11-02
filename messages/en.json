@@ -23,6 +23,11 @@
       "exporting": "Exporting...",
       "success": "Document exported successfully",
       "error": "Error exporting document"
+    },
+    "fileUpload": {
+      "fileTooLarge": "The file \"{filename}\" is too large ({size}MB). Maximum size: {maxSize}MB",
+      "invalidFileType": "The file type \"{filename}\" is not supported. Please upload PDF, JPG or PNG",
+      "uploadError": "Error uploading \"{filename}\": {error}"
     }
   },
   "navigation": {
@@ -763,6 +768,23 @@
         "startDate": "Start Date"
       },
       "notSpecified": "Not specified"
+    },
+    "files": {
+      "title": "Files and Documents",
+      "description": "Manage all files related to this case",
+      "success": {
+        "uploaded": "File uploaded successfully",
+        "deleted": "File deleted successfully"
+      },
+      "error": {
+        "fileTooBig": "File is too large. Maximum size: {size}",
+        "uploadFailed": "File upload failed. Please try again",
+        "deleteFailed": "File deletion failed. Please try again"
+      },
+      "delete": {
+        "title": "Delete File",
+        "description": "Are you sure you want to delete {filename}? This action cannot be undone."
+      }
     },
     "view": {
       "caseNumber": "Case #",

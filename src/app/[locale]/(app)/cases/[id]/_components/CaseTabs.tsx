@@ -16,8 +16,8 @@ import { CaseWithRelations, CaseType } from '@/types/case.types';
 
 // Import tab components
 import { OriginalRequestTab } from './OriginalRequestTab';
+import { FilesTab } from './FilesTab';
 // import { EnglishTab } from './EnglishTab';
-// import { FilesTab } from './FilesTab';
 // import { PaymentsTab } from './PaymentsTab';
 
 interface CaseTabsProps {
@@ -89,7 +89,7 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
 
       case 'files':
         // Check if required files are uploaded
-        const requiredFilesCount = 4; // menu, invitation, groom_photo, bride_photo
+        const requiredFilesCount = 3; // menu, invitation, couple_photo
         const uploadedFiles = caseData.files?.length || 0;
         if (uploadedFiles === 0) return 'error';
         if (uploadedFiles < requiredFilesCount) return 'warning';
@@ -128,7 +128,7 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
    * Get count badge for files tab
    */
   const getFilesBadge = () => {
-    const requiredFilesCount = 4;
+    const requiredFilesCount = 3;
     const uploadedFiles = caseData.files?.length || 0;
     return `${uploadedFiles}/${requiredFilesCount}`;
   };
@@ -233,12 +233,7 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
         {/* Files Tab Content - Wedding only */}
         {isWedding && (
           <TabsContent value="files" className="m-0">
-            {/* Placeholder - will be replaced with FilesTab component */}
-            <div className="p-6 border border-slate-200 rounded-lg bg-white">
-              <p className="text-slate-600">
-                {t('files')} - {t('comingSoon')}
-              </p>
-            </div>
+            <FilesTab caseData={caseData} />
           </TabsContent>
         )}
 

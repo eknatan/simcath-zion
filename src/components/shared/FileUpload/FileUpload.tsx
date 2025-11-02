@@ -1,10 +1,11 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, FileRejection } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 
 interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -29,8 +30,34 @@ export function FileUpload({
     onFilesSelected(acceptedFiles);
   }, [onFilesSelected]);
 
+  const onDropRejected = useCallback((rejectedFiles: FileRejection[]) => {
+    rejectedFiles.forEach((rejection) => {
+      const file = rejection.file;
+      const errors = rejection.errors;
+
+      errors.forEach((error) => {
+        if (error.code === 'file-too-large') {
+          const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1);
+          toast.error(t('fileUpload.fileTooLarge', {
+            filename: file.name,
+            size: fileSizeMB,
+            maxSize
+          }));
+        } else if (error.code === 'file-invalid-type') {
+          toast.error(t('fileUpload.invalidFileType', { filename: file.name }));
+        } else {
+          toast.error(t('fileUpload.uploadError', {
+            filename: file.name,
+            error: error.message
+          }));
+        }
+      });
+    });
+  }, [maxSize, t]);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected,
     multiple,
     maxSize: maxSize * 1024 * 1024,
     accept,

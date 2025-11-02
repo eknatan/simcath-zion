@@ -78,8 +78,7 @@ export enum PaymentStatus {
 export enum WeddingFileType {
   MENU = 'menu',
   INVITATION = 'invitation',
-  GROOM_PHOTO = 'groom_photo',
-  BRIDE_PHOTO = 'bride_photo',
+  COUPLE_PHOTO = 'couple_photo',
   THANK_YOU = 'thank_you',
   OTHER = 'other',
 }
@@ -361,6 +360,5 @@ export const MAX_MONTHLY_CLEANING_PAYMENT = 720;
 export const REQUIRED_WEDDING_FILES: WeddingFileType[] = [
   WeddingFileType.MENU,
   WeddingFileType.INVITATION,
-  WeddingFileType.GROOM_PHOTO,
-  WeddingFileType.BRIDE_PHOTO,
+  WeddingFileType.COUPLE_PHOTO,
 ];

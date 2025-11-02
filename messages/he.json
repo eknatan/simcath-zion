@@ -23,6 +23,11 @@
       "exporting": "מייצא...",
       "success": "המסמך יוצא בהצלחה",
       "error": "שגיאה בייצוא המסמך"
+    },
+    "fileUpload": {
+      "fileTooLarge": "הקובץ \"{filename}\" גדול מדי ({size}MB). גודל מקסימלי: {maxSize}MB",
+      "invalidFileType": "סוג הקובץ \"{filename}\" לא נתמך. אנא העלה PDF, JPG או PNG",
+      "uploadError": "שגיאה בהעלאת \"{filename}\": {error}"
     }
   },
   "navigation": {
@@ -658,6 +663,23 @@
         "startDate": "תאריך התחלה"
       },
       "notSpecified": "לא צוין"
+    },
+    "files": {
+      "title": "קבצים ומסמכים",
+      "description": "ניהול כל הקבצים הקשורים לתיק",
+      "success": {
+        "uploaded": "הקובץ הועלה בהצלחה",
+        "deleted": "הקובץ נמחק בהצלחה"
+      },
+      "error": {
+        "fileTooBig": "הקובץ גדול מדי. גודל מקסימלי: {size}",
+        "uploadFailed": "העלאת הקובץ נכשלה. נסה שוב",
+        "deleteFailed": "מחיקת הקובץ נכשלה. נסה שוב"
+      },
+      "delete": {
+        "title": "מחיקת קובץ",
+        "description": "האם אתה בטוח שברצונך למחוק את {filename}? פעולה זו בלתי הפיכה."
+      }
     },
     "view": {
       "caseNumber": "תיק מספר",
