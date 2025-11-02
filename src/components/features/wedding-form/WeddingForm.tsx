@@ -45,6 +45,9 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // VERSION CHECK - to verify latest code is deployed
+  console.log('🚀 WEDDING FORM VERSION: 2024-01-03-EMAIL-OPTIONAL');
+
   // Get current locale to determine RTL/LTR
   const isRTL = locale === 'he';
 

@@ -125,7 +125,7 @@ export const personInfoSchema = z.object({
     .min(2, 'validation.minLength|min=2')
     .max(100, 'validation.maxLength|max=100'),
   phone: israeliPhoneSchema,
-  email: emailSchema,
+  email: z.string().email('validation.invalidEmail').optional(),
   memorial_day: z.string().max(100, 'validation.maxLength|max=100').optional(),
   background: z.string().max(2000, 'validation.maxBackgroundLength').optional(),
 });
