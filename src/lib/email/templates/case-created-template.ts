@@ -314,6 +314,8 @@ export function getCaseCreatedTemplate(data: CaseCreatedTemplateData): {
         </tr>
       </table>
 
+      ${data.caseType === 'wedding' && data.fullFormData ? getWeddingDetailsHTML(data.fullFormData, 'en') : ''}
+
       <p style="color: #666; margin-top: 24px;">
         Please review the case and take the necessary action.
       </p>

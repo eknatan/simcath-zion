@@ -134,6 +134,7 @@ export async function POST(request: NextRequest) {
           applicantEmail: validatedData.data.applicantEmail,
           applicantPhone: validatedData.data.applicantPhone,
           caseUrl: validatedData.data.caseUrl,
+          fullFormData: validatedData.data.fullFormData, // Pass full form data for detailed email
           locale: validatedData.locale || validatedData.data.locale,
         });
 

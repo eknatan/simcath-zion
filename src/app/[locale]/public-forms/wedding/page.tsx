@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { WeddingForm } from '@/components/features/wedding-form/WeddingForm';
 import { Card } from '@/components/ui/card';
-import { Heart } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
+import Image from 'next/image';
 
 /**
  * Public Route: /public-forms/wedding
@@ -37,20 +37,50 @@ export default async function PublicWeddingFormPage({ params }: { params: Promis
       <header className="border-b bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-blue-900">
-                  {t('public_page.header.system_name')}
-                </h1>
-                <p className="text-xs text-blue-600">
-                  {t('public_page.header.system_subtitle')}
-                </p>
+            {/* Right Side - Text (Hebrew) / Text (English) */}
+            <div className="flex-1 flex justify-start">
+              {locale === 'he' ? (
+                <div className="text-start">
+                  <h1 className="text-xl font-bold text-blue-900">
+                    {t('public_page.header.system_name')}
+                  </h1>
+                  <p className="text-xs text-blue-600">
+                    {t('public_page.header.system_subtitle')}
+                  </p>
+                </div>
+              ) : (
+                <div className="text-start">
+                  <h1 className="text-xl font-bold text-blue-900">
+                    {t('public_page.header.system_name')}
+                  </h1>
+                  <p className="text-xs text-blue-600">
+                    {t('public_page.header.system_subtitle')}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Center - Logo */}
+            <div className="flex-shrink-0">
+              <div className="h-12 flex items-center justify-center relative w-24">
+                <Image
+                  src="/logo.png"
+                  alt={t('public_page.header.system_name')}
+                  width={250}
+                  height={130}
+                  className="h-12 w-auto object-contain"
+                  style={{
+                    filter: 'brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1352%) hue-rotate(200deg) brightness(97%) contrast(91%)'
+                  }}
+                  priority
+                />
               </div>
             </div>
-            <LanguageSwitcher />
+
+            {/* Left Side - Language Switcher (Hebrew) / Language Switcher (English) */}
+            <div className="flex-1 flex justify-end">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </header>

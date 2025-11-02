@@ -164,7 +164,10 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
         },
         body: JSON.stringify({
           case_type: 'wedding',
-          form_data: data,
+          form_data: {
+            ...data,
+            locale, // Add locale to form data
+          },
         }),
       });
 

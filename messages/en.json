@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Save",
+    "saving": "Saving...",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
@@ -13,6 +14,7 @@
     "close": "Close",
     "confirm": "Confirm",
     "back": "Back",
+    "tryAgain": "Try Again",
     "noResults": "No results",
     "dropHere": "Drop files here",
     "dragOrClick": "Drag files here or click to select",
@@ -147,7 +149,117 @@
     "ilsAmount": "Amount in ILS",
     "exchangeRate": "Exchange Rate",
     "updateRate": "Update Rate",
-    "convert": "Convert"
+    "convert": "Convert",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "transferred": "Transferred",
+      "rejected": "Rejected"
+    },
+    "bankDetails": {
+      "title": "Bank Account Details",
+      "bank": "Bank",
+      "bankNumber": "Bank Number",
+      "selectBank": "Select Bank",
+      "branch": "Branch",
+      "branchHelp": "3 digits",
+      "branchPlaceholder": "123",
+      "accountNumber": "Account Number",
+      "accountNumberHelp": "2-20 digits",
+      "accountNumberPlaceholder": "1234567",
+      "accountHolder": "Account Holder",
+      "accountHolderName": "Account Holder Name",
+      "accountHolderPlaceholder": "Full Name",
+      "save": "Save Bank Details",
+      "edit": "Edit Bank Details",
+      "saveSuccess": "Bank details saved successfully",
+      "saveError": "Error saving bank details",
+      "errors": {
+        "bankRequired": "Please select a bank",
+        "branchRequired": "Branch is required",
+        "branchInvalid": "Branch must be 3 digits",
+        "branchFormat": "Branch must be exactly 3 digits",
+        "accountRequired": "Account number is required",
+        "accountInvalid": "Account number must be 2-20 digits",
+        "accountFormat": "Account number must be between 2 and 20 digits",
+        "holderRequired": "Account holder name is required"
+      }
+    },
+    "costAndDonation": {
+      "title": "Cost and Donation Amount",
+      "weddingCost": "Reported Wedding Cost",
+      "weddingCostPlaceholder": "50000",
+      "weddingCostHelp": "Can be updated as needed",
+      "donationUsd": "Donation Amount in USD",
+      "donationUsdPlaceholder": "4000"
+    },
+    "conversion": {
+      "title": "Currency Conversion",
+      "usdAmount": "Amount in USD",
+      "exchangeRate": "Exchange Rate",
+      "exchangeRatePlaceholder": "3.7500",
+      "updateRate": "Update Rate",
+      "updateRateFromBOI": "Fetch rate from Bank of Israel",
+      "rateUpdated": "Exchange rate updated successfully",
+      "amountIls": "Amount in ILS",
+      "amountIlsPlaceholder": "Calculated automatically",
+      "boiRates": {
+        "title": "Bank of Israel Rates Today",
+        "loading": "Loading rates...",
+        "representative": "Representative Rate",
+        "buy": "Buy Rate",
+        "buyTooltip": "The bank buys USD from you at this rate",
+        "sell": "Sell Rate",
+        "sellTooltip": "The bank sells USD to you at this rate",
+        "lastUpdated": "Last updated",
+        "fetchError": "Error fetching Bank of Israel rates",
+        "refresh": "Refresh Rates"
+      }
+    },
+    "approval": {
+      "title": "Approve for Transfer",
+      "donationAmount": "Donation Amount",
+      "exchangeRate": "Exchange Rate",
+      "transferAmount": "Amount to Transfer",
+      "accountHolder": "Account Holder",
+      "warning": "After approval, the status will change to 'Pending Transfer' and the case will be moved to the transfers table",
+      "approveButton": "Approve for Bank Transfer",
+      "approving": "Approving...",
+      "confirmTitle": "Confirm Bank Transfer",
+      "confirmMessage": "Are you sure you want to approve a transfer of {amount} to account {account}?",
+      "confirmButton": "Confirm Transfer",
+      "success": "Payment approved successfully",
+      "successDescription": "The case has been moved to the transfers table"
+    },
+    "history": {
+      "title": "Payment History",
+      "date": "Date",
+      "amountUsd": "Amount ($)",
+      "amountIls": "Amount (₪)",
+      "status": "Status",
+      "notes": "Notes",
+      "empty": "No payments to display",
+      "noPayments": "No payments to display"
+    },
+    "monthly": {
+      "success": "Monthly payment created successfully",
+      "error": "Error creating monthly payment"
+    },
+    "errors": {
+      "invalidCase": "Invalid case",
+      "validationFailed": "Validation failed",
+      "saveBankDetails": "Error saving bank details",
+      "fetchRate": "Error fetching exchange rate",
+      "noBankDetails": "Bank details missing - please fill in bank details first",
+      "invalidAmount": "Invalid amount - please enter a valid amount",
+      "invalidRate": "Invalid exchange rate",
+      "invalidIlsAmount": "Invalid ILS amount",
+      "approvePayment": "Error approving payment",
+      "missingBankDetails": "Bank details missing",
+      "pleaseFillBankDetails": "Please fill in bank details first",
+      "tryAgainLater": "Please try again later",
+      "refreshFailed": "Refresh failed"
+    }
   },
   "calendar": {
     "title": "Hebrew Calendar",
@@ -799,5 +911,14 @@
       "backToCases": "Back to Cases List",
       "backToDashboard": "Back to Dashboard"
     }
+  },
+  "banks": {
+    "selectBank": "Select bank...",
+    "searchBank": "Search bank...",
+    "noBank": "No bank found.",
+    "bankCode": "Code:",
+    "selectBranch": "Select branch...",
+    "searchBranch": "Search branch (by number or name)...",
+    "noBranch": "No branch found."
   }
 }

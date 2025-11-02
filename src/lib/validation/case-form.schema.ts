@@ -200,7 +200,7 @@ export const bankDetailsSchema = z.object({
     .min(1, 'נדרש מספר סניף'),
   account_number: z
     .string()
-    .regex(/^\d{6,9}$/, 'מספר חשבון חייב להיות בין 6-9 ספרות')
+    .regex(/^\d{2,20}$/, 'מספר חשבון חייב להיות בין 2-20 ספרות')
     .min(1, 'נדרש מספר חשבון'),
   account_holder_name: requiredNameSchema,
 });

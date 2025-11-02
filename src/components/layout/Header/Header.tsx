@@ -9,6 +9,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useRouter } from '@/i18n/routing';
+import Image from 'next/image';
 
 export function Header() {
   const t = useTranslations('navigation');
@@ -52,8 +53,18 @@ export function Header() {
 
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md">
-            <span className="text-xl font-bold">{locale === 'he' ? 'צח' : 'FS'}</span>
+          <div className="flex h-11 items-center justify-center relative w-20">
+            <Image
+              src="/logo.png"
+              alt={tHeader('systemName')}
+              width={250}
+              height={130}
+              className="h-11 w-auto object-contain"
+              style={{
+                filter: 'brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1352%) hue-rotate(200deg) brightness(97%) contrast(91%)'
+              }}
+              priority
+            />
           </div>
           <div className="hidden md:block">
             <h1 className="text-lg font-bold text-slate-900">{tHeader('systemName')}</h1>

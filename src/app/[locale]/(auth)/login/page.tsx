@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Heart } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { RetroGrid } from '@/components/ui/retro-grid';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
@@ -68,8 +69,18 @@ export default function LoginPage() {
         {/* Logo/Title Section */}
         <div className="mb-8 text-center">
           <div className="mb-4 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
-              <Heart className="h-8 w-8 text-white" />
+            <div className="flex h-20 items-center justify-center relative w-40">
+              <Image
+                src="/logo.png"
+                alt={t('login.systemName')}
+                width={250}
+                height={130}
+                className="h-20 w-auto object-contain"
+                style={{
+                  filter: 'brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1352%) hue-rotate(200deg) brightness(97%) contrast(91%)'
+                }}
+                priority
+              />
             </div>
           </div>
           <h1 className="text-3xl font-bold tracking-tight">

@@ -52,6 +52,7 @@ export const caseCreatedEmailDataSchema = z.object({
   applicantPhone: z.string().optional(),
   caseUrl: z.string().url().optional(),
   additionalInfo: z.record(z.string(), z.any()).optional(),
+  fullFormData: z.any().optional(), // Full form data for detailed email template
   locale: z.enum(['he', 'en']).optional(),
 });
 

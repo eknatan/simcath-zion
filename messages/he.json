@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "שמור",
+    "saving": "שומר...",
     "cancel": "בטל",
     "delete": "מחק",
     "edit": "ערוך",
@@ -13,6 +14,7 @@
     "close": "סגור",
     "confirm": "אישור",
     "back": "חזור",
+    "tryAgain": "נסה שוב",
     "noResults": "אין תוצאות",
     "dropHere": "שחרר את הקבצים כאן",
     "dragOrClick": "גרור קבצים לכאן או לחץ לבחירה",
@@ -156,7 +158,117 @@
     "ilsAmount": "סכום בשקלים",
     "exchangeRate": "שער החליפין",
     "updateRate": "עדכן שער",
-    "convert": "המר"
+    "convert": "המר",
+    "status": {
+      "pending": "ממתין",
+      "approved": "מאושר",
+      "transferred": "הועבר",
+      "rejected": "נדחה"
+    },
+    "bankDetails": {
+      "title": "פרטי חשבון בנק",
+      "bank": "בנק",
+      "bankNumber": "מספר בנק",
+      "selectBank": "בחר בנק",
+      "branch": "סניף",
+      "branchHelp": "3 ספרות",
+      "branchPlaceholder": "123",
+      "accountNumber": "מספר חשבון",
+      "accountNumberHelp": "2-20 ספרות",
+      "accountNumberPlaceholder": "1234567",
+      "accountHolder": "בעל החשבון",
+      "accountHolderName": "שם בעל החשבון",
+      "accountHolderPlaceholder": "שם מלא",
+      "save": "שמור פרטי בנק",
+      "edit": "ערוך פרטי בנק",
+      "saveSuccess": "פרטי הבנק נשמרו בהצלחה",
+      "saveError": "שגיאה בשמירת פרטי הבנק",
+      "errors": {
+        "bankRequired": "יש לבחור בנק",
+        "branchRequired": "סניף הוא שדה חובה",
+        "branchInvalid": "סניף חייב להיות 3 ספרות",
+        "branchFormat": "סניף חייב להיות 3 ספרות בדיוק",
+        "accountRequired": "מספר חשבון הוא שדה חובה",
+        "accountInvalid": "מספר חשבון חייב להיות בין 2-20 ספרות",
+        "accountFormat": "מספר חשבון חייב להיות בין 2 ל-20 ספרות",
+        "holderRequired": "שם בעל החשבון הוא שדה חובה"
+      }
+    },
+    "costAndDonation": {
+      "title": "עלות וסכום תרומה",
+      "weddingCost": "עלות החתונה המדווחת",
+      "weddingCostPlaceholder": "50000",
+      "weddingCostHelp": "ניתן לעדכון בהתאם לצורך",
+      "donationUsd": "סכום תרומה בדולרים",
+      "donationUsdPlaceholder": "4000"
+    },
+    "conversion": {
+      "title": "המרת מטבע",
+      "usdAmount": "סכום בדולרים (USD)",
+      "exchangeRate": "שער חליפין",
+      "exchangeRatePlaceholder": "3.7500",
+      "updateRate": "עדכן שער",
+      "updateRateFromBOI": "שלוף שער מבנק ישראל",
+      "rateUpdated": "שער החליפין עודכן בהצלחה",
+      "amountIls": "סכום בשקלים (ILS)",
+      "amountIlsPlaceholder": "יחושב אוטומטית",
+      "boiRates": {
+        "title": "שערי בנק ישראל היום",
+        "loading": "טוען שערים...",
+        "representative": "שער יציג",
+        "buy": "שער קנייה",
+        "buyTooltip": "הבנק קונה דולר ממך במחיר זה",
+        "sell": "שער מכירה",
+        "sellTooltip": "הבנק מוכר לך דולר במחיר זה",
+        "lastUpdated": "עודכן לאחרונה",
+        "fetchError": "שגיאה בשליפת שערי בנק ישראל",
+        "refresh": "רענן שערים"
+      }
+    },
+    "approval": {
+      "title": "אישור להעברה",
+      "donationAmount": "סכום תרומה",
+      "exchangeRate": "שער חליפין",
+      "transferAmount": "סכום להעברה",
+      "accountHolder": "בעל החשבון",
+      "warning": "לאחר אישור, הסטטוס ישתנה ל\"ממתין להעברה\" והתיק יועבר לטבלת ההעברות",
+      "approveButton": "אשר להעברה בנקאית",
+      "approving": "מאשר...",
+      "confirmTitle": "אישור העברה בנקאית",
+      "confirmMessage": "האם אתה בטוח שברצונך לאשר העברה של {amount} לחשבון {account}?",
+      "confirmButton": "אשר העברה",
+      "success": "התשלום אושר בהצלחה",
+      "successDescription": "התיק הועבר לטבלת ההעברות"
+    },
+    "history": {
+      "title": "היסטוריית תשלומים",
+      "date": "תאריך",
+      "amountUsd": "סכום ($)",
+      "amountIls": "סכום (₪)",
+      "status": "סטטוס",
+      "notes": "הערות",
+      "empty": "אין תשלומים להצגה",
+      "noPayments": "אין תשלומים להצגה"
+    },
+    "monthly": {
+      "success": "תשלום חודשי נוצר בהצלחה",
+      "error": "שגיאה ביצירת תשלום חודשי"
+    },
+    "errors": {
+      "invalidCase": "תיק לא תקין",
+      "validationFailed": "נכשלה בדיקת תקינות הנתונים",
+      "saveBankDetails": "שגיאה בשמירת פרטי הבנק",
+      "fetchRate": "שגיאה בשליפת שער החליפין",
+      "noBankDetails": "חסרים פרטי בנק - אנא מלא את פרטי הבנק תחילה",
+      "invalidAmount": "סכום לא תקין - אנא הזן סכום תקין",
+      "invalidRate": "שער חליפין לא תקין",
+      "invalidIlsAmount": "סכום בשקלים לא תקין",
+      "approvePayment": "שגיאה באישור התשלום",
+      "missingBankDetails": "חסרים פרטי בנק",
+      "pleaseFillBankDetails": "אנא מלא את פרטי הבנק קודם",
+      "tryAgainLater": "אנא נסה שוב מאוחר יותר",
+      "refreshFailed": "רענון נכשל"
+    }
   },
   "calendar": {
     "title": "יומן עברי",
@@ -541,7 +653,13 @@
       "description": "צפה, חפש וסנן תיקים",
       "all": "כל התיקים",
       "wedding": "חתונות",
-      "cleaning": "ילדים חולים"
+      "cleaning": "ילדים חולים",
+      "hebrew": "הבקשה בעברית",
+      "english": "הבקשה באנגלית",
+      "files": "קבצים ומסמכים",
+      "payments": "תשלומים",
+      "family": "פרטי המשפחה",
+      "monthlyPayments": "תשלומים חודשיים"
     },
     "type": {
       "wedding": "חתונה",
@@ -694,6 +812,15 @@
       "backToCases": "לרשימת התיקים",
       "backToDashboard": "חזור לדשבורד"
     }
+  },
+  "banks": {
+    "selectBank": "בחר בנק...",
+    "searchBank": "חפש בנק...",
+    "noBank": "לא נמצא בנק.",
+    "bankCode": "קוד:",
+    "selectBranch": "בחר סניף...",
+    "searchBranch": "חפש סניף (לפי מספר או שם)...",
+    "noBranch": "לא נמצא סניף."
   },
   "applicants": {
     "page_title": "בקשות ממתינות",

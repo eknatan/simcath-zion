@@ -17,8 +17,8 @@ import { CaseWithRelations, CaseType } from '@/types/case.types';
 // Import tab components
 import { OriginalRequestTab } from './OriginalRequestTab';
 import { FilesTab } from './FilesTab';
+import { PaymentsTab } from './PaymentsTab';
 // import { EnglishTab } from './EnglishTab';
-// import { PaymentsTab } from './PaymentsTab';
 
 interface CaseTabsProps {
   caseData: CaseWithRelations;
@@ -239,12 +239,7 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
 
         {/* Payments Tab Content */}
         <TabsContent value="payments" className="m-0">
-          {/* Placeholder - will be replaced with PaymentsTab component */}
-          <div className="p-6 border border-slate-200 rounded-lg bg-white">
-            <p className="text-slate-600">
-              {t('payments')} - {t('comingSoon')}
-            </p>
-          </div>
+          <PaymentsTab caseData={caseData} />
         </TabsContent>
       </div>
     </Tabs>
