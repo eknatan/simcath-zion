@@ -45,9 +45,6 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // VERSION CHECK - to verify latest code is deployed
-  console.log('🚀 WEDDING FORM VERSION: 2024-01-03-EMAIL-OPTIONAL');
-
   // Get current locale to determine RTL/LTR
   const isRTL = locale === 'he';
 
@@ -159,8 +156,6 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   const onSubmit = async (data: WeddingFormData) => {
     setIsSubmitting(true);
 
-    console.log('🎯 [WEDDING FORM] Submitting form...', { locale });
-
     try {
       const requestBody = {
         case_type: 'wedding',
@@ -170,8 +165,6 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
         },
       };
 
-      console.log('🎯 [WEDDING FORM] Request body:', requestBody);
-
       const response = await fetch('/api/applicants', {
         method: 'POST',
         headers: {
@@ -180,16 +173,11 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
         body: JSON.stringify(requestBody),
       });
 
-      console.log('🎯 [WEDDING FORM] Response status:', response.status, response.statusText);
-
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ [WEDDING FORM] Error response:', errorText);
         throw new Error('Submission failed');
       }
 
       const result = await response.json();
-      console.log('✅ [WEDDING FORM] Success response:', result);
 
       // Success toast
       toast.success(t('success.title'), {
