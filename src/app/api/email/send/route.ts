@@ -16,11 +16,21 @@ import { isAllowedAttachmentType } from '@/lib/email/utils';
 import { ZodError } from 'zod';
 
 export async function POST(request: NextRequest) {
+  console.log('📧 [EMAIL API] POST request received');
+
   try {
     // 1. בדיקת הרשאות
+    console.log('📧 [EMAIL API] Checking authentication...');
     const authResult = await checkEmailApiAuth(request);
+    console.log('📧 [EMAIL API] Auth result:', {
+      authorized: authResult.authorized,
+      userId: authResult.userId,
+      userRole: authResult.userRole,
+      error: authResult.error
+    });
 
     if (!authResult.authorized) {
+      console.error('❌ [EMAIL API] Authentication failed:', authResult.error);
       return NextResponse.json(
         {
           success: false,
@@ -31,7 +41,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. בדיקה אם למשתמש יש הרשאה לשלוח מיילים
+    console.log('📧 [EMAIL API] Checking send permission for role:', authResult.userRole);
     if (!canSendEmail(authResult.userRole)) {
+      console.error('❌ [EMAIL API] Insufficient permissions for role:', authResult.userRole);
       return NextResponse.json(
         {
           success: false,
@@ -43,6 +55,7 @@ export async function POST(request: NextRequest) {
 
     // 3. קריאת גוף הבקשה
     const body = await request.json();
+    console.log('📧 [EMAIL API] Request body type:', body.type, 'locale:', body.locale);
 
     // 4. ולידציה עם Zod
     let validatedData;
@@ -107,14 +120,25 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'case-created': {
+        console.log('📧 [EMAIL API] Processing case-created email');
+        console.log('📧 [EMAIL API] Case data:', {
+          caseNumber: validatedData.data.caseNumber,
+          caseType: validatedData.data.caseType,
+          applicantEmail: validatedData.data.applicantEmail,
+          applicantPhone: validatedData.data.applicantPhone
+        });
+
         // ברירת מחדל: שליחה למזכירות אם לא צוין יעד
         let recipients = validatedData.to;
 
         if (!recipients) {
+          console.log('📧 [EMAIL API] No recipients specified, fetching secretary emails...');
           // אם לא צוינו נמענים, נשתמש במזכירות מ-DB
           const secretaryEmailsList = await getSecretaryEmails();
+          console.log('📧 [EMAIL API] Secretary emails found:', secretaryEmailsList);
 
           if (secretaryEmailsList.length === 0) {
+            console.error('❌ [EMAIL API] No secretary emails configured!');
             return NextResponse.json(
               {
                 success: false,
@@ -126,6 +150,8 @@ export async function POST(request: NextRequest) {
           }
           recipients = secretaryEmailsList;
         }
+
+        console.log('📧 [EMAIL API] Final recipients:', recipients);
 
         emailContent = getCaseCreatedTemplate({
           caseNumber: validatedData.data.caseNumber,
@@ -180,6 +206,7 @@ export async function POST(request: NextRequest) {
     // 6. שליחת המייל
     // Ensure 'to' is defined (it should be set for all email types by now)
     if (!validatedData.to) {
+      console.error('❌ [EMAIL API] No recipients specified after validation');
       return NextResponse.json(
         {
           success: false,
@@ -188,6 +215,14 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    console.log('📧 [EMAIL API] Sending email via emailService...');
+    console.log('📧 [EMAIL API] Email details:', {
+      to: validatedData.to,
+      subject: emailContent.subject,
+      emailType,
+      locale: validatedData.locale
+    });
 
     const result = await emailService.sendEmail(
       {
@@ -213,7 +248,10 @@ export async function POST(request: NextRequest) {
     );
 
     // 7. החזרת תוצאה
+    console.log('📧 [EMAIL API] Email send result:', result);
+
     if (result.success) {
+      console.log('✅ [EMAIL API] Email sent successfully, messageId:', result.messageId);
       return NextResponse.json(
         {
           success: true,
@@ -223,6 +261,7 @@ export async function POST(request: NextRequest) {
         { status: 200 }
       );
     } else {
+      console.error('❌ [EMAIL API] Failed to send email:', result.error);
       return NextResponse.json(
         {
           success: false,

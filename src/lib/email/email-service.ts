@@ -17,12 +17,28 @@ class EmailService {
    * אתחול ה-transporter
    */
   private async initialize(): Promise<void> {
-    if (this.transporter) return;
+    if (this.transporter) {
+      console.log('📮 [EMAIL SERVICE] Transporter already initialized');
+      return;
+    }
+
+    console.log('📮 [EMAIL SERVICE] Initializing transporter...');
+    console.log('📮 [EMAIL SERVICE] Email config:', {
+      host: emailConfig.host,
+      port: emailConfig.port,
+      secure: emailConfig.secure,
+      hasAuth: !!emailConfig.auth,
+      hasUser: !!emailConfig.auth?.user,
+      hasPass: !!emailConfig.auth?.pass
+    });
 
     // אימות הגדרות
     if (!validateEmailConfig()) {
+      console.error('❌ [EMAIL SERVICE] Email configuration is invalid!');
       throw new Error('Email configuration is invalid');
     }
+
+    console.log('✅ [EMAIL SERVICE] Email configuration validated');
 
     // יצירת transporter
     this.transporter = nodemailer.createTransport({
@@ -64,18 +80,33 @@ class EmailService {
         ? options.to
         : options.to.email;
 
+    console.log('📮 [EMAIL SERVICE] sendEmail called');
+    console.log('📮 [EMAIL SERVICE] Options:', {
+      to: options.to,
+      subject: options.subject,
+      hasHtml: !!options.html,
+      hasText: !!options.text
+    });
+    console.log('📮 [EMAIL SERVICE] Metadata:', metadata);
+
     try {
       // אתחול אם צריך
+      console.log('📮 [EMAIL SERVICE] Calling initialize...');
       await this.initialize();
 
       if (!this.transporter) {
+        console.error('❌ [EMAIL SERVICE] Transporter is not initialized after initialize()!');
         throw new Error('Email transporter is not initialized');
       }
 
+      console.log('✅ [EMAIL SERVICE] Transporter is ready');
+
       // the from address
       const from = options.from || defaultFrom;
+      console.log('📮 [EMAIL SERVICE] From address:', from);
 
       // sending the email
+      console.log('📮 [EMAIL SERVICE] Sending email via nodemailer...');
       const info = await this.transporter.sendMail({
         from: typeof from === 'string' ? from : `${from.name} <${from.email}>`,
         to: this.formatAddresses(options.to),
@@ -90,9 +121,12 @@ class EmailService {
         attachments: options.attachments,
       });
 
-      console.log('✅ Email sent successfully:', info.messageId);
+      console.log('✅ [EMAIL SERVICE] Email sent successfully!');
+      console.log('✅ [EMAIL SERVICE] Message ID:', info.messageId);
+      console.log('✅ [EMAIL SERVICE] Response:', info.response);
 
       // רישום ב-database
+      console.log('📮 [EMAIL SERVICE] Logging success to database...');
       await emailLogger.logSuccess(
         metadata?.emailType || 'general',
         primaryRecipient,
@@ -107,9 +141,13 @@ class EmailService {
         messageId: info.messageId,
       };
     } catch (error) {
-      console.error('❌ Failed to send email:', error);
+      console.error('❌ [EMAIL SERVICE] Failed to send email!');
+      console.error('❌ [EMAIL SERVICE] Error:', error);
+      console.error('❌ [EMAIL SERVICE] Error message:', error instanceof Error ? error.message : 'Unknown');
+      console.error('❌ [EMAIL SERVICE] Error stack:', error instanceof Error ? error.stack : 'N/A');
 
       // רישום כשל ב-database
+      console.log('📮 [EMAIL SERVICE] Logging failure to database...');
       await emailLogger.logFailure(
         metadata?.emailType || 'general',
         primaryRecipient,

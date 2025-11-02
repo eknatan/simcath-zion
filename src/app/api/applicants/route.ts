@@ -32,13 +32,26 @@ async function sendApplicantEmails(data: {
 }): Promise<{ secretaryEmailSent: boolean; applicantEmailSent: boolean }> {
   const { applicantId, caseType, formData, locale } = data;
 
+  console.log('📨 [APPLICANTS] Starting to send emails for applicant:', applicantId);
+  console.log('📨 [APPLICANTS] Case type:', caseType, 'Locale:', locale);
+
   let secretaryEmailSent = false;
   let applicantEmailSent = false;
 
   try {
     // 1. Send email to secretary (case-created template)
     // The /api/email/send will automatically use secretary emails from DB
-    const secretaryResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/email/send`, {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const apiKey = process.env.INTERNAL_EMAIL_API_KEY;
+
+    console.log('📨 [APPLICANTS] Email API config:', {
+      baseUrl,
+      apiKeyConfigured: !!apiKey,
+      apiKeyLength: apiKey?.length || 0
+    });
+
+    console.log('📨 [APPLICANTS] Sending secretary email...');
+    const secretaryResponse = await fetch(`${baseUrl}/api/email/send`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,13 +80,33 @@ async function sendApplicantEmails(data: {
     });
 
     secretaryEmailSent = secretaryResponse.ok;
+    console.log('📨 [APPLICANTS] Secretary email response:', {
+      ok: secretaryResponse.ok,
+      status: secretaryResponse.status,
+      statusText: secretaryResponse.statusText
+    });
+
     if (!secretaryEmailSent) {
-      console.error('Failed to send secretary email:', await secretaryResponse.text());
+      const errorText = await secretaryResponse.text();
+      console.error('❌ [APPLICANTS] Failed to send secretary email:', errorText);
+    } else {
+      const responseData = await secretaryResponse.json();
+      console.log('✅ [APPLICANTS] Secretary email sent successfully:', responseData);
     }
 
     // 2. Send confirmation email to applicant (applicant-notification template)
-    if (formData.personal_info?.email) {
-      const applicantResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/email/send`, {
+    // Get applicant email based on case type
+    const applicantEmail = caseType === 'wedding'
+      ? formData.groom_info?.email
+      : formData.personal_info?.email;
+
+    const applicantName = caseType === 'wedding'
+      ? `${formData.groom_info?.first_name || ''} ${formData.groom_info?.last_name || ''}`.trim() || 'שלום'
+      : formData.personal_info?.full_name || 'שלום';
+
+    if (applicantEmail) {
+      console.log('📨 [APPLICANTS] Sending applicant confirmation email to:', applicantEmail);
+      const applicantResponse = await fetch(`${baseUrl}/api/email/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,9 +114,9 @@ async function sendApplicantEmails(data: {
         },
         body: JSON.stringify({
           type: 'applicant-notification',
-          to: [formData.personal_info.email],
+          to: [applicantEmail],
           data: {
-            applicantName: formData.personal_info.full_name || 'שלום',
+            applicantName,
             caseType: caseType === 'wedding' ? 'חתונה' : 'ילד חולה',
             referenceNumber: applicantId.substring(0, 8).toUpperCase(),
           },
@@ -92,9 +125,21 @@ async function sendApplicantEmails(data: {
       });
 
       applicantEmailSent = applicantResponse.ok;
+      console.log('📨 [APPLICANTS] Applicant email response:', {
+        ok: applicantResponse.ok,
+        status: applicantResponse.status,
+        statusText: applicantResponse.statusText
+      });
+
       if (!applicantEmailSent) {
-        console.error('Failed to send applicant email:', await applicantResponse.text());
+        const errorText = await applicantResponse.text();
+        console.error('❌ [APPLICANTS] Failed to send applicant email:', errorText);
+      } else {
+        const responseData = await applicantResponse.json();
+        console.log('✅ [APPLICANTS] Applicant email sent successfully:', responseData);
       }
+    } else {
+      console.log('⚠️ [APPLICANTS] No applicant email found, skipping applicant notification');
     }
   } catch (error) {
     console.error('Error sending emails:', error);
