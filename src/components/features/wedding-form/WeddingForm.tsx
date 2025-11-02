@@ -156,26 +156,37 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   const onSubmit = async (data: WeddingFormData) => {
     setIsSubmitting(true);
 
+    console.log('🎯 [WEDDING FORM] Submitting form...', { locale });
+
     try {
+      const requestBody = {
+        case_type: 'wedding',
+        form_data: {
+          ...data,
+          locale, // Add locale to form data
+        },
+      };
+
+      console.log('🎯 [WEDDING FORM] Request body:', requestBody);
+
       const response = await fetch('/api/applicants', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          case_type: 'wedding',
-          form_data: {
-            ...data,
-            locale, // Add locale to form data
-          },
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('🎯 [WEDDING FORM] Response status:', response.status, response.statusText);
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ [WEDDING FORM] Error response:', errorText);
         throw new Error('Submission failed');
       }
 
-      await response.json();
+      const result = await response.json();
+      console.log('✅ [WEDDING FORM] Success response:', result);
 
       // Success toast
       toast.success(t('success.title'), {
