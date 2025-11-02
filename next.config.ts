@@ -7,9 +7,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 
   // Performance optimizations
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
+  // Note: removeConsole disabled temporarily for debugging email issues
+  // compiler: {
+  //   removeConsole: process.env.NODE_ENV === 'production',
+  // },
 
   // Optimize bundle splitting
   experimental: {
