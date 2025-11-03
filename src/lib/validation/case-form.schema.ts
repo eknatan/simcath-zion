@@ -92,6 +92,7 @@ export const weddingInfoSchema = z.object({
     .number()
     .min(0, 'עלות לא יכולה להיות שלילית')
     .optional(),
+  request_background: z.string().optional().or(z.literal('')),
 });
 
 /**
@@ -107,7 +108,6 @@ export const groomInfoSchema = z.object({
   groom_mother_name: nameSchema,
   groom_mother_occupation: z.string().optional().or(z.literal('')),
   groom_memorial_day: hebrewDateSchema,
-  groom_background: z.string().optional().or(z.literal('')),
 });
 
 /**
@@ -123,7 +123,6 @@ export const brideInfoSchema = z.object({
   bride_mother_name: nameSchema,
   bride_mother_occupation: z.string().optional().or(z.literal('')),
   bride_memorial_day: hebrewDateSchema,
-  bride_background: z.string().optional().or(z.literal('')),
 });
 
 /**

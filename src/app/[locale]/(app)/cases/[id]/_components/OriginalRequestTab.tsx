@@ -202,7 +202,6 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
           groom_father_name: caseData.groom_father_name || '',
           groom_mother_name: caseData.groom_mother_name || '',
           groom_memorial_day: caseData.groom_memorial_day || '',
-          groom_background: caseData.groom_background || '',
           groom_father_occupation: caseData.groom_father_occupation || '',
           groom_mother_occupation: caseData.groom_mother_occupation || '',
           // Bride
@@ -213,7 +212,6 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
           bride_father_name: caseData.bride_father_name || '',
           bride_mother_name: caseData.bride_mother_name || '',
           bride_memorial_day: caseData.bride_memorial_day || '',
-          bride_background: caseData.bride_background || '',
           bride_father_occupation: caseData.bride_father_occupation || '',
           bride_mother_occupation: caseData.bride_mother_occupation || '',
           // Contact
@@ -346,6 +344,17 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.total_cost?.message as string}
               />
+              <div className="md:col-span-2">
+                <Field
+                  name="request_background"
+                  label={t('weddingInfo.requestBackground')}
+                  type="textarea"
+                  value={formValues.request_background}
+                  onSave={handleFieldSave}
+                  notSpecifiedText={t('notSpecified')}
+                  error={formErrors.request_background?.message as string}
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -432,17 +441,6 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_memorial_day?.message as string}
               />
-              <div className="md:col-span-2">
-                <Field
-                  name="groom_background"
-                  label={t('groomInfo.background')}
-                  type="textarea"
-                  value={formValues.groom_background}
-                  onSave={handleFieldSave}
-                  notSpecifiedText={t('notSpecified')}
-                  error={formErrors.groom_background?.message as string}
-                />
-              </div>
             </CardContent>
           </Card>
 
@@ -529,17 +527,6 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_memorial_day?.message as string}
               />
-              <div className="md:col-span-2">
-                <Field
-                  name="bride_background"
-                  label={t('brideInfo.background')}
-                  type="textarea"
-                  value={formValues.bride_background}
-                  onSave={handleFieldSave}
-                  notSpecifiedText={t('notSpecified')}
-                  error={formErrors.bride_background?.message as string}
-                />
-              </div>
             </CardContent>
           </Card>
 

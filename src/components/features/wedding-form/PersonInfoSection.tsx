@@ -64,7 +64,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
               <Input
                 id={`${fieldPrefix}.first_name`}
                 {...register(`${fieldPrefix}.first_name`)}
-                placeholder={t(`${tKey}.first_name_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ps-10"
                 aria-invalid={!!personErrors?.first_name}
               />
@@ -85,7 +84,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
             <Input
               id={`${fieldPrefix}.last_name`}
               {...register(`${fieldPrefix}.last_name`)}
-              placeholder={t(`${tKey}.last_name_placeholder`)}
               className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               aria-invalid={!!personErrors?.last_name}
             />
@@ -106,7 +104,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
           <Input
             id={`${fieldPrefix}.id`}
             {...register(`${fieldPrefix}.id`)}
-            placeholder={t(`${tKey}.id_placeholder`)}
             className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             aria-invalid={!!personErrors?.id}
             maxLength={9}
@@ -126,7 +123,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
           <Input
             id={`${fieldPrefix}.school`}
             {...register(`${fieldPrefix}.school`)}
-            placeholder={t(`${tKey}.school_placeholder`)}
             className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             aria-invalid={!!personErrors?.school}
           />
@@ -145,7 +141,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
               <Input
                 id={`${fieldPrefix}.father_name`}
                 {...register(`${fieldPrefix}.father_name`)}
-                placeholder={t(`${tKey}.father_name_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white"
               />
             </div>
@@ -157,7 +152,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
               <Input
                 id={`${fieldPrefix}.father_occupation`}
                 {...register(`${fieldPrefix}.father_occupation`)}
-                placeholder={t(`${tKey}.father_occupation_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white"
               />
             </div>
@@ -170,7 +164,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
               <Input
                 id={`${fieldPrefix}.mother_name`}
                 {...register(`${fieldPrefix}.mother_name`)}
-                placeholder={t(`${tKey}.mother_name_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white"
               />
             </div>
@@ -182,7 +175,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
               <Input
                 id={`${fieldPrefix}.mother_occupation`}
                 {...register(`${fieldPrefix}.mother_occupation`)}
-                placeholder={t(`${tKey}.mother_occupation_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white"
               />
             </div>
@@ -200,7 +192,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
               <Input
                 id={`${fieldPrefix}.address`}
                 {...register(`${fieldPrefix}.address`)}
-                placeholder={t(`${tKey}.address_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ps-10"
                 aria-invalid={!!personErrors?.address}
               />
@@ -221,7 +212,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
             <Input
               id={`${fieldPrefix}.city`}
               {...register(`${fieldPrefix}.city`)}
-              placeholder={t(`${tKey}.city_placeholder`)}
               className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               aria-invalid={!!personErrors?.city}
             />
@@ -244,7 +234,6 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
               <Input
                 id={`${fieldPrefix}.phone`}
                 {...register(`${fieldPrefix}.phone`)}
-                placeholder={t(`${tKey}.phone_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ps-10"
                 aria-invalid={!!personErrors?.phone}
               />
@@ -260,14 +249,12 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
           <div className="space-y-2">
             <Label htmlFor={`${fieldPrefix}.email`}>
               {t(`${tKey}.email`)}
-              <span className="text-destructive ms-1">*</span>
             </Label>
             <div className="relative">
               <Input
                 id={`${fieldPrefix}.email`}
                 type="email"
                 {...register(`${fieldPrefix}.email`)}
-                placeholder={t(`${tKey}.email_placeholder`)}
                 className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ps-10"
                 aria-invalid={!!personErrors?.email}
               />
@@ -289,28 +276,10 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
           <Input
             id={`${fieldPrefix}.memorial_day`}
             {...register(`${fieldPrefix}.memorial_day`)}
-            placeholder={t(`${tKey}.memorial_day_placeholder`)}
             className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           />
           <p className="text-xs text-muted-foreground">
             {t(`${tKey}.memorial_day_helper`)}
-          </p>
-        </div>
-
-        {/* תיעוד רקע */}
-        <div className="space-y-2">
-          <Label htmlFor={`${fieldPrefix}.background`}>
-            {t(`${tKey}.background`)}
-          </Label>
-          <Textarea
-            id={`${fieldPrefix}.background`}
-            {...register(`${fieldPrefix}.background`)}
-            placeholder={t(`${tKey}.background_placeholder`)}
-            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 min-h-[120px]"
-            rows={5}
-          />
-          <p className="text-xs text-muted-foreground">
-            {t(`${tKey}.background_helper`)}
           </p>
         </div>
       </div>

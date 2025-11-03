@@ -299,7 +299,10 @@
       "guests_count_placeholder": "300",
       "total_cost": "Total Wedding Cost",
       "total_cost_placeholder": "50000",
-      "total_cost_helper": "Including catering, and venue"
+      "total_cost_helper": "Including catering, and venue",
+      "request_background": "Background About the Request (Optional)",
+      "request_background_placeholder": "Tell us about the request...",
+      "request_background_helper": "Additional information about the request to help us better understand the situation"
     },
     "section_groom_info": {
       "title": "Groom Information",
@@ -331,10 +334,7 @@
       "email_placeholder": "david@example.com",
       "memorial_day": "Memorial Day (Optional)",
       "memorial_day_placeholder": "9th of Av",
-      "memorial_day_helper": "Memorial day of deceased parent",
-      "background": "Background Documentation (Optional)",
-      "background_placeholder": "Tell us a bit about the family background...",
-      "background_helper": "Additional information to help us better understand the application"
+      "memorial_day_helper": "Memorial day of deceased parent"
     },
     "section_bride_info": {
       "title": "Bride Information",
@@ -366,10 +366,7 @@
       "email_placeholder": "sarah@example.com",
       "memorial_day": "Memorial Day (Optional)",
       "memorial_day_placeholder": "20th of Shevat",
-      "memorial_day_helper": "Memorial day of deceased parent",
-      "background": "Background Documentation (Optional)",
-      "background_placeholder": "Tell us a bit about the family background...",
-      "background_helper": "Additional information to help us better understand the application"
+      "memorial_day_helper": "Memorial day of deceased parent"
     },
     "marital_status": {
       "single": "Single",
@@ -833,7 +830,8 @@
         "city": "City",
         "venue": "Venue",
         "guestsCount": "Number of Guests",
-        "totalCost": "Total Cost (₪)"
+        "totalCost": "Total Cost (₪)",
+        "requestBackground": "Background request"
       },
       "groomInfo": {
         "title": "Groom Details",

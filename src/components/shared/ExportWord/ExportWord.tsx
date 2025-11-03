@@ -54,6 +54,11 @@ interface ExportWordProps {
   title?: string;
 
   /**
+   * שפה/Locale ('he' או 'en')
+   */
+  locale?: string;
+
+  /**
    * Variant של הכפתור
    */
   variant?: 'default' | 'primary' | 'outline';
@@ -88,6 +93,7 @@ export function ExportWord({
   formData,
   filename,
   title,
+  locale = 'he',
   variant = 'outline',
   size = 'default',
   buttonText,
@@ -98,8 +104,12 @@ export function ExportWord({
   const t = useTranslations('common.export');
   const [isExporting, setIsExporting] = useState(false);
 
+  // זיהוי אם זה עברית (RTL)
+  const isRTL = locale === 'he';
+
   /**
    * יצירת שורת טבלה עם label ו-value
+   * תמיכה ב-RTL וריווח אוטומטי
    */
   const createTableRow = (label: string, value: string | number | null | undefined) => {
     return new TableRow({
@@ -115,11 +125,11 @@ export function ExportWord({
                   font: 'Arial',
                 }),
               ],
-              alignment: AlignmentType.RIGHT,
-              bidirectional: true,
+              alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
+              bidirectional: isRTL,
             }),
           ],
-          width: { size: 35, type: WidthType.PERCENTAGE },
+          width: { size: 3000, type: WidthType.DXA }, // רוחב מינימלי לכותרת (~2 אינץ')
           borders: {
             top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
             bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
@@ -137,11 +147,11 @@ export function ExportWord({
                   font: 'Arial',
                 }),
               ],
-              alignment: AlignmentType.RIGHT,
-              bidirectional: true,
+              alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
+              bidirectional: isRTL,
             }),
           ],
-          width: { size: 65, type: WidthType.PERCENTAGE },
+          width: { size: 6500, type: WidthType.DXA }, // רוחב גדול יותר לתוכן (~4.3 אינץ')
           borders: {
             top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
             bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
@@ -168,8 +178,8 @@ export function ExportWord({
         }),
       ],
       heading: HeadingLevel.HEADING_2,
-      alignment: AlignmentType.RIGHT,
-      bidirectional: true,
+      alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
+      bidirectional: isRTL,
       spacing: { before: 240, after: 120 },
     });
   };
@@ -210,8 +220,8 @@ export function ExportWord({
               }),
             ],
             heading: HeadingLevel.HEADING_1,
-            alignment: AlignmentType.CENTER,
-            bidirectional: true,
+            alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.CENTER,
+            bidirectional: isRTL,
             spacing: { after: 240 },
             border: {
               bottom: {
@@ -229,6 +239,7 @@ export function ExportWord({
         createSectionHeader('מידע החתונה'),
         new Table({
           width: { size: 100, type: WidthType.PERCENTAGE },
+          alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
           rows: [
             createTableRow('תאריך עברי', formData.wedding_info?.date_hebrew),
             createTableRow('תאריך לועזי', formData.wedding_info?.date_gregorian),
@@ -244,6 +255,7 @@ export function ExportWord({
         createSectionHeader('פרטי החתן'),
         new Table({
           width: { size: 100, type: WidthType.PERCENTAGE },
+          alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
           rows: [
             createTableRow('שם פרטי', formData.groom_info?.first_name),
             createTableRow('שם משפחה', formData.groom_info?.last_name),
@@ -268,6 +280,7 @@ export function ExportWord({
         createSectionHeader('פרטי הכלה'),
         new Table({
           width: { size: 100, type: WidthType.PERCENTAGE },
+          alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
           rows: [
             createTableRow('שם פרטי', formData.bride_info?.first_name),
             createTableRow('שם משפחה', formData.bride_info?.last_name),

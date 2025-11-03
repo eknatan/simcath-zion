@@ -88,6 +88,7 @@ export const weddingInfoSchema = z.object({
     .refine((v) => typeof v === 'number' && !Number.isNaN(v), 'validation.invalidNumber')
     .min(0, 'validation.minCost')
     .max(10000000, 'validation.maxCost'),
+  request_background: z.string().max(2000, 'validation.maxBackgroundLength').optional(),
 });
 
 /**

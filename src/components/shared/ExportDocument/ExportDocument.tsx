@@ -16,12 +16,10 @@
  * לפי: DESIGN_SYSTEM.md, AI_DEVELOPMENT_GUIDE.md
  */
 
-import { useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { FileDown, Loader2 } from 'lucide-react';
-import html2pdf from 'html2pdf.js';
-import { toast } from 'sonner';
+import { useExportPDF } from '@/lib/hooks/useExportPDF';
 
 interface ExportDocumentProps {
   /**
@@ -88,93 +86,18 @@ export function ExportDocument({
   onExportError,
 }: ExportDocumentProps) {
   const t = useTranslations('common.export');
-  const [isExporting, setIsExporting] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
 
-  /**
-   * ייצוא ל-PDF
-   * מטפל בשגיאות בצורה בטוחה ולא משפיע על הדיאלוג ההורה
-   */
+  // שימוש ב-hook המשותף
+  const { isExporting, exportToPDF, contentRef } = useExportPDF({
+    filename,
+    onSuccess: onExportComplete,
+    onError: onExportError,
+  });
+
   const handleExportPDF = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    // מניעת התפשטות האירוע כדי לא להשפיע על הדיאלוג ההורה
     e.stopPropagation();
     e.preventDefault();
-
-    // Validation: בדיקת תקינות contentRef
-    if (!contentRef.current) {
-      console.error('Export failed: contentRef is null');
-      toast.error(t('error'));
-      return;
-    }
-
-    // Validation: בדיקת תקינות filename
-    if (!filename || filename.trim() === '') {
-      console.error('Export failed: filename is empty');
-      toast.error(t('error'));
-      return;
-    }
-
-    setIsExporting(true);
-
-    try {
-      // הגדרות ה-PDF
-      const opt = {
-        margin: [10, 10, 10, 10], // mm [top, right, bottom, left]
-        filename: `${filename}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true,
-          scrollY: 0,
-          scrollX: 0,
-        },
-        jsPDF: {
-          unit: 'mm' as const,
-          format: 'a4' as const,
-          orientation: 'portrait' as const,
-          compress: true,
-        },
-        pagebreak: {
-          mode: ['avoid-all', 'css', 'legacy'],
-          before: '.page-break-before',
-          after: '.page-break-after',
-        },
-      };
-
-      // יצירת ה-PDF - עם timeout למניעת תקיעה
-      const exportPromise = html2pdf().set(opt).from(contentRef.current).save();
-
-      // Timeout של 30 שניות למניעת תקיעה
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Export timeout')), 30000)
-      );
-
-      await Promise.race([exportPromise, timeoutPromise]);
-
-      // הודעת הצלחה
-      toast.success(t('success'));
-
-      // Callback
-      onExportComplete?.();
-    } catch (error) {
-      // לוג השגיאה
-      console.error('Error exporting PDF:', error);
-
-      // הצגת הודעת שגיאה ידידותית למשתמש
-      toast.error(t('error'));
-
-      // Callback שגיאה (אם קיים)
-      try {
-        onExportError?.(error as Error);
-      } catch (callbackError) {
-        // אם גם ה-callback נכשל, לא נזרוק שגיאה
-        console.error('Error in onExportError callback:', callbackError);
-      }
-    } finally {
-      // תמיד נוודא שהכפתור חוזר למצב רגיל
-      setIsExporting(false);
-    }
+    await exportToPDF();
   };
 
   // טקסט הכפתור
@@ -184,7 +107,7 @@ export function ExportDocument({
     <div className="export-document-wrapper">
       {/* כפתור ייצוא */}
       <ActionButton
-        variant={variant as any}
+        variant={variant === 'outline' ? 'view' : (variant as any)}
         size={size}
         onClick={handleExportPDF}
         disabled={isExporting}
@@ -207,11 +130,11 @@ export function ExportDocument({
           style={{
             width: '210mm', // A4 width
             minHeight: '297mm', // A4 height
-            padding: '20mm',
+            padding: '12mm',
             backgroundColor: 'white',
             fontFamily: 'Arial, sans-serif',
-            fontSize: '12pt',
-            lineHeight: '1.6',
+            fontSize: '10pt',
+            lineHeight: '1.5',
             color: '#000',
           }}
         >
@@ -220,11 +143,11 @@ export function ExportDocument({
             <div
               style={{
                 textAlign: 'center',
-                fontSize: '20pt',
+                fontSize: '16pt',
                 fontWeight: 'bold',
-                marginBottom: '20mm',
+                marginBottom: '10mm',
                 borderBottom: '2px solid #000',
-                paddingBottom: '10mm',
+                paddingBottom: '5mm',
               }}
             >
               {title}
@@ -254,7 +177,7 @@ export function ExportField({
   return (
     <div
       style={{
-        marginBottom: '8mm',
+        marginBottom: '4mm',
         display: fullWidth ? 'block' : 'inline-block',
         width: fullWidth ? '100%' : '48%',
         verticalAlign: 'top',
@@ -264,19 +187,19 @@ export function ExportField({
       <div
         style={{
           fontWeight: 'bold',
-          fontSize: '10pt',
+          fontSize: '9pt',
           color: '#333',
-          marginBottom: '2mm',
+          marginBottom: '1mm',
         }}
       >
         {label}:
       </div>
       <div
         style={{
-          fontSize: '11pt',
+          fontSize: '9pt',
           color: '#000',
           borderBottom: '1px solid #ddd',
-          paddingBottom: '2mm',
+          paddingBottom: '1mm',
         }}
       >
         {value || '-'}
@@ -300,24 +223,24 @@ export function ExportSection({
   return (
     <div
       style={{
-        marginBottom: '15mm',
+        marginBottom: '8mm',
         pageBreakInside: 'avoid',
       }}
     >
       <div
         style={{
-          fontSize: '14pt',
+          fontSize: '12pt',
           fontWeight: 'bold',
           color: '#1e40af',
-          marginBottom: '5mm',
+          marginBottom: '3mm',
           borderBottom: '2px solid #3b82f6',
-          paddingBottom: '3mm',
+          paddingBottom: '2mm',
         }}
       >
         {icon && <span style={{ marginRight: '5mm' }}>{icon}</span>}
         {title}
       </div>
-      <div style={{ paddingTop: '3mm' }}>
+      <div style={{ paddingTop: '2mm' }}>
         {children}
       </div>
     </div>

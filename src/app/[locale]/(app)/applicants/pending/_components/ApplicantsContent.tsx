@@ -12,7 +12,7 @@
  * - Dependency Inversion: משתמש בקומפוננטות משותפות
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileText, XCircle, Clock, ExternalLink } from 'lucide-react';
@@ -38,13 +38,16 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
     ? ApplicantStatus.PENDING_APPROVAL
     : ApplicantStatus.REJECTED;
 
+  // Memoize initialFilters to prevent infinite loop
+  const initialFilters = useMemo(() => ({ status: statusFilter }), [statusFilter]);
+
   // Fetch data
   const {
     data: applicants,
     isLoading,
     error,
     refetch,
-  } = useApplicants({ status: statusFilter });
+  } = useApplicants(initialFilters);
 
   // Calculate stats
   const stats = {

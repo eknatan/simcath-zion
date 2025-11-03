@@ -122,21 +122,21 @@ function WeddingFormView({
     return (
       <div style={{ width: '100%', backgroundColor: '#ffffff' }}>
         {/* Wedding Info */}
-        <div style={{ marginBottom: '15mm', backgroundColor: '#ffffff' }}>
+        <div style={{ marginBottom: '8mm', backgroundColor: '#ffffff' }}>
           <div
             style={{
-              fontSize: '14pt',
+              fontSize: '12pt',
               fontWeight: 'bold',
               color: '#1e40af',
-              marginBottom: '5mm',
+              marginBottom: '3mm',
               borderBottom: '2px solid #3b82f6',
-              paddingBottom: '3mm',
+              paddingBottom: '2mm',
               backgroundColor: '#ffffff',
             }}
           >
-            📅 {t('wedding_info.title')}
+            {t('wedding_info.title')}
           </div>
-          <div style={{ paddingTop: '3mm' }}>
+          <div style={{ paddingTop: '2mm' }}>
             <ExportFieldInline
               label={t('wedding_info.date_hebrew')}
               value={weddingInfo.date_hebrew}
@@ -158,133 +158,132 @@ function WeddingFormView({
           </div>
         </div>
 
-        {/* Groom Info */}
-        <div style={{ marginBottom: '15mm', backgroundColor: '#ffffff' }}>
-          <div
-            style={{
-              fontSize: '14pt',
-              fontWeight: 'bold',
-              color: '#1e40af',
-              marginBottom: '5mm',
-              borderBottom: '2px solid #3b82f6',
-              paddingBottom: '3mm',
-              backgroundColor: '#ffffff',
-            }}
-          >
-            👔 {t('groom_info.title')}
-          </div>
-          <div style={{ paddingTop: '3mm' }}>
-            <ExportFieldInline
-              label={t('groom_info.name')}
-              value={`${groomInfo.first_name || ''} ${groomInfo.last_name || ''}`.trim()}
-            />
-            <ExportFieldInline label={t('groom_info.id')} value={groomInfo.id_number || groomInfo.id} />
-            <ExportFieldInline label={t('groom_info.phone')} value={groomInfo.phone} />
-            <ExportFieldInline label={t('groom_info.email')} value={groomInfo.email} />
-            {groomInfo.school && <ExportFieldInline label="בית ספר" value={groomInfo.school} />}
-            {groomInfo.city && <ExportFieldInline label="עיר" value={groomInfo.city} />}
-            <ExportFieldInline
-              label={t('groom_info.address')}
-              value={groomInfo.address}
-              fullWidth
-            />
-            {groomInfo.father_name && (
-              <ExportFieldInline label="שם האב" value={groomInfo.father_name} />
-            )}
-            {groomInfo.father_occupation && (
-              <ExportFieldInline label="עיסוק האב" value={groomInfo.father_occupation} />
-            )}
-            {groomInfo.mother_name && (
-              <ExportFieldInline label="שם האם" value={groomInfo.mother_name} />
-            )}
-            {groomInfo.mother_occupation && (
-              <ExportFieldInline label="עיסוק האם" value={groomInfo.mother_occupation} />
-            )}
-            {groomInfo.memorial_day && (
-              <ExportFieldInline
-                label={t('groom_info.memorial_day')}
-                value={groomInfo.memorial_day}
-                fullWidth
+        {/* Groom & Bride Info - Two Columns */}
+        <div style={{ display: 'flex', gap: '5mm', marginBottom: '8mm' }}>
+          {/* Groom Column */}
+          <div style={{ flex: 1, backgroundColor: '#ffffff' }}>
+            <div
+              style={{
+                fontSize: '12pt',
+                fontWeight: 'bold',
+                color: '#1e40af',
+                marginBottom: '3mm',
+                borderBottom: '2px solid #3b82f6',
+                paddingBottom: '2mm',
+                backgroundColor: '#ffffff',
+              }}
+            >
+              {t('groom_info.title')}
+            </div>
+            <div style={{ paddingTop: '2mm' }}>
+              <ExportFieldColumn
+                label={t('groom_info.name')}
+                value={`${groomInfo.first_name || ''} ${groomInfo.last_name || ''}`.trim()}
               />
-            )}
-            {groomInfo.background && (
-              <ExportFieldInline label="רקע" value={groomInfo.background} fullWidth />
-            )}
+              <ExportFieldColumn label={t('groom_info.id')} value={groomInfo.id_number || groomInfo.id} />
+              <ExportFieldColumn label={t('groom_info.phone')} value={groomInfo.phone} />
+              <ExportFieldColumn label={t('groom_info.email')} value={groomInfo.email} />
+              {groomInfo.school && <ExportFieldColumn label="בית ספר" value={groomInfo.school} />}
+              {groomInfo.city && <ExportFieldColumn label="עיר" value={groomInfo.city} />}
+              <ExportFieldColumn
+                label={t('groom_info.address')}
+                value={groomInfo.address}
+              />
+              {groomInfo.father_name && (
+                <ExportFieldColumn label="שם האב" value={groomInfo.father_name} />
+              )}
+              {groomInfo.father_occupation && (
+                <ExportFieldColumn label="עיסוק האב" value={groomInfo.father_occupation} />
+              )}
+              {groomInfo.mother_name && (
+                <ExportFieldColumn label="שם האם" value={groomInfo.mother_name} />
+              )}
+              {groomInfo.mother_occupation && (
+                <ExportFieldColumn label="עיסוק האם" value={groomInfo.mother_occupation} />
+              )}
+              {groomInfo.memorial_day && (
+                <ExportFieldColumn
+                  label={t('groom_info.memorial_day')}
+                  value={groomInfo.memorial_day}
+                />
+              )}
+              {groomInfo.background && (
+                <ExportFieldColumn label="רקע" value={groomInfo.background} />
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Bride Info */}
-        <div style={{ marginBottom: '15mm', backgroundColor: '#ffffff' }}>
-          <div
-            style={{
-              fontSize: '14pt',
-              fontWeight: 'bold',
-              color: '#1e40af',
-              marginBottom: '5mm',
-              borderBottom: '2px solid #3b82f6',
-              paddingBottom: '3mm',
-              backgroundColor: '#ffffff',
-            }}
-          >
-            👰 {t('bride_info.title')}
-          </div>
-          <div style={{ paddingTop: '3mm' }}>
-            <ExportFieldInline
-              label={t('bride_info.name')}
-              value={`${brideInfo.first_name || ''} ${brideInfo.last_name || ''}`.trim()}
-            />
-            <ExportFieldInline label={t('bride_info.id')} value={brideInfo.id_number || brideInfo.id} />
-            <ExportFieldInline label={t('bride_info.phone')} value={brideInfo.phone} />
-            <ExportFieldInline label={t('bride_info.email')} value={brideInfo.email} />
-            {brideInfo.school && <ExportFieldInline label="בית ספר" value={brideInfo.school} />}
-            {brideInfo.city && <ExportFieldInline label="עיר" value={brideInfo.city} />}
-            <ExportFieldInline
-              label={t('bride_info.address')}
-              value={brideInfo.address}
-              fullWidth
-            />
-            {brideInfo.father_name && (
-              <ExportFieldInline label="שם האב" value={brideInfo.father_name} />
-            )}
-            {brideInfo.father_occupation && (
-              <ExportFieldInline label="עיסוק האב" value={brideInfo.father_occupation} />
-            )}
-            {brideInfo.mother_name && (
-              <ExportFieldInline label="שם האם" value={brideInfo.mother_name} />
-            )}
-            {brideInfo.mother_occupation && (
-              <ExportFieldInline label="עיסוק האם" value={brideInfo.mother_occupation} />
-            )}
-            {brideInfo.memorial_day && (
-              <ExportFieldInline
-                label={t('bride_info.memorial_day')}
-                value={brideInfo.memorial_day}
-                fullWidth
+          {/* Bride Column */}
+          <div style={{ flex: 1, backgroundColor: '#ffffff' }}>
+            <div
+              style={{
+                fontSize: '12pt',
+                fontWeight: 'bold',
+                color: '#1e40af',
+                marginBottom: '3mm',
+                borderBottom: '2px solid #3b82f6',
+                paddingBottom: '2mm',
+                backgroundColor: '#ffffff',
+              }}
+            >
+              {t('bride_info.title')}
+            </div>
+            <div style={{ paddingTop: '2mm' }}>
+              <ExportFieldColumn
+                label={t('bride_info.name')}
+                value={`${brideInfo.first_name || ''} ${brideInfo.last_name || ''}`.trim()}
               />
-            )}
-            {brideInfo.background && (
-              <ExportFieldInline label="רקע" value={brideInfo.background} fullWidth />
-            )}
+              <ExportFieldColumn label={t('bride_info.id')} value={brideInfo.id_number || brideInfo.id} />
+              <ExportFieldColumn label={t('bride_info.phone')} value={brideInfo.phone} />
+              <ExportFieldColumn label={t('bride_info.email')} value={brideInfo.email} />
+              {brideInfo.school && <ExportFieldColumn label="בית ספר" value={brideInfo.school} />}
+              {brideInfo.city && <ExportFieldColumn label="עיר" value={brideInfo.city} />}
+              <ExportFieldColumn
+                label={t('bride_info.address')}
+                value={brideInfo.address}
+              />
+              {brideInfo.father_name && (
+                <ExportFieldColumn label="שם האב" value={brideInfo.father_name} />
+              )}
+              {brideInfo.father_occupation && (
+                <ExportFieldColumn label="עיסוק האב" value={brideInfo.father_occupation} />
+              )}
+              {brideInfo.mother_name && (
+                <ExportFieldColumn label="שם האם" value={brideInfo.mother_name} />
+              )}
+              {brideInfo.mother_occupation && (
+                <ExportFieldColumn label="עיסוק האם" value={brideInfo.mother_occupation} />
+              )}
+              {brideInfo.memorial_day && (
+                <ExportFieldColumn
+                  label={t('bride_info.memorial_day')}
+                  value={brideInfo.memorial_day}
+                />
+              )}
+              {brideInfo.background && (
+                <ExportFieldColumn label="רקע" value={brideInfo.background} />
+              )}
+            </div>
           </div>
         </div>
 
         {/* Additional Info */}
         {(additionalInfo.background || additionalInfo.notes) && (
-          <div style={{ marginBottom: '15mm', backgroundColor: '#ffffff' }}>
+          <div style={{ marginBottom: '8mm', backgroundColor: '#ffffff' }}>
             <div
               style={{
-                fontSize: '14pt',
+                fontSize: '12pt',
                 fontWeight: 'bold',
                 color: '#1e40af',
-                marginBottom: '5mm',
+                marginBottom: '3mm',
                 borderBottom: '2px solid #3b82f6',
-                paddingBottom: '3mm',
+                paddingBottom: '2mm',
                 backgroundColor: '#ffffff',
               }}
             >
-              📝 מידע נוסף
+              מידע נוסף
             </div>
-            <div style={{ paddingTop: '3mm' }}>
+            <div style={{ paddingTop: '2mm' }}>
               {additionalInfo.background && (
                 <ExportFieldInline
                   label="רקע"
@@ -495,7 +494,7 @@ function ExportFieldInline({
   return (
     <div
       style={{
-        marginBottom: '5mm',
+        marginBottom: '4mm',
         display: fullWidth ? 'block' : 'inline-block',
         width: fullWidth ? '100%' : '48%',
         verticalAlign: 'top',
@@ -506,7 +505,7 @@ function ExportFieldInline({
       <div
         style={{
           fontWeight: 'bold',
-          fontSize: '10pt',
+          fontSize: '9pt',
           color: '#333333',
           marginBottom: '1mm',
           backgroundColor: '#ffffff',
@@ -516,10 +515,54 @@ function ExportFieldInline({
       </div>
       <div
         style={{
-          fontSize: '11pt',
+          fontSize: '9pt',
           color: '#000000',
           borderBottom: '1px solid #dddddd',
-          paddingBottom: '2mm',
+          paddingBottom: '1mm',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        {value || '-'}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * רכיב עזר להצגת שדה בטור - לשימוש במבנה דו-טורי
+ */
+function ExportFieldColumn({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | null | undefined;
+}) {
+  return (
+    <div
+      style={{
+        marginBottom: '3mm',
+        width: '100%',
+        backgroundColor: '#ffffff',
+      }}
+    >
+      <div
+        style={{
+          fontWeight: 'bold',
+          fontSize: '9pt',
+          color: '#333333',
+          marginBottom: '1mm',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        {label}:
+      </div>
+      <div
+        style={{
+          fontSize: '9pt',
+          color: '#000000',
+          borderBottom: '1px solid #dddddd',
+          paddingBottom: '1mm',
           backgroundColor: '#ffffff',
         }}
       >

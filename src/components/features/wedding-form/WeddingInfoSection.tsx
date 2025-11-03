@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { FormSection } from '@/components/shared/Forms/FormSection';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { WeddingFormData } from '@/lib/validations/wedding-form.schema';
 import { translateValidationMessage } from '@/lib/validations/translate';
 
@@ -53,7 +54,6 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
           <Input
             id="date_hebrew"
             {...register('wedding_info.date_hebrew')}
-            placeholder={t('section_wedding_info.date_hebrew_placeholder')}
             className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             aria-invalid={!!weddingErrors?.date_hebrew}
           />
@@ -96,7 +96,6 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
           <Input
             id="city"
             {...register('wedding_info.city')}
-            placeholder={t('section_wedding_info.city_placeholder')}
             className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             aria-invalid={!!weddingErrors?.city}
           />
@@ -119,7 +118,6 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
             {...register('wedding_info.guests_count', {
               valueAsNumber: true,
             })}
-            placeholder={t('section_wedding_info.guests_count_placeholder')}
             className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             aria-invalid={!!weddingErrors?.guests_count}
             min={1}
@@ -145,7 +143,6 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
               {...register('wedding_info.total_cost', {
                 valueAsNumber: true,
               })}
-              placeholder={t('section_wedding_info.total_cost_placeholder')}
               className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               aria-invalid={!!weddingErrors?.total_cost}
               min={0}
@@ -162,6 +159,22 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
           )}
           <p className="text-xs text-muted-foreground">
             {t('section_wedding_info.total_cost_helper')}
+          </p>
+        </div>
+
+        {/* רקע על הבקשה */}
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="request_background">
+            {t('section_wedding_info.request_background')}
+          </Label>
+          <Textarea
+            id="request_background"
+            {...register('wedding_info.request_background')}
+            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 min-h-[120px]"
+            rows={5}
+          />
+          <p className="text-xs text-muted-foreground">
+            {t('section_wedding_info.request_background_helper')}
           </p>
         </div>
       </div>

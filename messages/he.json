@@ -308,7 +308,10 @@
       "guests_count_placeholder": "300",
       "total_cost": "עלות כוללת של החתונה",
       "total_cost_placeholder": "50000",
-      "total_cost_helper": "כולל קטרינג, ואולם   "
+      "total_cost_helper": "כולל קטרינג, ואולם   ",
+      "request_background": "רקע על הבקשה (אופציונלי)",
+      "request_background_placeholder": "ספר לנו קצת על הבקשה...",
+      "request_background_helper": "מידע נוסף על הבקשה שיעזור לנו להבין את המצב טוב יותר"
     },
     "section_groom_info": {
       "title": "פרטי החתן",
@@ -340,10 +343,7 @@
       "email_placeholder": "david@example.com",
       "memorial_day": "יום זיכרון (אופציונלי)",
       "memorial_day_placeholder": "ט' באב",
-      "memorial_day_helper": "יום זיכרון של ההורה שנפטר",
-      "background": "תיעוד רקע (אופציונלי)",
-      "background_placeholder": "ספר לנו קצת על רקע המשפחה...",
-      "background_helper": "מידע נוסף שיעזור לנו להבין את הבקשה טוב יותר"
+      "memorial_day_helper": "יום זיכרון של ההורה שנפטר"
     },
     "section_bride_info": {
       "title": "פרטי הכלה",
@@ -375,10 +375,7 @@
       "email_placeholder": "sarah@example.com",
       "memorial_day": "יום זיכרון (אופציונלי)",
       "memorial_day_placeholder": "כ' בשבט",
-      "memorial_day_helper": "יום זיכרון של ההורה שנפטר",
-      "background": "תיעוד רקע (אופציונלי)",
-      "background_placeholder": "ספר לנו קצת על רקע המשפחה...",
-      "background_helper": "מידע נוסף שיעזור לנו להבין את הבקשה טוב יותר"
+      "memorial_day_helper": "יום זיכרון של ההורה שנפטר"
     },
     "marital_status": {
       "single": "רווק/ה",
@@ -730,7 +727,8 @@
         "city": "עיר",
         "venue": "אולם",
         "guestsCount": "כמות מוזמנים",
-        "totalCost": "עלות כוללת (₪)"
+        "totalCost": "עלות כוללת (₪)",
+        "requestBackground": "רקע על הבקשה"
       },
       "groomInfo": {
         "title": "פרטי החתן",

@@ -94,6 +94,7 @@ export function ApplicantViewDialog({
               formData={formData}
               filename={filename}
               title={documentTitle}
+              locale={locale}
               variant="primary"
               size="default"
               onExportComplete={() => {

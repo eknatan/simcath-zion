@@ -145,6 +145,7 @@ export interface WeddingFormData {
   venue?: string;
   guests_count?: number;
   total_cost?: number;
+  request_background?: string;
 
   // Groom info
   groom_first_name?: string;
@@ -154,7 +155,6 @@ export interface WeddingFormData {
   groom_father_name?: string;
   groom_mother_name?: string;
   groom_memorial_day?: string;
-  groom_background?: string;
 
   // Bride info
   bride_first_name?: string;
@@ -164,7 +164,6 @@ export interface WeddingFormData {
   bride_father_name?: string;
   bride_mother_name?: string;
   bride_memorial_day?: string;
-  bride_background?: string;
 
   // Contact
   address?: string;

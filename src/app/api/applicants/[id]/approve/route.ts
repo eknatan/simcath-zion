@@ -46,6 +46,7 @@ function mapFormDataToCaseFields(formData: any, caseType: string) {
       // Wedding specific
       wedding_date_hebrew: formData.wedding_info?.date_hebrew,
       wedding_date_gregorian: formData.wedding_info?.date_gregorian,
+      request_background: formData.wedding_info?.request_background,
       groom_first_name: formData.groom_info?.first_name,
       groom_last_name: formData.groom_info?.last_name,
       groom_id: formData.groom_info?.id,
@@ -54,7 +55,6 @@ function mapFormDataToCaseFields(formData: any, caseType: string) {
       groom_father_occupation: formData.groom_info?.father_occupation,
       groom_mother_occupation: formData.groom_info?.mother_occupation,
       groom_school: formData.groom_info?.school,
-      groom_background: formData.groom_info?.background,
       groom_memorial_day: formData.groom_info?.memorial_day,
       bride_first_name: formData.bride_info?.first_name,
       bride_last_name: formData.bride_info?.last_name,
@@ -64,7 +64,6 @@ function mapFormDataToCaseFields(formData: any, caseType: string) {
       bride_father_occupation: formData.bride_info?.father_occupation,
       bride_mother_occupation: formData.bride_info?.mother_occupation,
       bride_school: formData.bride_info?.school,
-      bride_background: formData.bride_info?.background,
       bride_memorial_day: formData.bride_info?.memorial_day,
       venue: formData.wedding_info?.venue,
       guests_count: formData.wedding_info?.guests_count,
