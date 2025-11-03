@@ -57,6 +57,7 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
         date_hebrew: '',
         date_gregorian: '',
         city: '',
+        venue: '',
         guests_count: undefined,
         total_cost: undefined,
       },

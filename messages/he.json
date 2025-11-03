@@ -304,6 +304,8 @@
       "date_gregorian": "תאריך לועזי",
       "city": "עיר",
       "city_placeholder": "לדוגמה: ירושלים",
+      "venue": "אולם",
+      "venue_placeholder": "לדוגמה: אולמי גן האירועים",
       "guests_count": "מספר מוזמנים משוער",
       "guests_count_placeholder": "300",
       "total_cost": "עלות כוללת של החתונה",

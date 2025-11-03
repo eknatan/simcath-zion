@@ -295,6 +295,8 @@
       "date_gregorian": "Gregorian Date",
       "city": "City",
       "city_placeholder": "Example: Jerusalem",
+      "venue": "Venue",
+      "venue_placeholder": "Example: Garden Event Hall",
       "guests_count": "Estimated Number of Guests",
       "guests_count_placeholder": "300",
       "total_cost": "Total Wedding Cost",
