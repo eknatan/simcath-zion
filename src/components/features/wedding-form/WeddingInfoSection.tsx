@@ -150,7 +150,7 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
         </div>
 
         {/* עלות כוללת */}
-        <div className="space-y-2 md:col-span-2">
+        <div className="space-y-2">
           <Label htmlFor="total_cost">
             {t('section_wedding_info.total_cost')}
             <span className="text-destructive ms-1">*</span>

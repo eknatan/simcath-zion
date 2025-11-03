@@ -129,7 +129,7 @@ export function ExportWord({
               bidirectional: isRTL,
             }),
           ],
-          width: { size: 3000, type: WidthType.DXA }, // רוחב מינימלי לכותרת (~2 אינץ')
+          width: { size: 4200, type: WidthType.DXA }, // רוחב קבוע לכותרת (~3 אינץ')
           borders: {
             top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
             bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
@@ -151,7 +151,7 @@ export function ExportWord({
               bidirectional: isRTL,
             }),
           ],
-          width: { size: 6500, type: WidthType.DXA }, // רוחב גדול יותר לתוכן (~4.3 אינץ')
+          width: { size: 9000, type: WidthType.DXA }, // רוחב קבוע לתוכן (~6.25 אינץ')
           borders: {
             top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
             bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
