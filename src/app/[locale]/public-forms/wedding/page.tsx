@@ -98,7 +98,6 @@ export default async function PublicWeddingFormPage({ params }: { params: Promis
             <div className="text-sm text-blue-700 space-y-1">
               <p>• {t('public_page.footer_info.privacy_note')}</p>
               <p>• {t('public_page.footer_info.usage_note')}</p>
-              <p>• {t('public_page.footer_info.response_time')}</p>
               <p>• {t('public_page.footer_info.contact')}</p>
             </div>
           </div>

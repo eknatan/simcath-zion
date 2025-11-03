@@ -48,9 +48,6 @@ export function ApplicantViewDialog({
   const brideName = formData.bride_info?.first_name || 'bride';
   const filename = `application_${groomName}_${brideName}_${applicant.id.substring(0, 8)}`;
 
-  // כותרת המסמך
-  const documentTitle = `בקשת תמיכה לחתונה - ${groomName} & ${brideName}`;
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -93,7 +90,6 @@ export function ApplicantViewDialog({
             <ExportWord
               formData={formData}
               filename={filename}
-              title={documentTitle}
               locale={locale}
               variant="primary"
               size="default"
@@ -105,7 +101,6 @@ export function ApplicantViewDialog({
             {/* ייצוא PDF */}
             <ExportDocument
               filename={filename}
-              title={documentTitle}
               variant="outline"
               size="default"
               direction={locale === 'he' ? 'rtl' : 'ltr'}

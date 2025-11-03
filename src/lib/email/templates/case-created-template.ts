@@ -30,6 +30,10 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
           <td style="padding: 12px; border: 1px solid #e0e0e0;">${wedding_info.city || 'N/A'}</td>
         </tr>
         <tr>
+          <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600;">Venue</td>
+          <td style="padding: 12px; border: 1px solid #e0e0e0;">${wedding_info.venue || 'N/A'}</td>
+        </tr>
+        <tr>
           <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600;">Number of Guests</td>
           <td style="padding: 12px; border: 1px solid #e0e0e0;">${wedding_info.guests_count || 'N/A'}</td>
         </tr>
@@ -49,7 +53,7 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
 
   // Hebrew
   return `
-    <h3 style="color: #333; margin: 24px 0 16px 0;">פרטי החתונה:</h3>
+    <h3 style="color: #333; margin: 24px 0 16px 0; direction: rtl; text-align: right;">פרטי החתונה:</h3>
     <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; direction: rtl;">
       <tr>
         <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; width: 40%; text-align: right;">תאריך עברי</td>
@@ -64,6 +68,10 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
         <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${wedding_info.city || 'לא צוין'}</td>
       </tr>
       <tr>
+        <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; text-align: right;">אולם</td>
+        <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${wedding_info.venue || 'לא צוין'}</td>
+      </tr>
+      <tr>
         <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; text-align: right;">מספר מוזמנים</td>
         <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${wedding_info.guests_count || 'לא צוין'}</td>
       </tr>
@@ -73,10 +81,10 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
       </tr>
     </table>
 
-    <h3 style="color: #333; margin: 24px 0 16px 0;">פרטי החתן:</h3>
+    <h3 style="color: #333; margin: 24px 0 16px 0; direction: rtl; text-align: right;">פרטי החתן:</h3>
     ${getPersonDetailsHTML(groom_info, 'he')}
 
-    <h3 style="color: #333; margin: 24px 0 16px 0;">פרטי הכלה:</h3>
+    <h3 style="color: #333; margin: 24px 0 16px 0; direction: rtl; text-align: right;">פרטי הכלה:</h3>
     ${getPersonDetailsHTML(bride_info, 'he')}
   `;
 }

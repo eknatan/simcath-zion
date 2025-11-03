@@ -121,22 +121,31 @@ function WeddingFormView({
   if (exportMode) {
     return (
       <div style={{ width: '100%', backgroundColor: '#ffffff' }}>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '6mm' }}>
+          <img
+            src="/logo.png"
+            alt="שמחת ציון"
+            style={{ height: '32mm', width: 'auto', margin: '0 auto' }}
+          />
+        </div>
+
         {/* Wedding Info */}
-        <div style={{ marginBottom: '8mm', backgroundColor: '#ffffff' }}>
+        <div style={{ marginBottom: '5mm', backgroundColor: '#ffffff' }}>
           <div
             style={{
-              fontSize: '12pt',
+              fontSize: '13pt',
               fontWeight: 'bold',
               color: '#1e40af',
-              marginBottom: '3mm',
+              marginBottom: '2.5mm',
               borderBottom: '2px solid #3b82f6',
-              paddingBottom: '2mm',
+              paddingBottom: '1.5mm',
               backgroundColor: '#ffffff',
             }}
           >
             {t('wedding_info.title')}
           </div>
-          <div style={{ paddingTop: '2mm' }}>
+          <div style={{ paddingTop: '1.5mm' }}>
             <ExportFieldInline
               label={t('wedding_info.date_hebrew')}
               value={weddingInfo.date_hebrew}
@@ -146,6 +155,7 @@ function WeddingFormView({
               value={weddingInfo.date_gregorian}
             />
             <ExportFieldInline label={t('wedding_info.city')} value={weddingInfo.city} />
+            <ExportFieldInline label={t('wedding_info.venue')} value={weddingInfo.venue} />
             <ExportFieldInline
               label={t('wedding_info.guests_count')}
               value={weddingInfo.guests_count}
@@ -153,29 +163,28 @@ function WeddingFormView({
             <ExportFieldInline
               label={t('wedding_info.total_cost')}
               value={weddingInfo.total_cost ? `₪${weddingInfo.total_cost.toLocaleString()}` : '-'}
-              fullWidth
             />
           </div>
         </div>
 
         {/* Groom & Bride Info - Two Columns */}
-        <div style={{ display: 'flex', gap: '5mm', marginBottom: '8mm' }}>
+        <div style={{ display: 'flex', gap: '4mm', marginBottom: '5mm' }}>
           {/* Groom Column */}
           <div style={{ flex: 1, backgroundColor: '#ffffff' }}>
             <div
               style={{
-                fontSize: '12pt',
+                fontSize: '13pt',
                 fontWeight: 'bold',
                 color: '#1e40af',
-                marginBottom: '3mm',
+                marginBottom: '2.5mm',
                 borderBottom: '2px solid #3b82f6',
-                paddingBottom: '2mm',
+                paddingBottom: '1.5mm',
                 backgroundColor: '#ffffff',
               }}
             >
               {t('groom_info.title')}
             </div>
-            <div style={{ paddingTop: '2mm' }}>
+            <div style={{ paddingTop: '1.5mm' }}>
               <ExportFieldColumn
                 label={t('groom_info.name')}
                 value={`${groomInfo.first_name || ''} ${groomInfo.last_name || ''}`.trim()}
@@ -183,7 +192,7 @@ function WeddingFormView({
               <ExportFieldColumn label={t('groom_info.id')} value={groomInfo.id_number || groomInfo.id} />
               <ExportFieldColumn label={t('groom_info.phone')} value={groomInfo.phone} />
               <ExportFieldColumn label={t('groom_info.email')} value={groomInfo.email} />
-              {groomInfo.school && <ExportFieldColumn label="בית ספר" value={groomInfo.school} />}
+              {groomInfo.school && <ExportFieldColumn label="ישיבה" value={groomInfo.school} />}
               {groomInfo.city && <ExportFieldColumn label="עיר" value={groomInfo.city} />}
               <ExportFieldColumn
                 label={t('groom_info.address')}
@@ -208,7 +217,7 @@ function WeddingFormView({
                 />
               )}
               {groomInfo.background && (
-                <ExportFieldColumn label="רקע" value={groomInfo.background} />
+                <ExportFieldColumn label="רקע" value={groomInfo.background} multiline />
               )}
             </div>
           </div>
@@ -217,18 +226,18 @@ function WeddingFormView({
           <div style={{ flex: 1, backgroundColor: '#ffffff' }}>
             <div
               style={{
-                fontSize: '12pt',
+                fontSize: '13pt',
                 fontWeight: 'bold',
                 color: '#1e40af',
-                marginBottom: '3mm',
+                marginBottom: '2.5mm',
                 borderBottom: '2px solid #3b82f6',
-                paddingBottom: '2mm',
+                paddingBottom: '1.5mm',
                 backgroundColor: '#ffffff',
               }}
             >
               {t('bride_info.title')}
             </div>
-            <div style={{ paddingTop: '2mm' }}>
+            <div style={{ paddingTop: '1.5mm' }}>
               <ExportFieldColumn
                 label={t('bride_info.name')}
                 value={`${brideInfo.first_name || ''} ${brideInfo.last_name || ''}`.trim()}
@@ -261,7 +270,7 @@ function WeddingFormView({
                 />
               )}
               {brideInfo.background && (
-                <ExportFieldColumn label="רקע" value={brideInfo.background} />
+                <ExportFieldColumn label="רקע" value={brideInfo.background} multiline />
               )}
             </div>
           </div>
@@ -269,30 +278,31 @@ function WeddingFormView({
 
         {/* Additional Info */}
         {(additionalInfo.background || additionalInfo.notes) && (
-          <div style={{ marginBottom: '8mm', backgroundColor: '#ffffff' }}>
+          <div style={{ marginBottom: '0', backgroundColor: '#ffffff' }}>
             <div
               style={{
-                fontSize: '12pt',
+                fontSize: '13pt',
                 fontWeight: 'bold',
                 color: '#1e40af',
-                marginBottom: '3mm',
+                marginBottom: '2.5mm',
                 borderBottom: '2px solid #3b82f6',
-                paddingBottom: '2mm',
+                paddingBottom: '1.5mm',
                 backgroundColor: '#ffffff',
               }}
             >
               מידע נוסף
             </div>
-            <div style={{ paddingTop: '2mm' }}>
+            <div style={{ paddingTop: '1.5mm' }}>
               {additionalInfo.background && (
                 <ExportFieldInline
                   label="רקע"
                   value={additionalInfo.background}
                   fullWidth
+                  multiline
                 />
               )}
               {additionalInfo.notes && (
-                <ExportFieldInline label="הערות" value={additionalInfo.notes} fullWidth />
+                <ExportFieldInline label="הערות" value={additionalInfo.notes} fullWidth multiline />
               )}
             </div>
           </div>
@@ -320,13 +330,13 @@ function WeddingFormView({
               value={weddingInfo.date_gregorian}
             />
             <FormField label={t('wedding_info.city')} value={weddingInfo.city} />
+            <FormField label={t('wedding_info.venue')} value={weddingInfo.venue} />
             <FormField label={t('wedding_info.guests_count')} value={weddingInfo.guests_count} />
             <FormField
               label={t('wedding_info.total_cost')}
               value={
                 weddingInfo.total_cost ? `₪${weddingInfo.total_cost.toLocaleString()}` : null
               }
-              fullWidth
               highlight
             />
           </div>
@@ -350,7 +360,7 @@ function WeddingFormView({
             <FormField label={t('groom_info.id')} value={groomInfo.id_number || groomInfo.id} />
             <FormField label={t('groom_info.phone')} value={groomInfo.phone} />
             <FormField label={t('groom_info.email')} value={groomInfo.email} />
-            {groomInfo.school && <FormField label="בית ספר" value={groomInfo.school} />}
+            {groomInfo.school && <FormField label="ישיבה" value={groomInfo.school} />}
             {groomInfo.city && <FormField label="עיר" value={groomInfo.city} />}
             <FormField label={t('groom_info.address')} value={groomInfo.address} fullWidth />
             {groomInfo.father_name && (
@@ -486,44 +496,68 @@ function ExportFieldInline({
   label,
   value,
   fullWidth = false,
+  multiline = false,
 }: {
   label: string;
   value: string | number | null | undefined;
   fullWidth?: boolean;
+  multiline?: boolean;
 }) {
+  // אם multiline - תצוגה של תווית + ערך בשורות נפרדות
+  if (multiline) {
+    return (
+      <div
+        style={{
+          marginBottom: '3mm',
+          display: 'block',
+          width: '100%',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        <div
+          style={{
+            fontWeight: 'bold',
+            fontSize: '11pt',
+            color: '#333333',
+            marginBottom: '1.5mm',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          {label}:
+        </div>
+        <div
+          style={{
+            fontSize: '11pt',
+            color: '#000000',
+            borderBottom: '1px solid #dddddd',
+            paddingBottom: '1.5mm',
+            backgroundColor: '#ffffff',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {value || '-'}
+        </div>
+      </div>
+    );
+  }
+
+  // תצוגה רגילה - תווית וערך באותה שורה
   return (
     <div
       style={{
-        marginBottom: '4mm',
+        marginBottom: '2.5mm',
         display: fullWidth ? 'block' : 'inline-block',
         width: fullWidth ? '100%' : '48%',
         verticalAlign: 'top',
         paddingLeft: fullWidth ? '0' : '2mm',
         backgroundColor: '#ffffff',
+        fontSize: '11pt',
+        borderBottom: '1px solid #dddddd',
+        paddingBottom: '1.5mm',
       }}
     >
-      <div
-        style={{
-          fontWeight: 'bold',
-          fontSize: '9pt',
-          color: '#333333',
-          marginBottom: '1mm',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        {label}:
-      </div>
-      <div
-        style={{
-          fontSize: '9pt',
-          color: '#000000',
-          borderBottom: '1px solid #dddddd',
-          paddingBottom: '1mm',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        {value || '-'}
-      </div>
+      <span style={{ fontWeight: 'bold', color: '#333333' }}>{label}: </span>
+      <span style={{ color: '#000000' }}>{value || '-'}</span>
     </div>
   );
 }
@@ -534,40 +568,63 @@ function ExportFieldInline({
 function ExportFieldColumn({
   label,
   value,
+  multiline = false,
 }: {
   label: string;
   value: string | number | null | undefined;
+  multiline?: boolean;
 }) {
+  // אם multiline - תצוגה של תווית + ערך בשורות נפרדות
+  if (multiline) {
+    return (
+      <div
+        style={{
+          marginBottom: '3mm',
+          width: '100%',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        <div
+          style={{
+            fontWeight: 'bold',
+            fontSize: '11pt',
+            color: '#333333',
+            marginBottom: '1.5mm',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          {label}:
+        </div>
+        <div
+          style={{
+            fontSize: '11pt',
+            color: '#000000',
+            borderBottom: '1px solid #dddddd',
+            paddingBottom: '1.5mm',
+            backgroundColor: '#ffffff',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {value || '-'}
+        </div>
+      </div>
+    );
+  }
+
+  // תצוגה רגילה - תווית וערך באותה שורה
   return (
     <div
       style={{
-        marginBottom: '3mm',
+        marginBottom: '2mm',
         width: '100%',
         backgroundColor: '#ffffff',
+        fontSize: '11pt',
+        borderBottom: '1px solid #dddddd',
+        paddingBottom: '1.5mm',
       }}
     >
-      <div
-        style={{
-          fontWeight: 'bold',
-          fontSize: '9pt',
-          color: '#333333',
-          marginBottom: '1mm',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        {label}:
-      </div>
-      <div
-        style={{
-          fontSize: '9pt',
-          color: '#000000',
-          borderBottom: '1px solid #dddddd',
-          paddingBottom: '1mm',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        {value || '-'}
-      </div>
+      <span style={{ fontWeight: 'bold', color: '#333333' }}>{label}: </span>
+      <span style={{ color: '#000000' }}>{value || '-'}</span>
     </div>
   );
 }

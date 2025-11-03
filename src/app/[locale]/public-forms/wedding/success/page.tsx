@@ -64,7 +64,6 @@ export default async function WeddingSuccessPage({ params }: { params: Promise<{
                 {t('public_page.footer_info.title')}
               </h3>
               <div className="text-sm text-green-700 space-y-2">
-                <p>• {t('public_page.footer_info.response_time')}</p>
                 <p>• {t('public_page.footer_info.usage_note')}</p>
                 <p>• {t('public_page.footer_info.contact')}</p>
               </div>

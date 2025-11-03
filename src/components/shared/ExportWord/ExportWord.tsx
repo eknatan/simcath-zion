@@ -260,7 +260,7 @@ export function ExportWord({
             createTableRow('שם פרטי', formData.groom_info?.first_name),
             createTableRow('שם משפחה', formData.groom_info?.last_name),
             createTableRow('תעודת זהות', formData.groom_info?.id),
-            createTableRow('בית ספר', formData.groom_info?.school),
+            createTableRow('ישיבה', formData.groom_info?.school),
             createTableRow('עיר', formData.groom_info?.city),
             createTableRow('כתובת', formData.groom_info?.address),
             createTableRow('טלפון', formData.groom_info?.phone),

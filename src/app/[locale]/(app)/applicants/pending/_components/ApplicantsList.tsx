@@ -339,7 +339,7 @@ export function ApplicantsList({
             onOpenChange={setApproveDialogOpen}
             onSuccess={(caseId) => {
               onRefresh();
-              router.push(`/${locale}/cases/wedding/${caseId}`);
+              router.push(`/${locale}/cases/${caseId}`);
             }}
             locale={locale}
           />

@@ -129,12 +129,11 @@ export function ExportDocument({
           className="export-document-content"
           style={{
             width: '210mm', // A4 width
-            minHeight: '297mm', // A4 height
-            padding: '12mm',
+            padding: '10mm 12mm',
             backgroundColor: 'white',
             fontFamily: 'Arial, sans-serif',
-            fontSize: '10pt',
-            lineHeight: '1.5',
+            fontSize: '11pt',
+            lineHeight: '1.4',
             color: '#000',
           }}
         >
@@ -143,11 +142,11 @@ export function ExportDocument({
             <div
               style={{
                 textAlign: 'center',
-                fontSize: '16pt',
+                fontSize: '14pt',
                 fontWeight: 'bold',
-                marginBottom: '10mm',
-                borderBottom: '2px solid #000',
-                paddingBottom: '5mm',
+                marginBottom: '4mm',
+                borderBottom: '1.5px solid #000',
+                paddingBottom: '2mm',
               }}
             >
               {title}

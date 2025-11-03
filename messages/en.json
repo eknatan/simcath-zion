@@ -402,7 +402,7 @@
         "privacy_note": "All details are stored in an encrypted and secure database",
         "usage_note": "Information will be used solely for reviewing the application",
         "response_time": "A representative will contact you within 3 business days",
-        "contact": "Questions? Contact us at: 02-1234567"
+        "contact": "Questions? Contact us at: 02-502-1751"
       },
       "footer": {
         "copyright": "© {year} Family Support System - All Rights Reserved",
@@ -672,6 +672,7 @@
         "date_hebrew": "Hebrew Date",
         "date_gregorian": "Gregorian Date",
         "city": "City",
+        "venue": "Venue",
         "guests_count": "Number of Guests",
         "total_cost": "Total Cost"
       },
@@ -706,6 +707,8 @@
       "cancel": "Cancel",
       "confirm": "Yes, Approve",
       "approving": "Approving...",
+      "processing": "Processing request...",
+      "please_wait": "Please wait, this may take a few seconds",
       "success_title": "Case Created Successfully!",
       "success_description": "You are being redirected to the new case...",
       "error_title": "Error Approving Application",
@@ -721,6 +724,8 @@
       "cancel": "Cancel",
       "confirm": "Yes, Reject",
       "rejecting": "Rejecting...",
+      "processing": "Processing rejection...",
+      "please_wait": "Please wait, this may take a few seconds",
       "success_title": "Application Rejected",
       "success_description": "The application can be restored within 30 days",
       "error_title": "Error Rejecting Application",
