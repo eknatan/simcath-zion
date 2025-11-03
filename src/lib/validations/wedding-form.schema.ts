@@ -73,6 +73,11 @@ export const weddingInfoSchema = z.object({
     .string()
     .min(2, 'validation.minLength|min=2')
     .max(100, 'validation.maxLength|max=100'),
+  venue: z
+    .string()
+    .min(1, 'validation.required')
+    .min(2, 'validation.minLength|min=2')
+    .max(100, 'validation.maxLength|max=100'),
   guests_count: z
     .number({
       message: 'validation.invalidNumber',

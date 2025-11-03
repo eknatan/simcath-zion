@@ -106,6 +106,25 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
           )}
         </div>
 
+        {/* אולם */}
+        <div className="space-y-2">
+          <Label htmlFor="venue">
+            {t('section_wedding_info.venue')}
+            <span className="text-destructive ms-1">*</span>
+          </Label>
+          <Input
+            id="venue"
+            {...register('wedding_info.venue')}
+            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            aria-invalid={!!weddingErrors?.venue}
+          />
+          {weddingErrors?.venue && (
+            <p className="text-sm text-destructive">
+              {translateValidationMessage(tValidation, weddingErrors.venue.message)}
+            </p>
+          )}
+        </div>
+
         {/* כמות מוזמנים */}
         <div className="space-y-2">
           <Label htmlFor="guests_count">
