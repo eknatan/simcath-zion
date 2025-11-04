@@ -62,7 +62,7 @@ async function sendApplicantEmails(data: {
           applicantPhone: caseType === 'wedding'
             ? formData.groom_info?.phone
             : formData.personal_info?.phone,
-          caseUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://simcath-zion.vercel.app'}/applicants/${applicantId}`,
+          caseUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://simcath-zion.vercel.app'}/applicants/pending`,
           fullFormData: formData, // Send entire form data for detailed email
         },
         locale,

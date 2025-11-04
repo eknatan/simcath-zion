@@ -366,7 +366,7 @@ Please review the request and take the necessary action.
         preheader: `Request #${data.caseNumber} awaiting review`,
         ctaButton: data.caseUrl
           ? {
-              text: 'View Request',
+              text: 'View Pending Requests',
               url: data.caseUrl,
             }
           : undefined,
@@ -457,7 +457,7 @@ ${data.caseUrl ? `צפייה בבקשה: ${data.caseUrl}` : ''}
       preheader: `בקשה #${data.caseNumber} ממתינה לבדיקה`,
       ctaButton: data.caseUrl
         ? {
-            text: 'צפה בבקשה',
+            text: 'עבור לבקשות הממתינות',
             url: data.caseUrl,
           }
         : undefined,
