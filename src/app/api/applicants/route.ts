@@ -26,11 +26,12 @@ import { z } from 'zod';
  */
 async function sendApplicantEmails(data: {
   applicantId: string;
+  requestNumber: number;
   caseType: string;
   formData: any;
   locale: 'he' | 'en';
 }): Promise<{ secretaryEmailSent: boolean; applicantEmailSent: boolean }> {
-  const { applicantId, caseType, formData, locale } = data;
+  const { applicantId, requestNumber, caseType, formData, locale } = data;
 
   let secretaryEmailSent = false;
   let applicantEmailSent = false;
@@ -50,7 +51,7 @@ async function sendApplicantEmails(data: {
         type: 'case-created',
         // to: undefined, // Let it use default secretary emails
         data: {
-          caseNumber: applicantId.substring(0, 8).toUpperCase(), // Short reference code
+          caseNumber: requestNumber, // Use request_number from database
           caseType: caseType, // Send original value: 'wedding' or 'cleaning'
           applicantName: caseType === 'wedding'
             ? `${formData.groom_info?.first_name || ''} ${formData.groom_info?.last_name || ''}`.trim() || 'לא צוין'
@@ -93,7 +94,7 @@ async function sendApplicantEmails(data: {
           data: {
             applicantName,
             caseType: caseType === 'wedding' ? 'חתונה' : 'ילד חולה',
-            referenceNumber: applicantId.substring(0, 8).toUpperCase(),
+            referenceNumber: requestNumber, // Use request_number from database
           },
           locale,
         }),
@@ -165,6 +166,7 @@ export async function POST(request: NextRequest) {
     const locale = (form_data.locale || 'he') as 'he' | 'en';
     const emailResults = await sendApplicantEmails({
       applicantId: data.id,
+      requestNumber: data.request_number,
       caseType: case_type,
       formData: form_data,
       locale,
@@ -185,7 +187,7 @@ export async function POST(request: NextRequest) {
         message: 'Application submitted successfully',
         data: {
           id: data.id,
-          reference: data.id.substring(0, 8).toUpperCase(),
+          reference: data.request_number, // Use request_number from database
         },
         emails: {
           secretaryNotified: emailResults.secretaryEmailSent,

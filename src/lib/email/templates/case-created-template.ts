@@ -41,6 +41,12 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
           <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600;">Total Cost</td>
           <td style="padding: 12px; border: 1px solid #e0e0e0;">${wedding_info.total_cost ? '₪' + wedding_info.total_cost.toLocaleString() : 'N/A'}</td>
         </tr>
+        ${wedding_info.request_background ? `
+        <tr>
+          <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600;">Request Background</td>
+          <td style="padding: 12px; border: 1px solid #e0e0e0;">${wedding_info.request_background}</td>
+        </tr>
+        ` : ''}
       </table>
 
       <h3 style="color: #333; margin: 24px 0 16px 0;">Groom Details:</h3>
@@ -79,6 +85,12 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
         <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; text-align: right;">עלות כוללת</td>
         <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${wedding_info.total_cost ? '₪' + wedding_info.total_cost.toLocaleString('he-IL') : 'לא צוין'}</td>
       </tr>
+      ${wedding_info.request_background ? `
+      <tr>
+        <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; text-align: right;">רקע לבקשה</td>
+        <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${wedding_info.request_background}</td>
+      </tr>
+      ` : ''}
     </table>
 
     <h3 style="color: #333; margin: 24px 0 16px 0; direction: rtl; text-align: right;">פרטי החתן:</h3>

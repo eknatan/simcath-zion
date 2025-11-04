@@ -21,6 +21,7 @@ export type Database = {
           email_sent_to_secretary: boolean | null
           form_data: Json
           id: string
+          request_number: number
           status: string | null
           updated_at: string | null
         }
@@ -30,6 +31,7 @@ export type Database = {
           email_sent_to_secretary?: boolean | null
           form_data: Json
           id?: string
+          request_number?: number
           status?: string | null
           updated_at?: string | null
         }
@@ -39,6 +41,7 @@ export type Database = {
           email_sent_to_secretary?: boolean | null
           form_data?: Json
           id?: string
+          request_number?: number
           status?: string | null
           updated_at?: string | null
         }
