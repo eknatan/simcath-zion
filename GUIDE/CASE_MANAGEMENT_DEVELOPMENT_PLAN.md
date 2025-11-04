@@ -644,17 +644,4 @@ docs(case): update development plan
 - Types אוטומטיים מ-DB
 - Optimistic UI updates
 
----
 
-## ✅ מוכן להתחיל?
-
-הפאזה הראשונה מוכנה:
-```bash
-# יצירת המבנה הבסיסי
-cd src
-mkdir -p app/[locale]/\(dashboard\)/cases/[id]/_components
-mkdir -p components/shared/CaseHeader
-mkdir -p types
-```
-
-**נתחיל ב-Phase 1?**

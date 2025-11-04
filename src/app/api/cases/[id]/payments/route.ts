@@ -36,14 +36,7 @@ export async function GET(
     // ========================================
     const { data: payments, error: paymentsError } = await supabase
       .from('payments')
-      .select(
-        `
-        *,
-        approved_by_profile:profiles!payments_approved_by_fkey (
-          name
-        )
-      `
-      )
+      .select('*')
       .eq('case_id', caseId)
       .order('created_at', { ascending: false });
 
@@ -55,12 +48,29 @@ export async function GET(
       );
     }
 
-    // Transform data to include user names
-    const paymentsWithUser = (payments || []).map((payment) => ({
-      ...payment,
-      approved_by_name:
-        (payment.approved_by_profile as any)?.name || 'Unknown',
-    }));
+    // Fetch profile names for approved_by users (if exists)
+    const paymentsWithUser = await Promise.all(
+      (payments || []).map(async (payment) => {
+        let approved_by_name = 'Unknown';
+
+        if (payment.approved_by) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('name')
+            .eq('id', payment.approved_by)
+            .single();
+
+          if (profile) {
+            approved_by_name = profile.name;
+          }
+        }
+
+        return {
+          ...payment,
+          approved_by_name,
+        };
+      })
+    );
 
     return NextResponse.json(paymentsWithUser);
   } catch (error) {

@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { RefreshCw, DollarSign } from 'lucide-react';
-import { format } from 'date-fns';
-import { he } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,18 +19,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 import { type BankDetailsFormData } from '@/components/shared/BankDetailsForm';
 import { ActionButton } from '@/components/shared/ActionButton';
-import { Badge } from '@/components/ui/badge';
+import { PaymentHistoryTable } from '@/components/shared/PaymentHistoryTable';
 import { useCasePayments } from '@/components/features/cases/hooks/useCasePayments';
 import { getExchangeRate, getBankOfIsraelRates, type BankOfIsraelRates } from '@/lib/services/currency.service';
 import { BankSelector, BranchSelector } from '@/components/features/banks/BankBranchSelector';
@@ -663,63 +653,10 @@ export function PaymentsTab({ caseData }: PaymentsTabProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
-          {isLoadingPayments ? (
-            <div className="animate-pulse space-y-3">
-              <div className="h-10 bg-slate-100 rounded" />
-              <div className="h-10 bg-slate-100 rounded" />
-            </div>
-          ) : payments && payments.length > 0 ? (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-slate-50">
-                    <TableHead>{t('history.date')}</TableHead>
-                    <TableHead className="text-end">{t('history.amountUsd')}</TableHead>
-                    <TableHead className="text-end">{t('history.amountIls')}</TableHead>
-                    <TableHead>{t('history.status')}</TableHead>
-                    <TableHead>{t('history.notes')}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {payments.map((payment) => (
-                    <TableRow key={payment.id} className="hover:bg-slate-50/50">
-                      <TableCell className="font-medium text-slate-700">
-                        {payment.created_at ? format(new Date(payment.created_at), 'dd/MM/yy HH:mm', { locale: he }) : '-'}
-                      </TableCell>
-                      <TableCell className="text-end font-semibold text-slate-900">
-                        ${payment.amount_usd?.toLocaleString('en-US') ?? '-'}
-                      </TableCell>
-                      <TableCell className="text-end font-semibold text-emerald-700">
-                        ₪{payment.amount_ils?.toLocaleString('he-IL') ?? '-'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={
-                          payment.status === 'approved' ? 'default' :
-                          payment.status === 'transferred' ? 'secondary' :
-                          payment.status === 'rejected' ? 'destructive' :
-                          'outline'
-                        }>
-                          {payment.status === 'pending' ? t('status.pending') :
-                           payment.status === 'approved' ? t('status.approved') :
-                           payment.status === 'transferred' ? t('status.transferred') :
-                           payment.status === 'rejected' ? t('status.rejected') :
-                           payment.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-slate-600 text-sm">
-                        {payment.notes || '-'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ) : (
-            <div className="text-center py-12 text-slate-500">
-              <DollarSign className="h-12 w-12 mx-auto mb-3 text-slate-300" />
-              <p>{t('history.empty')}</p>
-            </div>
-          )}
+          <PaymentHistoryTable
+            payments={payments || []}
+            isLoading={isLoadingPayments}
+          />
         </CardContent>
       </Card>
 
