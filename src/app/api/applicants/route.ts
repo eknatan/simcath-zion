@@ -38,7 +38,7 @@ async function sendApplicantEmails(data: {
   try {
     // 1. Send email to secretary (case-created template)
     // The /api/email/send will automatically use secretary emails from DB
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://simcath-zion.vercel.app';
 
     const secretaryResponse = await fetch(`${baseUrl}/api/email/send`, {
       method: 'POST',
@@ -61,7 +61,7 @@ async function sendApplicantEmails(data: {
           applicantPhone: caseType === 'wedding'
             ? formData.groom_info?.phone
             : formData.personal_info?.phone,
-          caseUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/applicants/${applicantId}`,
+          caseUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://simcath-zion.vercel.app'}/applicants/${applicantId}`,
           fullFormData: formData, // Send entire form data for detailed email
         },
         locale,

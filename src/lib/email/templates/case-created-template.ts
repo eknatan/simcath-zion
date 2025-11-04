@@ -1,6 +1,6 @@
 /**
- * Case Created Email Template
- * תבנית מייל עבור יצירת תיק חדש (למזכירות)
+ * Request Created Email Template
+ * תבנית מייל עבור יצירת בקשה חדשה (למזכירות)
  */
 
 import { getBaseTemplate } from './base-template';
@@ -275,9 +275,9 @@ export function getCaseCreatedTemplate(data: CaseCreatedTemplateData): {
   if (locale === 'en') {
     const content = `
       <div style="background-color: #f0f7ff; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; margin-bottom: 24px;">
-        <h3 style="color: #667eea; margin: 0 0 8px 0;">New Case Created</h3>
+        <h3 style="color: #667eea; margin: 0 0 8px 0;">New Request Created</h3>
         <p style="margin: 0; font-size: 18px; font-weight: 600;">
-          Case #${data.caseNumber} - ${caseTypeLabel[data.caseType]}
+          Request #${data.caseNumber} - ${caseTypeLabel[data.caseType]}
         </p>
       </div>
 
@@ -314,7 +314,7 @@ export function getCaseCreatedTemplate(data: CaseCreatedTemplateData): {
         ` : ''}
         <tr>
           <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600;">
-            Case Type
+            Request Type
           </td>
           <td style="padding: 12px; border: 1px solid #e0e0e0;">
             ${caseTypeLabel[data.caseType]}
@@ -325,36 +325,36 @@ export function getCaseCreatedTemplate(data: CaseCreatedTemplateData): {
       ${data.caseType === 'wedding' && data.fullFormData ? getWeddingDetailsHTML(data.fullFormData, 'en') : ''}
 
       <p style="color: #666; margin-top: 24px;">
-        Please review the case and take the necessary action.
+        Please review the request and take the necessary action.
       </p>
     `;
 
     const text = `
-New Case Created
+New Request Created
 
-Case #${data.caseNumber} - ${caseTypeLabel[data.caseType]}
+Request #${data.caseNumber} - ${caseTypeLabel[data.caseType]}
 
 Applicant Details:
 - Name: ${data.applicantName}
 ${data.applicantEmail ? `- Email: ${data.applicantEmail}` : ''}
 ${data.applicantPhone ? `- Phone: ${data.applicantPhone}` : ''}
-- Case Type: ${caseTypeLabel[data.caseType]}
+- Request Type: ${caseTypeLabel[data.caseType]}
 
-${data.caseUrl ? `View case: ${data.caseUrl}` : ''}
+${data.caseUrl ? `View request: ${data.caseUrl}` : ''}
 
-Please review the case and take the necessary action.
+Please review the request and take the necessary action.
     `.trim();
 
     return {
-      subject: `New Case #${data.caseNumber} - ${caseTypeLabel[data.caseType]}`,
+      subject: `New Request #${data.caseNumber} - ${caseTypeLabel[data.caseType]}`,
       html: getBaseTemplate({
-        title: 'New Case Created',
+        title: 'New Request Created',
         content,
         locale: 'en',
-        preheader: `Case #${data.caseNumber} awaiting review`,
+        preheader: `Request #${data.caseNumber} awaiting review`,
         ctaButton: data.caseUrl
           ? {
-              text: 'View Case',
+              text: 'View Request',
               url: data.caseUrl,
             }
           : undefined,
@@ -366,9 +366,9 @@ Please review the case and take the necessary action.
   // עברית (ברירת מחדל)
   const content = `
     <div style="background-color: #f0f7ff; padding: 20px; border-radius: 8px; border-right: 4px solid #667eea; margin-bottom: 24px; direction: rtl;">
-      <h3 style="color: #667eea; margin: 0 0 8px 0; text-align: right;">תיק חדש נוצר במערכת</h3>
+      <h3 style="color: #667eea; margin: 0 0 8px 0; text-align: right;">בקשה חדשה נוצרה במערכת</h3>
       <p style="margin: 0; font-size: 18px; font-weight: 600; text-align: right;">
-        תיק מספר ${data.caseNumber} - ${caseTypeLabel[data.caseType]}
+        בקשה מספר ${data.caseNumber} - ${caseTypeLabel[data.caseType]}
       </p>
     </div>
 
@@ -405,7 +405,7 @@ Please review the case and take the necessary action.
       ` : ''}
       <tr>
         <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; text-align: right;">
-          סוג תיק
+          סוג בקשה
         </td>
         <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">
           ${caseTypeLabel[data.caseType]}
@@ -421,31 +421,31 @@ Please review the case and take the necessary action.
   `;
 
   const text = `
-תיק חדש נוצר במערכת
+בקשה חדשה נוצרה במערכת
 
-תיק מספר ${data.caseNumber} - ${caseTypeLabel[data.caseType]}
+בקשה מספר ${data.caseNumber} - ${caseTypeLabel[data.caseType]}
 
 פרטי המבקש:
 - שם מלא: ${data.applicantName}
 ${data.applicantEmail ? `- אימייל: ${data.applicantEmail}` : ''}
 ${data.applicantPhone ? `- טלפון: ${data.applicantPhone}` : ''}
-- סוג תיק: ${caseTypeLabel[data.caseType]}
+- סוג בקשה: ${caseTypeLabel[data.caseType]}
 
-${data.caseUrl ? `צפייה בתיק: ${data.caseUrl}` : ''}
+${data.caseUrl ? `צפייה בבקשה: ${data.caseUrl}` : ''}
 
 עכשיו צריך לאשר את הבקשה כדי שזה ייכנס למערכת
   `.trim();
 
   return {
-    subject: `תיק חדש #${data.caseNumber} - ${caseTypeLabel[data.caseType]}`,
+    subject: `בקשה חדשה #${data.caseNumber} - ${caseTypeLabel[data.caseType]}`,
     html: getBaseTemplate({
-      title: 'תיק חדש נוצר',
+      title: 'בקשה חדשה נוצרה',
       content,
       locale: 'he',
-      preheader: `תיק #${data.caseNumber} ממתין לבדיקה`,
+      preheader: `בקשה #${data.caseNumber} ממתינה לבדיקה`,
       ctaButton: data.caseUrl
         ? {
-            text: 'צפה בתיק',
+            text: 'צפה בבקשה',
             url: data.caseUrl,
           }
         : undefined,
