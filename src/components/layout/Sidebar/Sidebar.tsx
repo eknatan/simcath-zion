@@ -41,18 +41,6 @@ export function Sidebar() {
       title: t('cases'),
       href: '/cases',
       icon: <FileText className="h-5 w-5" />,
-      children: [
-        {
-          title: t('wedding'),
-          href: '/cases/wedding',
-          icon: <Heart className="h-4 w-4" />,
-        },
-        {
-          title: t('cleaning'),
-          href: '/cases/cleaning',
-          icon: <Users className="h-4 w-4" />,
-        },
-      ],
     },
     {
       title: t('calendar'),
