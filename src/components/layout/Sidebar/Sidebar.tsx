@@ -38,6 +38,11 @@ export function Sidebar() {
       icon: <LayoutDashboard className="h-5 w-5" />,
     },
     {
+      title: t('applicants'),
+      href: '/applicants/pending',
+      icon: <ClipboardList className="h-5 w-5" />,
+    },
+    {
       title: t('cases'),
       href: '/cases',
       icon: <FileText className="h-5 w-5" />,
@@ -46,11 +51,6 @@ export function Sidebar() {
       title: t('calendar'),
       href: '/calendar',
       icon: <Calendar className="h-5 w-5" />,
-    },
-    {
-      title: t('applicants'),
-      href: '/applicants/pending',
-      icon: <ClipboardList className="h-5 w-5" />,
     },
     {
       title: t('transfers'),
