@@ -107,7 +107,7 @@ export async function DELETE(
             previous_status: null // Clear previous_status after reverting
           })
           .eq('id', caseId);
-      } catch (error) {
+      } catch {
         // If previous_status column doesn't exist, just update the status
         await supabase
           .from('cases')

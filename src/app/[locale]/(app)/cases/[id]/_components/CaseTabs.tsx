@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   FileText,
@@ -76,6 +76,18 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
 
   const isWedding = caseData.case_type === CaseType.WEDDING;
 
+  // Available tabs based on case type
+  const availableTabs = isWedding ? WEDDING_TABS : CLEANING_TABS;
+
+  /**
+   * Handle tab change - update URL
+   */
+  const handleTabChange = useCallback((value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', value);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [searchParams, router, pathname]);
+
   // Keyboard navigation effect
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -90,7 +102,7 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
       }
 
       // Handle arrow key navigation between tabs
-      if (event.target && event.target.getAttribute('role') === 'tab') {
+      if (event.target && (event.target as Element).getAttribute('role') === 'tab') {
         const tabs = Array.from(document.querySelectorAll('[role="tab"]:not([disabled])'));
         const currentIndex = tabs.indexOf(event.target as Element);
 
@@ -136,10 +148,7 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [availableTabs]);
-
-  // Available tabs based on case type
-  const availableTabs = isWedding ? WEDDING_TABS : CLEANING_TABS;
+  }, [availableTabs, handleTabChange]);
 
   // Get active tab from URL or default to first tab
   const urlTab = searchParams.get('tab') as TabId | null;
@@ -216,19 +225,6 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
       default:
         return null;
     }
-  };
-
-  // ========================================
-  // Tab Change Handler
-  // ========================================
-
-  /**
-   * Handle tab change - update URL
-   */
-  const handleTabChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('tab', value);
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   // ========================================

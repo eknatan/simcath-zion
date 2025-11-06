@@ -188,7 +188,7 @@ export function useCaseTranslation({ caseId }: UseCaseTranslationOptions) {
     } finally {
       setIsTranslating(false);
     }
-  }, [caseId]);
+  }, [caseId, translations]);
 
   // ========================================
   // Update Translation Function
@@ -300,7 +300,7 @@ export function useCaseTranslation({ caseId }: UseCaseTranslationOptions) {
     } finally {
       setIsTranslating(false);
     }
-  }, [caseId]);
+  }, [caseId, translations]);
 
   // ========================================
   // Utility Functions

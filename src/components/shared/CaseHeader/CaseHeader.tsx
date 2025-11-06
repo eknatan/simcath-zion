@@ -20,7 +20,6 @@ import {
   XCircle,
   MoreVertical,
   Printer,
-  Download,
   Trash2,
   RotateCcw,
   Heart,
@@ -31,13 +30,6 @@ import { formatCurrency } from '@/lib/utils/format';
 import { ExportDocument } from '@/components/shared/ExportDocument';
 import { CaseSummary } from '@/components/shared/CaseSummary';
 import { AuditLogTimeline } from '@/components/shared/AuditLogTimeline';
-
-/**
- * Helper function to get mirrored icon class for RTL
- */
-function getIconClass(locale: string): string {
-  return locale === 'he' ? 'scale-x-[-1]' : '';
-}
 
 interface CaseHeaderProps {
   caseData: CaseWithRelations;
@@ -57,7 +49,6 @@ interface CaseHeaderProps {
 export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
   const t = useTranslations('case');
   const dir = locale === 'he' ? 'rtl' : 'ltr';
-  const iconClass = getIconClass(locale);
   const isWedding = caseData.case_type === CaseType.WEDDING;
   const isCleaning = caseData.case_type === CaseType.CLEANING;
 

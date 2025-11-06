@@ -31,7 +31,7 @@ async function sendApplicantEmails(data: {
   formData: any;
   locale: 'he' | 'en';
 }): Promise<{ secretaryEmailSent: boolean; applicantEmailSent: boolean }> {
-  const { applicantId, requestNumber, caseType, formData, locale } = data;
+  const { requestNumber, caseType, formData, locale } = data;
 
   let secretaryEmailSent = false;
   let applicantEmailSent = false;

@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { FormSection } from '@/components/shared/Forms/FormSection';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { WeddingFormData } from '@/lib/validations/wedding-form.schema';
 import { translateValidationMessage } from '@/lib/validations/translate';
 import { User, Phone, Mail, MapPin } from 'lucide-react';

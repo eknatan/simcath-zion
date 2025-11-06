@@ -2,7 +2,7 @@
 
 import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { formatCurrency } from '@/lib/utils/format';
-import { ExportDocument, ExportSection, ExportField } from '@/components/shared/ExportDocument';
+import { ExportSection, ExportField } from '@/components/shared/ExportDocument';
 
 interface CaseSummaryProps {
   caseData: CaseWithRelations;
@@ -16,7 +16,6 @@ interface CaseSummaryProps {
  */
 export function CaseSummary({ caseData }: CaseSummaryProps) {
   const isWedding = caseData.case_type === CaseType.WEDDING;
-  const isCleaning = caseData.case_type === CaseType.CLEANING;
 
   // Calculate total transferred for cleaning cases
   const totalTransferred = caseData.payments?.reduce(

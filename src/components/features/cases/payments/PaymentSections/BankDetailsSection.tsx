@@ -26,7 +26,6 @@ interface BankDetailsSectionProps {
 }
 
 export function BankDetailsSection({
-  bankDetails,
   localBankDetails,
   bankDetailsErrors,
   isBankDetailsLocked,

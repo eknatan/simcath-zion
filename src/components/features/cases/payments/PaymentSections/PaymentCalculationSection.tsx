@@ -8,7 +8,7 @@ import { ActionButton } from '@/components/shared/ActionButton';
 import { RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
-import { getExchangeRate, getBankOfIsraelRates, type BankOfIsraelRates } from '@/lib/services/currency.service';
+import { getBankOfIsraelRates, type BankOfIsraelRates } from '@/lib/services/currency.service';
 
 interface PaymentCalculationSectionProps {
   weddingCost: string;

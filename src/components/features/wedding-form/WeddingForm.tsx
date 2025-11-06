@@ -178,8 +178,6 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
         throw new Error('Submission failed');
       }
 
-      const result = await response.json();
-
       // Success toast
       toast.success(t('success.title'), {
         description: t('success.message'),

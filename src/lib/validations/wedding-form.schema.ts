@@ -37,14 +37,6 @@ const israeliPhoneSchema = z
   .regex(/^0\d{1,2}-?\d{7}$/, 'validation.invalidPhone');
 
 /**
- * וולידציה לאימייל
- */
-const emailSchema = z
-  .string()
-  .min(1, 'validation.required')
-  .email('validation.invalidEmail');
-
-/**
  * וולידציה לתאריך עברי
  */
 const hebrewDateSchema = z

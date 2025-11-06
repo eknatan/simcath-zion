@@ -6,8 +6,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
-  Heart,
-  Users,
   Calendar,
   FileText,
   DollarSign,

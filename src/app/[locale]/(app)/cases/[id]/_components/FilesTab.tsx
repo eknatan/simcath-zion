@@ -35,7 +35,6 @@ import {
   CaseFile,
   WeddingFileType,
   REQUIRED_WEDDING_FILES,
-  MAX_FILE_SIZE,
 } from '@/types/case.types';
 import { useCaseFiles } from '@/components/features/cases/hooks/useCaseFiles';
 
@@ -121,7 +120,6 @@ export function FilesTab({ caseData }: FilesTabProps) {
     uploadFile,
     deleteFile,
     uploadProgress,
-    isUploading,
   } = useCaseFiles(caseData.id);
 
   // Use fetched files if available, otherwise fall back to initial data

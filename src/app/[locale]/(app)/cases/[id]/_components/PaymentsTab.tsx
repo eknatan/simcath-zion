@@ -34,7 +34,6 @@ interface PaymentsTabProps {
  */
 export function PaymentsTab({ caseData }: PaymentsTabProps) {
   const t = useTranslations('payments');
-  const tc = useTranslations('common');
 
   // ========================================
   // Hooks

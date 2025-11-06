@@ -32,9 +32,7 @@ export function FormField({
   notSpecifiedText = 'Not specified',
   icon,
   placeholder,
-  className,
-  disabled,
-  ...props
+  className
 }: FormFieldProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value || '');
