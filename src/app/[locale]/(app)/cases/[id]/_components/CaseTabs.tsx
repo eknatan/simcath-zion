@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   FileText,
@@ -13,12 +14,32 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { CaseWithRelations, CaseType } from '@/types/case.types';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 
-// Import tab components
-import { OriginalRequestTab } from './OriginalRequestTab';
-import { FilesTab } from './FilesTab';
-import { PaymentsTab } from './PaymentsTab';
-import { EnglishTab } from './EnglishTab';
+// Import Loading component
+import { TabLoadingSkeleton } from './TabLoadingSkeleton';
+
+// Dynamic imports for tab components - code splitting for better performance
+const OriginalRequestTab = dynamic(() => import('./OriginalRequestTab').then(mod => ({ default: mod.OriginalRequestTab })), {
+  loading: () => <TabLoadingSkeleton />,
+  ssr: false
+});
+
+const FilesTab = dynamic(() => import('./FilesTab').then(mod => ({ default: mod.FilesTab })), {
+  loading: () => <TabLoadingSkeleton />,
+  ssr: false
+});
+
+const PaymentsTab = dynamic(() => import('./PaymentsTab').then(mod => ({ default: mod.PaymentsTab })), {
+  loading: () => <TabLoadingSkeleton />,
+  ssr: false
+});
+
+const EnglishTab = dynamic(() => import('./EnglishTab').then(mod => ({ default: mod.EnglishTab })), {
+  loading: () => <TabLoadingSkeleton />,
+  ssr: false
+});
 
 interface CaseTabsProps {
   caseData: CaseWithRelations;
@@ -42,6 +63,8 @@ type TabId = WeddingTabId | CleaningTabId;
  * - URL state management (?tab=hebrew)
  * - Visual indicators (✅/⚠️/🔴) for tab completion status
  * - Lazy loading of tab content
+ * - Full keyboard navigation support
+ * - Accessibility compliance
  *
  * Version B design: Elegant & Soft
  */
@@ -52,6 +75,68 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
   const pathname = usePathname();
 
   const isWedding = caseData.case_type === CaseType.WEDDING;
+
+  // Keyboard navigation effect
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Handle Ctrl/Cmd + number keys for tab navigation
+      if ((event.ctrlKey || event.metaKey) && event.key >= '1' && event.key <= '9') {
+        const tabIndex = parseInt(event.key) - 1;
+        if (tabIndex < availableTabs.length) {
+          const tabId = availableTabs[tabIndex];
+          handleTabChange(tabId);
+          event.preventDefault();
+        }
+      }
+
+      // Handle arrow key navigation between tabs
+      if (event.target && event.target.getAttribute('role') === 'tab') {
+        const tabs = Array.from(document.querySelectorAll('[role="tab"]:not([disabled])'));
+        const currentIndex = tabs.indexOf(event.target as Element);
+
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+          let nextIndex;
+          if (isRTL()) {
+            // In RTL, right arrow goes to previous, left arrow goes to next
+            nextIndex = event.key === 'ArrowLeft'
+              ? (currentIndex + 1) % tabs.length
+              : (currentIndex - 1 + tabs.length) % tabs.length;
+          } else {
+            // In LTR, right arrow goes to next, left arrow goes to previous
+            nextIndex = event.key === 'ArrowRight'
+              ? (currentIndex + 1) % tabs.length
+              : (currentIndex - 1 + tabs.length) % tabs.length;
+          }
+
+          tabs[nextIndex].setAttribute('tabindex', '0');
+          tabs[currentIndex].setAttribute('tabindex', '-1');
+          (tabs[nextIndex] as HTMLElement).focus();
+          event.preventDefault();
+        }
+
+        // Handle Home/End keys
+        if (event.key === 'Home') {
+          tabs[0].setAttribute('tabindex', '0');
+          tabs[currentIndex].setAttribute('tabindex', '-1');
+          (tabs[0] as HTMLElement).focus();
+          event.preventDefault();
+        } else if (event.key === 'End') {
+          const lastTab = tabs[tabs.length - 1];
+          lastTab.setAttribute('tabindex', '0');
+          tabs[currentIndex].setAttribute('tabindex', '-1');
+          (lastTab as HTMLElement).focus();
+          event.preventDefault();
+        }
+      }
+    };
+
+    const isRTL = () => {
+      return document.documentElement.getAttribute('dir') === 'rtl';
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [availableTabs]);
 
   // Available tabs based on case type
   const availableTabs = isWedding ? WEDDING_TABS : CLEANING_TABS;
@@ -153,17 +238,24 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
       {/* Tabs List */}
-      <TabsList className="grid w-full bg-slate-100 p-1" style={{
-        gridTemplateColumns: `repeat(${availableTabs.length}, minmax(0, 1fr))`
-      }}>
+      <TabsList
+        className="grid w-full bg-slate-100 p-1 gap-1 max-w-4xl mx-auto lg:max-w-none"
+        style={{
+          gridTemplateColumns: `repeat(${availableTabs.length}, minmax(140px, 1fr))`
+        }}
+      >
         {/* Original Request Tab */}
         <TabsTrigger
           value="originalRequest"
-          className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs sm:text-sm min-w-0 focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+          data-tab-short={t('originalRequestShort')}
+          data-tab-long={t('originalRequest')}
+          aria-label={`${t('originalRequest')} tab ${getStatusIcon(getTabStatus('originalRequest')) ? '- ' + (getTabStatus('originalRequest') === 'complete' ? 'completed' : getTabStatus('originalRequest') === 'warning' ? 'needs attention' : 'has errors') : ''}`}
+          tabIndex={activeTab === 'originalRequest' ? 0 : -1}
         >
-          <FileText className="h-4 w-4 me-2" />
-          <span className="hidden sm:inline">{t('originalRequest')}</span>
-          <span className="sm:hidden">{t('originalRequestShort')}</span>
+          <FileText className="h-4 w-4 me-1 sm:me-2 flex-shrink-0" aria-hidden="true" />
+          <span className="hidden sm:inline truncate">{t('originalRequest')}</span>
+          <span className="sm:hidden truncate">{t('originalRequestShort')}</span>
           {getStatusIcon(getTabStatus('originalRequest'))}
         </TabsTrigger>
 
@@ -171,11 +263,13 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
         {isWedding && (
           <TabsTrigger
             value="english"
-            className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs sm:text-sm min-w-0"
+            data-tab-short={t('englishShort')}
+            data-tab-long={t('english')}
           >
-            <Globe className="h-4 w-4 me-2" />
-            <span className="hidden sm:inline">{t('english')}</span>
-            <span className="sm:hidden">{t('englishShort')}</span>
+            <Globe className="h-4 w-4 me-1 sm:me-2 flex-shrink-0" />
+            <span className="hidden sm:inline truncate">{t('english')}</span>
+            <span className="sm:hidden truncate">{t('englishShort')}</span>
             {getStatusIcon(getTabStatus('english'))}
           </TabsTrigger>
         )}
@@ -184,14 +278,16 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
         {isWedding && (
           <TabsTrigger
             value="files"
-            className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs sm:text-sm min-w-0"
+            data-tab-short={t('filesShort')}
+            data-tab-long={t('files')}
           >
-            <Paperclip className="h-4 w-4 me-2" />
-            <span className="hidden sm:inline">{t('files')}</span>
-            <span className="sm:hidden">{t('filesShort')}</span>
+            <Paperclip className="h-4 w-4 me-1 sm:me-2 flex-shrink-0" />
+            <span className="hidden sm:inline truncate">{t('files')}</span>
+            <span className="sm:hidden truncate">{t('filesShort')}</span>
             <Badge
               variant="outline"
-              className="ms-2 bg-white text-xs px-1.5 py-0.5"
+              className="ms-1 sm:ms-2 bg-white text-xs px-1.5 py-0.5 flex-shrink-0"
             >
               {getFilesBadge()}
             </Badge>
@@ -202,11 +298,13 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
         {/* Payments Tab */}
         <TabsTrigger
           value="payments"
-          className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs sm:text-sm min-w-0"
+          data-tab-short={t('paymentsShort')}
+          data-tab-long={t('payments')}
         >
-          <DollarSign className="h-4 w-4 me-2" />
-          <span className="hidden sm:inline">{t('payments')}</span>
-          <span className="sm:hidden">{t('paymentsShort')}</span>
+          <DollarSign className="h-4 w-4 me-1 sm:me-2 flex-shrink-0" />
+          <span className="hidden sm:inline truncate">{t('payments')}</span>
+          <span className="sm:hidden truncate">{t('paymentsShort')}</span>
           {getStatusIcon(getTabStatus('payments'))}
         </TabsTrigger>
       </TabsList>
@@ -215,26 +313,34 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
       <div className="mt-6">
         {/* Original Request Tab Content */}
         <TabsContent value="originalRequest" className="m-0">
-          <OriginalRequestTab caseData={caseData} />
+          <Suspense fallback={<TabLoadingSkeleton />}>
+            <OriginalRequestTab caseData={caseData} />
+          </Suspense>
         </TabsContent>
 
         {/* English Tab Content - Wedding only */}
         {isWedding && (
           <TabsContent value="english" className="m-0">
-            <EnglishTab caseData={caseData} />
+            <Suspense fallback={<TabLoadingSkeleton />}>
+              <EnglishTab caseData={caseData} />
+            </Suspense>
           </TabsContent>
         )}
 
         {/* Files Tab Content - Wedding only */}
         {isWedding && (
           <TabsContent value="files" className="m-0">
-            <FilesTab caseData={caseData} />
+            <Suspense fallback={<TabLoadingSkeleton />}>
+              <FilesTab caseData={caseData} />
+            </Suspense>
           </TabsContent>
         )}
 
         {/* Payments Tab Content */}
         <TabsContent value="payments" className="m-0">
-          <PaymentsTab caseData={caseData} />
+          <Suspense fallback={<TabLoadingSkeleton />}>
+            <PaymentsTab caseData={caseData} />
+          </Suspense>
         </TabsContent>
       </div>
     </Tabs>

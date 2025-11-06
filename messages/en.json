@@ -796,7 +796,9 @@
   "case": {
     "type": {
       "wedding": "Wedding Case",
-      "cleaning": "Sick Child Case"
+      "weddingShort": "Wedding",
+      "cleaning": "Sick Child Case",
+      "cleaningShort": "Sick Child"
     },
     "guests": "guests",
     "childName": "Child Name",
@@ -826,6 +828,26 @@
       "payments": "Payments",
       "paymentsShort": "Payments",
       "comingSoon": "Coming soon..."
+    },
+    "paymentHistory": {
+      "loading": "Loading payment history...",
+      "noData": "No payments",
+      "noDataDescription": "No payments have been made for this case yet",
+      "headers": {
+        "date": "Date",
+        "amountUSD": "Amount ($)",
+        "amountILS": "Amount (₪)",
+        "status": "Status",
+        "notes": "Notes",
+        "actions": "Actions"
+      },
+      "delete": {
+        "title": "Delete Payment",
+        "description": "Are you sure you want to delete this payment? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete Payment",
+        "deleting": "Deleting..."
+      }
     },
     "originalRequest": {
       "title": "Application in Hebrew",

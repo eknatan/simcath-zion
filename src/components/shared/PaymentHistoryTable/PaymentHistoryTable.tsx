@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Receipt, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -100,6 +101,8 @@ export function PaymentHistoryTable({
   onDelete,
   deletingPaymentId,
 }: PaymentHistoryTableProps) {
+  const t = useTranslations('paymentHistory');
+
   // ========================================
   // State
   // ========================================
@@ -128,7 +131,7 @@ export function PaymentHistoryTable({
       <div className={`border border-slate-200 rounded-lg p-8 ${className}`}>
         <div className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600" />
-          <p className="ms-3 text-slate-600">טוען היסטוריית תשלומים...</p>
+          <p className="ms-3 text-slate-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -144,10 +147,10 @@ export function PaymentHistoryTable({
         <div className="flex flex-col items-center justify-center text-center">
           <Receipt className="h-12 w-12 text-slate-400 mb-3" />
           <h3 className="text-lg font-semibold text-slate-700 mb-1">
-            אין תשלומים
+            {t('noData')}
           </h3>
           <p className="text-sm text-slate-500">
-            טרם בוצעו תשלומים בתיק זה
+            {t('noDataDescription')}
           </p>
         </div>
       </div>
@@ -166,23 +169,23 @@ export function PaymentHistoryTable({
           <TableHeader>
             <TableRow className="bg-slate-50 border-b border-slate-200">
               <TableHead className="text-right font-semibold text-slate-700">
-                תאריך
+                {t('headers.date')}
               </TableHead>
               <TableHead className="text-right font-semibold text-slate-700">
-                סכום ($)
+                {t('headers.amountUSD')}
               </TableHead>
               <TableHead className="text-right font-semibold text-slate-700">
-                סכום (₪)
+                {t('headers.amountILS')}
               </TableHead>
               <TableHead className="text-right font-semibold text-slate-700">
-                סטטוס
+                {t('headers.status')}
               </TableHead>
               <TableHead className="text-right font-semibold text-slate-700">
-                הערות
+                {t('headers.notes')}
               </TableHead>
               {onDelete && (
                 <TableHead className="text-right font-semibold text-slate-700">
-                  פעולות
+                  {t('headers.actions')}
                 </TableHead>
               )}
             </TableRow>

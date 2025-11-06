@@ -32,8 +32,16 @@ import { ExportDocument } from '@/components/shared/ExportDocument';
 import { CaseSummary } from '@/components/shared/CaseSummary';
 import { AuditLogTimeline } from '@/components/shared/AuditLogTimeline';
 
+/**
+ * Helper function to get mirrored icon class for RTL
+ */
+function getIconClass(locale: string): string {
+  return locale === 'he' ? 'scale-x-[-1]' : '';
+}
+
 interface CaseHeaderProps {
   caseData: CaseWithRelations;
+  locale?: string;
 }
 
 /**
@@ -44,9 +52,12 @@ interface CaseHeaderProps {
  * - Cleaning: Family name, child name, start date, total transferred
  *
  * Version B design: Elegant & Soft with gradient background
+ * RTL support: Proper text direction and icon mirroring for Hebrew
  */
-export function CaseHeader({ caseData }: CaseHeaderProps) {
+export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
   const t = useTranslations('case');
+  const dir = locale === 'he' ? 'rtl' : 'ltr';
+  const iconClass = getIconClass(locale);
   const isWedding = caseData.case_type === CaseType.WEDDING;
   const isCleaning = caseData.case_type === CaseType.CLEANING;
 
@@ -72,10 +83,15 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-white to-sky-50/30 border border-slate-200 shadow-md rounded-lg p-6">
+    <div
+      data-testid="case-header"
+      dir={dir}
+      lang={locale}
+      className="bg-gradient-to-br from-white to-sky-50/30 border border-slate-200 shadow-md rounded-lg p-4 sm:p-6"
+    >
       {/* Top Row: Case Number, Type Badge, Status Badge */}
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-slate-600" />
             <span className="text-lg font-bold text-slate-900">
@@ -94,12 +110,14 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
             {isWedding ? (
               <>
                 <Heart className="h-3 w-3 me-1" />
-                {t('type.wedding')}
+                <span className="hidden sm:inline">{t('type.wedding')}</span>
+                <span className="sm:hidden">{t('type.weddingShort')}</span>
               </>
             ) : (
               <>
                 <Users className="h-3 w-3 me-1" />
-                {t('type.cleaning')}
+                <span className="hidden sm:inline">{t('type.cleaning')}</span>
+                <span className="sm:hidden">{t('type.cleaningShort')}</span>
               </>
             )}
           </Badge>
@@ -121,7 +139,10 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
             </div>
 
             {/* Wedding Details Grid */}
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 text-sm">
+            <div
+              data-testid="wedding-details-grid"
+              className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-sm"
+            >
               {/* Date */}
               {caseData.wedding_date_hebrew && (
                 <div className="flex items-center gap-2 text-slate-700">
@@ -185,7 +206,10 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
             )}
 
             {/* Cleaning Details Grid */}
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 text-sm">
+            <div
+              data-testid="cleaning-details-grid"
+              className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-sm"
+            >
               {/* Start Date */}
               {caseData.start_date && (
                 <div className="flex items-center gap-2 text-slate-700">
@@ -237,23 +261,23 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2 mt-6 flex-wrap">
+      <div className="flex flex-wrap gap-2 mt-6 sm:flex-row">
         {/* Wedding Actions */}
         {isWedding && (
           <>
-            <ActionButton variant="view" size="sm">
+            <ActionButton variant="view" size="sm" data-testid="action-button">
               <Edit3 className="h-4 w-4 me-1" />
               {t('actions.updateStatus')}
             </ActionButton>
 
             {caseData.status === 'new' && (
-              <ActionButton variant="approve" size="sm">
+              <ActionButton variant="approve" size="sm" data-testid="action-button">
                 <CheckCircle2 className="h-4 w-4 me-1" />
                 {t('actions.approveTransfer')}
               </ActionButton>
             )}
 
-            <ActionButton variant="reject" size="sm">
+            <ActionButton variant="reject" size="sm" data-testid="action-button">
               <XCircle className="h-4 w-4 me-1" />
               {t('actions.reject')}
             </ActionButton>

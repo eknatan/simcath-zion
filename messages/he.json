@@ -688,7 +688,9 @@
   "case": {
     "type": {
       "wedding": "תיק חתונה",
-      "cleaning": "תיק ילד חולה"
+      "weddingShort": "חתונה",
+      "cleaning": "תיק ילד חולה",
+      "cleaningShort": "ילד חולה"
     },
     "guests": "מוזמנים",
     "childName": "שם הילד",
@@ -718,6 +720,26 @@
       "payments": "תשלומים",
       "paymentsShort": "תשלומים",
       "comingSoon": "בפיתוח..."
+    },
+    "paymentHistory": {
+      "loading": "טוען היסטוריית תשלומים...",
+      "noData": "אין תשלומים",
+      "noDataDescription": "טרם בוצעו תשלומים בתיק זה",
+      "headers": {
+        "date": "תאריך",
+        "amountUSD": "סכום ($)",
+        "amountILS": "סכום (₪)",
+        "status": "סטטוס",
+        "notes": "הערות",
+        "actions": "פעולות"
+      },
+      "delete": {
+        "title": "מחיקת תשלום",
+        "description": "האם אתה בטוח שברצונך למחוק תשלום זה? פעולה זו בלתי הפיכה.",
+        "cancel": "בטל",
+        "confirm": "מחק תשלום",
+        "deleting": "מוחק..."
+      }
     },
     "originalRequest": {
       "title": "מקור הבקשה - הטופס המקורי",
