@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,7 @@ import {
 } from '@/lib/validation/case-form.schema';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { ActionButton } from '@/components/shared/ActionButton';
 
 interface OriginalRequestTabProps {
   caseData: CaseWithRelations;
@@ -37,19 +38,28 @@ interface FieldProps {
   onSave: (fieldName: string, value: any) => Promise<boolean>;
   notSpecifiedText: string;
   error?: string;
+  isGlobalEditMode: boolean;
 }
 
-const Field = ({ name, label, type = 'text', required = false, value, onSave, notSpecifiedText, error }: FieldProps) => {
+const Field = ({ name, label, type = 'text', required = false, value, onSave, notSpecifiedText, error, isGlobalEditMode }: FieldProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editValue, setEditValue] = useState(value);
   const [validationError, setValidationError] = useState<string | undefined>(error);
 
-  const handleEdit = () => {
-    setEditValue(value);
-    setValidationError(undefined);
-    setIsEditing(true);
-  };
+  
+  // Enable editing when global edit mode is on and field is not already editing
+  useEffect(() => {
+    if (isGlobalEditMode && !isEditing) {
+      setEditValue(value);
+      setValidationError(undefined);
+      setIsEditing(true);
+    } else if (!isGlobalEditMode && isEditing) {
+      setEditValue(value);
+      setValidationError(undefined);
+      setIsEditing(false);
+    }
+  }, [isGlobalEditMode, value, isEditing]);
 
   const handleCancel = () => {
     setEditValue(value);
@@ -77,23 +87,12 @@ const Field = ({ name, label, type = 'text', required = false, value, onSave, no
   };
 
   if (!isEditing) {
-    // View mode
+    // View mode - no individual edit button
     return (
       <div className="space-y-1">
         <Label className="text-xs text-slate-600">{label}</Label>
-        <div className="flex items-center gap-2">
-          <div className="text-sm text-slate-900 flex-1">
-            {value || <span className="text-slate-400">{notSpecifiedText}</span>}
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleEdit}
-            className="h-7 w-7 p-0"
-          >
-            <Edit3 className="h-3.5 w-3.5 text-slate-500" />
-          </Button>
+        <div className="text-sm text-slate-900">
+          {value || <span className="text-slate-400">{notSpecifiedText}</span>}
         </div>
       </div>
     );
@@ -178,6 +177,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
   const { updateCase } = useCase(caseData.id, caseData);
 
   const isWedding = caseData.case_type === CaseType.WEDDING;
+  const [isGlobalEditMode, setIsGlobalEditMode] = useState(false);
 
   // ========================================
   // Form Setup (for validation only)
@@ -274,11 +274,29 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-2">
-        <FileText className="h-5 w-5 text-sky-600" />
-        <h2 className="text-xl font-bold text-slate-900">
-          {t('title')}
-        </h2>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <FileText className="h-5 w-5 text-sky-600" />
+          <h2 className="text-xl font-bold text-slate-900">
+            {t('title')}
+          </h2>
+        </div>
+        <ActionButton
+          variant={isGlobalEditMode ? "approve" : "view"}
+          onClick={() => setIsGlobalEditMode(!isGlobalEditMode)}
+        >
+          {isGlobalEditMode ? (
+            <>
+              <Check className="h-4 w-4 me-2" />
+              סיום עריכה
+            </>
+          ) : (
+            <>
+              <Edit3 className="h-4 w-4 me-2" />
+              עריכה
+            </>
+          )}
+        </ActionButton>
       </div>
 
       {/* Wedding Case Sections */}
@@ -300,6 +318,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.wedding_date_hebrew?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="wedding_date_gregorian"
@@ -309,6 +328,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.wedding_date_gregorian?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="city"
@@ -317,6 +337,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.city?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="venue"
@@ -325,6 +346,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.venue?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="guests_count"
@@ -334,6 +356,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.guests_count?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="total_cost"
@@ -343,6 +366,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.total_cost?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <div className="md:col-span-2">
                 <Field
@@ -353,6 +377,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                   onSave={handleFieldSave}
                   notSpecifiedText={t('notSpecified')}
                   error={formErrors.request_background?.message as string}
+                  isGlobalEditMode={isGlobalEditMode}
                 />
               </div>
             </CardContent>
@@ -375,6 +400,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_first_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="groom_last_name"
@@ -384,6 +410,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_last_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="groom_id"
@@ -392,6 +419,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_id?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="groom_school"
@@ -400,6 +428,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_school?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="groom_father_name"
@@ -408,6 +437,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_father_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="groom_mother_name"
@@ -416,6 +446,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_mother_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
                 <Field
                   name="groom_father_occupation"
@@ -424,6 +455,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                   onSave={handleFieldSave}
                   notSpecifiedText={t('notSpecified')}
                   error={formErrors.groom_father_occupation?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
                 />
                 <Field
                   name="groom_mother_occupation"
@@ -432,6 +464,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                   onSave={handleFieldSave}
                   notSpecifiedText={t('notSpecified')}
                   error={formErrors.groom_mother_occupation?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
                 />
               <Field
                 name="groom_memorial_day"
@@ -440,6 +473,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.groom_memorial_day?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
             </CardContent>
           </Card>
@@ -461,6 +495,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_first_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_last_name"
@@ -470,6 +505,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_last_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_id"
@@ -478,6 +514,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_id?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_school"
@@ -486,6 +523,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_school?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_father_name"
@@ -494,6 +532,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_father_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_mother_name"
@@ -502,6 +541,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_mother_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_father_occupation"
@@ -510,6 +550,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_father_occupation?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_mother_occupation"
@@ -518,6 +559,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_mother_occupation?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="bride_memorial_day"
@@ -526,6 +568,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.bride_memorial_day?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
             </CardContent>
           </Card>
@@ -547,6 +590,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                   onSave={handleFieldSave}
                   notSpecifiedText={t('notSpecified')}
                   error={formErrors.address?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
                 />
               </div>
               <Field
@@ -557,6 +601,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.contact_phone?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
               <Field
                 name="contact_email"
@@ -566,6 +611,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.contact_email?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
             </CardContent>
           </Card>
@@ -590,6 +636,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.family_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="child_name"
@@ -599,6 +646,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.child_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="parent1_name"
@@ -608,6 +656,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.parent1_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="parent1_id"
@@ -616,6 +665,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.parent1_id?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="parent2_name"
@@ -624,6 +674,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.parent2_name?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="parent2_id"
@@ -632,6 +683,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.parent2_id?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <div className="md:col-span-2">
               <Field
@@ -641,6 +693,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.address?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
               />
             </div>
             <Field
@@ -651,6 +704,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.city?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="contact_phone"
@@ -660,6 +714,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.contact_phone?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="contact_phone2"
@@ -669,6 +724,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.contact_phone2?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="contact_phone3"
@@ -678,6 +734,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.contact_phone3?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="contact_email"
@@ -687,6 +744,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.contact_email?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
             <Field
               name="start_date"
@@ -696,6 +754,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               onSave={handleFieldSave}
               notSpecifiedText={t('notSpecified')}
               error={formErrors.start_date?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
             />
           </CardContent>
         </Card>

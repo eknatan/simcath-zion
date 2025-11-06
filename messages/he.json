@@ -254,6 +254,10 @@
       "success": "תשלום חודשי נוצר בהצלחה",
       "error": "שגיאה ביצירת תשלום חודשי"
     },
+    "delete": {
+      "success": "התשלום נמחק בהצלחה",
+      "error": "שגיאה במחיקת התשלום"
+    },
     "errors": {
       "invalidCase": "תיק לא תקין",
       "validationFailed": "נכשלה בדיקת תקינות הנתונים",
@@ -799,6 +803,64 @@
         "description": "האם אתה בטוח שברצונך למחוק את {filename}? פעולה זו בלתי הפיכה."
       }
     },
+    "english": {
+      "title": "הבקשה באנגלית",
+      "subtitle": "תרגום אוטומטי מעברית לאנגלית עם אפשרות עריכה ידנית",
+      "notTranslated": {
+        "title": "תרגום לא זמין",
+        "description": "תיק זה טרם תורגם לאנגלית. לחץ על הכפתור מטה כדי לתרגם באמצעות AI.",
+        "translateButton": "תרגם לאנגלית (AI)"
+      },
+      "translating": {
+        "title": "מתרגם...",
+        "description": "התיק מתורגם מעברית לאנגלית באמצעות AI.",
+        "estimatedTime": "צפוי לקחת 5-10 שניות."
+      },
+      "status": {
+        "translated": "תורגם",
+        "edited": "נערך"
+      },
+      "actions": {
+        "edit": "ערוך תרגום",
+        "retranslate": "תרגם מחדש"
+      },
+      "retranslateDialog": {
+        "title": "האם אתה בטוח?",
+        "description": "תרגום מחדש ימחק את כל העריכות הידניות שביצעת. פעולה זו בלתי הפיכה.",
+        "cancel": "ביטול",
+        "confirm": "אשר תרגום מחדש"
+      },
+      "sections": {
+        "weddingInfo": "פרטי החתונה",
+        "groomInfo": "פרטי החתן",
+        "brideInfo": "פרטי הכלה",
+        "contactInfo": "פרטי התקשרות"
+      },
+      "fields": {
+        "weddingDateHebrew": "תאריך עברי",
+        "weddingDateGregorian": "תאריך לועזי",
+        "city": "עיר",
+        "venue": "אולם",
+        "guestsCount": "מספר מוזמנים",
+        "totalCost": "סכום כולל (₪)",
+        "requestBackground": "רקע הבקשה",
+        "firstName": "שם פרטי",
+        "lastName": "שם משפחה",
+        "idNumber": "מספר זהות",
+        "school": "בית ספר",
+        "fatherName": "שם האב",
+        "motherName": "שם האם",
+        "memorialDay": "יום זיכרון",
+        "address": "כתובת",
+        "phone": "טלפון",
+        "email": "אימייל"
+      },
+      "saving": "שומר שינויים...",
+      "error": {
+        "translationFailed": "התרגום נכשל",
+        "retry": "נסה שוב"
+      }
+    },
     "view": {
       "caseNumber": "תיק מספר",
       "type": "סוג",
@@ -943,6 +1005,36 @@
       "success_description": "כעת ניתן לאשר את הבקשה",
       "error_title": "שגיאה בשחזור בקשה",
       "error_description": "לא ניתן לשחזר את הבקשה. נסה שוב מאוחר יותר."
+    }
+  },
+  "audit": {
+    "title": "היסטוריית שינויים",
+    "history": "היסטוריה",
+    "noHistory": "אין היסטוריית שינויים עדיין",
+    "status": {
+      "new": "חדש",
+      "active": "פעיל",
+      "pending_transfer": "ממתין להעברה",
+      "transferred": "הועבר",
+      "rejected": "נדחה",
+      "inactive": "לא פעיל",
+      "expired": "פג תוקף",
+      "deleted": "נמחק"
+    },
+    "field": {
+      "status": "סטטוס",
+      "name": "שם",
+      "phone": "טלפון",
+      "email": "אימייל",
+      "address": "כתובת",
+      "city": "עיר",
+      "date": "תאריך",
+      "wedding_date": "תאריך חתונה",
+      "bank_details": "פרטי בנק",
+      "payment": "תשלום",
+      "file_uploaded": "העלאת קובץ",
+      "file_deleted": "מחיקת קובץ",
+      "payment_approved": "אישור תשלום"
     }
   }
 }

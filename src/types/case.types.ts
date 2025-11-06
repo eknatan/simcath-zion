@@ -246,6 +246,59 @@ export interface TranslationRequestData {
   lang_to: string;
 }
 
+/**
+ * Translated content structure returned by AI
+ */
+export interface TranslatedContent {
+  wedding_info?: {
+    wedding_date_hebrew?: string;
+    wedding_date_gregorian?: string;
+    city?: string;
+    venue?: string;
+    guests_count?: number;
+    total_cost?: number;
+    request_background?: string;
+  };
+  groom_info?: {
+    first_name?: string;
+    last_name?: string;
+    id_number?: string;
+    school?: string;
+    father_name?: string;
+    mother_name?: string;
+    memorial_day?: string;
+  };
+  bride_info?: {
+    first_name?: string;
+    last_name?: string;
+    id_number?: string;
+    school?: string;
+    father_name?: string;
+    mother_name?: string;
+    memorial_day?: string;
+  };
+  contact_info?: {
+    address?: string;
+    phone?: string;
+    email?: string;
+  };
+  family_info?: {
+    family_name?: string;
+    child_name?: string;
+    parent1_name?: string;
+    parent1_id?: string;
+    parent2_name?: string;
+    parent2_id?: string;
+    address?: string;
+    city?: string;
+    phone?: string;
+    phone2?: string;
+    phone3?: string;
+    email?: string;
+    start_date?: string;
+  };
+}
+
 // ========================================
 // UI Display Types
 // ========================================

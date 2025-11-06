@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { uploadToStorage, validateFile } from '@/lib/services/file-storage.service';
+import { createAuditLogger } from '@/lib/middleware/audit-log.middleware';
 
 /**
  * GET /api/cases/[id]/files
@@ -123,13 +124,11 @@ export async function POST(
       return NextResponse.json({ error: 'Failed to save file metadata' }, { status: 500 });
     }
 
-    // Log to case history
-    await supabase.from('case_history').insert({
-      case_id: id,
-      changed_by: user.id,
-      field_changed: 'file_uploaded',
-      new_value: fileType,
-      note: `Uploaded ${file.name}`,
+    // Log to case history using middleware
+    const auditLogger = createAuditLogger(supabase);
+    await auditLogger.logAction(id, user.id, 'file_uploaded', {
+      newValue: fileType,
+      note: `Uploaded ${file.name}`
     });
 
     return NextResponse.json(savedFile, { status: 201 });

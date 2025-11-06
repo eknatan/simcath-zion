@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { CaseUpdatePayload } from '@/types/case.types';
+import { createAuditLogger, getChangedFields } from '@/lib/middleware/audit-log.middleware';
 
 /**
  * GET /api/cases/[id]
@@ -120,23 +121,22 @@ export async function PATCH(
       );
     }
 
-    // Log the change in case_history
-    // Note: Only log if there are actual changes
-    const changedFields = Object.keys(updates);
+    // Log the changes in case_history using middleware
+    const auditLogger = createAuditLogger(supabase);
 
-    if (changedFields.length > 0) {
-      // Create history entries for changed fields
-      const historyPromises = changedFields.map((field) => {
-        return supabase.from('case_history').insert({
-          case_id: id,
-          changed_by: user.id,
-          field_changed: field,
-          new_value: String(updates[field as keyof typeof updates]),
-          note: `Updated ${field}`,
-        });
-      });
+    // Get old data for comparison
+    const { data: oldCaseData } = await supabase
+      .from('cases')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-      await Promise.all(historyPromises);
+    if (oldCaseData) {
+      const changes = getChangedFields(oldCaseData, updates);
+
+      if (Object.keys(changes).length > 0) {
+        await auditLogger.logMultipleChanges(id, user.id, changes);
+      }
     }
 
     // Fetch updated case with relations
@@ -203,13 +203,11 @@ export async function DELETE(
       );
     }
 
-    // Log the deletion
-    await supabase.from('case_history').insert({
-      case_id: id,
-      changed_by: user.id,
-      field_changed: 'status',
-      new_value: 'deleted',
-      note: 'Case deleted',
+    // Log the deletion using middleware
+    const auditLogger = createAuditLogger(supabase);
+    await auditLogger.logAction(id, user.id, 'status', {
+      newValue: 'deleted',
+      note: 'Case deleted'
     });
 
     return NextResponse.json({ success: true, case: deletedCase });

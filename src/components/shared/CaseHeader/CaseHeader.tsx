@@ -28,7 +28,9 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { formatCurrency } from '@/lib/utils/format';
-import { useExportPDF } from '@/lib/hooks/useExportPDF';
+import { ExportDocument } from '@/components/shared/ExportDocument';
+import { CaseSummary } from '@/components/shared/CaseSummary';
+import { AuditLogTimeline } from '@/components/shared/AuditLogTimeline';
 
 interface CaseHeaderProps {
   caseData: CaseWithRelations;
@@ -57,10 +59,17 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
   // Count active months for cleaning cases
   const activeMonths = caseData.payments?.length || 0;
 
-  // שימוש ב-hook המשותף לייצוא PDF
-  const { isExporting, exportToPDF, contentRef: exportRef } = useExportPDF({
-    filename: `case_${caseData.case_number}`,
-  });
+  // Generate filename for export
+  const getExportFilename = () => {
+    if (caseData.case_type === CaseType.WEDDING) {
+      const groomName = caseData.groom_first_name || 'groom';
+      const brideName = caseData.bride_first_name || 'bride';
+      return `case_${caseData.case_number}_${groomName}_${brideName}`;
+    } else {
+      const familyName = caseData.family_name || 'family';
+      return `case_${caseData.case_number}_${familyName}`;
+    }
+  };
 
   return (
     <div className="bg-gradient-to-br from-white to-sky-50/30 border border-slate-200 shadow-md rounded-lg p-6">
@@ -275,6 +284,29 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
           </>
         )}
 
+        {/* Export PDF Button */}
+        <ExportDocument
+          filename={getExportFilename()}
+          title={`תיק מספר ${caseData.case_number}`}
+          variant="outline"
+          size="sm"
+          direction="rtl"
+          showIcon={true}
+          onExportComplete={() => {
+            // Optional: Add success notification
+          }}
+          onExportError={() => {
+            // Optional: Add error handling
+          }}
+        >
+          <CaseSummary caseData={caseData} />
+        </ExportDocument>
+
+        {/* Audit History Button */}
+        <AuditLogTimeline
+          history={caseData.history || []}
+        />
+
         {/* More Options Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -287,10 +319,6 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
               <Printer className="h-4 w-4 me-2" />
               {t('actions.print')}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={exportToPDF} disabled={isExporting}>
-              <Download className="h-4 w-4 me-2" />
-              {isExporting ? 'מייצא...' : t('actions.exportPdf')}
-            </DropdownMenuItem>
             <DropdownMenuItem className="text-red-600">
               <Trash2 className="h-4 w-4 me-2" />
               {t('actions.delete')}
@@ -299,155 +327,6 @@ export function CaseHeader({ caseData }: CaseHeaderProps) {
         </DropdownMenu>
       </div>
 
-      {/* Export Content - Hidden */}
-      <div className="hidden">
-        <div
-          ref={exportRef}
-          dir="rtl"
-          style={{
-            width: '210mm',
-            minHeight: '297mm',
-            padding: '12mm',
-            backgroundColor: 'white',
-            fontFamily: 'Arial, sans-serif',
-            fontSize: '10pt',
-            lineHeight: '1.5',
-            color: '#000',
-          }}
-        >
-          {/* Title */}
-          <div
-            style={{
-              textAlign: 'center',
-              fontSize: '16pt',
-              fontWeight: 'bold',
-              marginBottom: '10mm',
-              borderBottom: '2px solid #000',
-              paddingBottom: '5mm',
-            }}
-          >
-            תיק מספר {caseData.case_number}
-          </div>
-
-          {/* Case Type & Status */}
-          <div style={{ marginBottom: '8mm' }}>
-            <div style={{ fontSize: '12pt', fontWeight: 'bold', marginBottom: '3mm' }}>
-              סוג תיק: {isWedding ? 'חתונה' : 'ניקיון'}
-            </div>
-            <div style={{ fontSize: '10pt' }}>
-              סטטוס: {caseData.status}
-            </div>
-          </div>
-
-          {isWedding ? (
-            <>
-              {/* Names */}
-              <div style={{ marginBottom: '8mm' }}>
-                <div style={{ fontSize: '14pt', fontWeight: 'bold', marginBottom: '3mm' }}>
-                  {caseData.groom_first_name} {caseData.groom_last_name} ♥ {caseData.bride_first_name} {caseData.bride_last_name}
-                </div>
-              </div>
-
-              {/* Wedding Details */}
-              <div style={{ marginBottom: '8mm', backgroundColor: '#ffffff' }}>
-                <div style={{ fontSize: '12pt', fontWeight: 'bold', color: '#1e40af', marginBottom: '3mm', borderBottom: '2px solid #3b82f6', paddingBottom: '2mm', backgroundColor: '#ffffff' }}>
-                  פרטי החתונה
-                </div>
-                <div style={{ paddingTop: '2mm', backgroundColor: '#ffffff' }}>
-                  {caseData.wedding_date_hebrew && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>תאריך עברי:</strong> {caseData.wedding_date_hebrew}
-                    </div>
-                  )}
-                  {caseData.wedding_date_gregorian && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>תאריך לועזי:</strong> {new Date(caseData.wedding_date_gregorian).toLocaleDateString('he-IL')}
-                    </div>
-                  )}
-                  {caseData.city && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>עיר:</strong> {caseData.city}
-                    </div>
-                  )}
-                  {caseData.guests_count && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>מספר אורחים:</strong> {caseData.guests_count}
-                    </div>
-                  )}
-                  {caseData.total_cost && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>סכום מאושר:</strong> {formatCurrency(caseData.total_cost)}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Contact Info */}
-              <div style={{ marginBottom: '8mm', backgroundColor: '#ffffff' }}>
-                <div style={{ fontSize: '12pt', fontWeight: 'bold', color: '#1e40af', marginBottom: '3mm', borderBottom: '2px solid #3b82f6', paddingBottom: '2mm', backgroundColor: '#ffffff' }}>
-                  פרטי קשר
-                </div>
-                <div style={{ paddingTop: '2mm', backgroundColor: '#ffffff' }}>
-                  {caseData.address && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>כתובת:</strong> {caseData.address}
-                    </div>
-                  )}
-                  {caseData.contact_phone && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>טלפון:</strong> {caseData.contact_phone}
-                    </div>
-                  )}
-                  {caseData.contact_email && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>אימייל:</strong> {caseData.contact_email}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* Cleaning Case Info */}
-              <div style={{ marginBottom: '8mm' }}>
-                <div style={{ fontSize: '14pt', fontWeight: 'bold', marginBottom: '3mm' }}>
-                  {caseData.family_name}
-                </div>
-                {caseData.child_name && (
-                  <div style={{ fontSize: '12pt', marginBottom: '3mm' }}>
-                    <strong>שם הילד:</strong> {caseData.child_name}
-                  </div>
-                )}
-              </div>
-
-              {/* Details */}
-              <div style={{ marginBottom: '8mm', backgroundColor: '#ffffff' }}>
-                <div style={{ fontSize: '12pt', fontWeight: 'bold', color: '#1e40af', marginBottom: '3mm', borderBottom: '2px solid #3b82f6', paddingBottom: '2mm', backgroundColor: '#ffffff' }}>
-                  פרטים
-                </div>
-                <div style={{ paddingTop: '2mm', backgroundColor: '#ffffff' }}>
-                  {caseData.start_date && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>תאריך התחלה:</strong> {new Date(caseData.start_date).toLocaleDateString('he-IL', { month: 'long', year: 'numeric' })}
-                    </div>
-                  )}
-                  {caseData.city && (
-                    <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                      <strong>עיר:</strong> {caseData.city}
-                    </div>
-                  )}
-                  <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                    <strong>סך כל הכסף שהועבר:</strong> {formatCurrency(totalTransferred)}
-                  </div>
-                  <div style={{ marginBottom: '3mm', backgroundColor: '#ffffff', color: '#000000' }}>
-                    <strong>חודשים פעילים:</strong> {activeMonths}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+  </div>
   );
 }

@@ -245,6 +245,10 @@
       "success": "Monthly payment created successfully",
       "error": "Error creating monthly payment"
     },
+    "delete": {
+      "success": "Payment deleted successfully",
+      "error": "Error deleting payment"
+    },
     "errors": {
       "invalidCase": "Invalid case",
       "validationFailed": "Validation failed",
@@ -903,6 +907,64 @@
         "description": "Are you sure you want to delete {filename}? This action cannot be undone."
       }
     },
+    "english": {
+      "title": "Application in English",
+      "subtitle": "AI-powered translation from Hebrew to English with manual editing capability",
+      "notTranslated": {
+        "title": "Translation Not Available",
+        "description": "This case has not been translated to English yet. Click the button below to translate using AI.",
+        "translateButton": "Translate to English (AI)"
+      },
+      "translating": {
+        "title": "Translating...",
+        "description": "The case is being translated from Hebrew to English using AI.",
+        "estimatedTime": "Expected to take 5-10 seconds."
+      },
+      "status": {
+        "translated": "Translated",
+        "edited": "Edited"
+      },
+      "actions": {
+        "edit": "Edit Translation",
+        "retranslate": "Retranslate"
+      },
+      "retranslateDialog": {
+        "title": "Are you sure?",
+        "description": "Retranslating will delete all manual edits you have made. This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Confirm Retranslation"
+      },
+      "sections": {
+        "weddingInfo": "Wedding Information",
+        "groomInfo": "Groom Details",
+        "brideInfo": "Bride Details",
+        "contactInfo": "Contact Information"
+      },
+      "fields": {
+        "weddingDateHebrew": "Hebrew Date",
+        "weddingDateGregorian": "Gregorian Date",
+        "city": "City",
+        "venue": "Venue",
+        "guestsCount": "Number of Guests",
+        "totalCost": "Total Cost (₪)",
+        "requestBackground": "Background Request",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "idNumber": "ID Number",
+        "school": "School",
+        "fatherName": "Father Name",
+        "motherName": "Mother Name",
+        "memorialDay": "Memorial Day",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email"
+      },
+      "saving": "Saving changes...",
+      "error": {
+        "translationFailed": "Translation failed",
+        "retry": "Try Again"
+      }
+    },
     "view": {
       "caseNumber": "Case #",
       "type": "Type",
@@ -925,5 +987,35 @@
     "selectBranch": "Select branch...",
     "searchBranch": "Search branch (by number or name)...",
     "noBranch": "No branch found."
+  },
+  "audit": {
+    "title": "Change History",
+    "history": "History",
+    "noHistory": "No change history yet",
+    "status": {
+      "new": "New",
+      "active": "Active",
+      "pending_transfer": "Pending Transfer",
+      "transferred": "Transferred",
+      "rejected": "Rejected",
+      "inactive": "Inactive",
+      "expired": "Expired",
+      "deleted": "Deleted"
+    },
+    "field": {
+      "status": "Status",
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "city": "City",
+      "date": "Date",
+      "wedding_date": "Wedding Date",
+      "bank_details": "Bank Details",
+      "payment": "Payment",
+      "file_uploaded": "File Upload",
+      "file_deleted": "File Deletion",
+      "payment_approved": "Payment Approval"
+    }
   }
 }

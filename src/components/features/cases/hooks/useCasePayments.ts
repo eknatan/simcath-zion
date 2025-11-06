@@ -62,6 +62,7 @@ export function useCasePayments(caseId: string) {
   const [isApproving, setIsApproving] = useState(false);
   const [isCreatingPayment, setIsCreatingPayment] = useState(false);
   const [isSavingBankDetails, setIsSavingBankDetails] = useState(false);
+  const [isDeletingPayment, setIsDeletingPayment] = useState<string | null>(null);
 
   // ========================================
   // SWR Hook - Payments List
@@ -75,8 +76,9 @@ export function useCasePayments(caseId: string) {
     caseId ? `/api/cases/${caseId}/payments` : null,
     paymentsFetcher,
     {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
       dedupingInterval: 5000,
     }
   );
@@ -93,8 +95,9 @@ export function useCasePayments(caseId: string) {
     caseId ? `/api/cases/${caseId}/bank-details` : null,
     bankDetailsFetcher,
     {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
       dedupingInterval: 5000,
       onSuccess: (data) => {
         console.log('[useCasePayments] Loaded bank details from API:', data);
@@ -301,6 +304,51 @@ export function useCasePayments(caseId: string) {
   };
 
   // ========================================
+  // Delete Payment
+  // ========================================
+
+  /**
+   * Delete an approved payment (only allowed for 'approved' status)
+   *
+   * @param paymentId - ID of the payment to delete
+   * @returns Promise that resolves when deletion is complete
+   */
+  const deletePayment = async (paymentId: string): Promise<boolean> => {
+    if (!caseId) {
+      toast.error(t('errors.invalidCase'));
+      return false;
+    }
+
+    setIsDeletingPayment(paymentId);
+
+    try {
+      const response = await fetch(`/api/cases/${caseId}/payments/${paymentId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to delete payment');
+      }
+
+      // Refresh payments list
+      await mutatePayments();
+
+      toast.success(t('delete.success'));
+      return true;
+    } catch (error) {
+      console.error('Failed to delete payment:', error);
+      toast.error(t('delete.error'), {
+        description:
+          error instanceof Error ? error.message : t('errors.tryAgainLater'),
+      });
+      return false;
+    } finally {
+      setIsDeletingPayment(null);
+    }
+  };
+
+  // ========================================
   // Refresh Functions
   // ========================================
 
@@ -342,6 +390,7 @@ export function useCasePayments(caseId: string) {
     isApproving,
     isCreatingPayment,
     isSavingBankDetails,
+    isDeletingPayment,
     paymentsError,
     bankDetailsError,
 
@@ -349,6 +398,7 @@ export function useCasePayments(caseId: string) {
     saveBankDetails,
     approvePayment,
     createMonthlyPayment,
+    deletePayment,
     refreshPayments,
     refreshBankDetails,
 

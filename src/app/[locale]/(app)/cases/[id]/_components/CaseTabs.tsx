@@ -18,7 +18,7 @@ import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { OriginalRequestTab } from './OriginalRequestTab';
 import { FilesTab } from './FilesTab';
 import { PaymentsTab } from './PaymentsTab';
-// import { EnglishTab } from './EnglishTab';
+import { EnglishTab } from './EnglishTab';
 
 interface CaseTabsProps {
   caseData: CaseWithRelations;
@@ -61,6 +61,15 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
   const defaultTab = availableTabs[0];
   const activeTab = urlTab && availableTabs.includes(urlTab as any) ? urlTab : defaultTab;
 
+  /**
+   * Get count badge for files tab
+   */
+  const getFilesBadge = () => {
+    const requiredFilesCount = 3;
+    const uploadedFiles = caseData.files?.length || 0;
+    return `${uploadedFiles}/${requiredFilesCount}`;
+  };
+
   // ========================================
   // Tab Status Calculation
   // ========================================
@@ -83,9 +92,9 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
         }
 
       case 'english':
-        // Check if translation exists
-        const hasTranslation = caseData.translations && caseData.translations.length > 0;
-        return hasTranslation ? 'complete' : 'warning';
+        // For English tab - always show as complete since manual editing is always available
+        // The English tab is designed to be always accessible and usable
+        return 'complete';
 
       case 'files':
         // Check if required files are uploaded
@@ -122,15 +131,6 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
       default:
         return null;
     }
-  };
-
-  /**
-   * Get count badge for files tab
-   */
-  const getFilesBadge = () => {
-    const requiredFilesCount = 3;
-    const uploadedFiles = caseData.files?.length || 0;
-    return `${uploadedFiles}/${requiredFilesCount}`;
   };
 
   // ========================================
@@ -221,12 +221,7 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
         {/* English Tab Content - Wedding only */}
         {isWedding && (
           <TabsContent value="english" className="m-0">
-            {/* Placeholder - will be replaced with EnglishTab component */}
-            <div className="p-6 border border-slate-200 rounded-lg bg-white">
-              <p className="text-slate-600">
-                {t('english')} - {t('comingSoon')}
-              </p>
-            </div>
+            <EnglishTab caseData={caseData} />
           </TabsContent>
         )}
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { PaymentApprovalData } from '@/types/case.types';
+import { createAuditLogger } from '@/lib/middleware/audit-log.middleware';
 
 /**
  * POST /api/cases/[id]/payments/approve
@@ -123,12 +124,19 @@ export async function POST(
     // ========================================
     // Update Case Status
     // ========================================
+    // Only update previous_status if not already pending_transfer
+    const updateData: any = {
+      status: 'pending_transfer',
+      updated_at: new Date().toISOString(),
+    };
+
+    if (caseData.status !== 'pending_transfer') {
+      updateData.previous_status = caseData.status || 'new';
+    }
+
     const { error: updateError } = await supabase
       .from('cases')
-      .update({
-        status: 'pending_transfer',
-        updated_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq('id', caseId);
 
     if (updateError) {
@@ -138,23 +146,15 @@ export async function POST(
     }
 
     // ========================================
-    // Log in Case History
+    // Log in Case History using middleware
     // ========================================
-    const { error: historyError } = await supabase.from('case_history').insert({
-      case_id: caseId,
-      changed_by: user.id,
-      field_changed: 'payment_approved',
-      old_value: null,
-      new_value: `Approved payment: ₪${amount_ils}${
+    const auditLogger = createAuditLogger(supabase);
+    await auditLogger.logAction(caseId, user.id, 'payment_approved', {
+      newValue: `Approved payment: ₪${amount_ils}${
         amount_usd ? ` ($${amount_usd})` : ''
       }`,
-      note: `Payment approved and case status changed to pending_transfer`,
+      note: `Payment approved and case status changed to pending_transfer`
     });
-
-    if (historyError) {
-      console.error('Failed to log case history:', historyError);
-      // Non-critical error, continue
-    }
 
     // ========================================
     // Return Success

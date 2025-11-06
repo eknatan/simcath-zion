@@ -27,6 +27,7 @@
  * ```
  */
 
+import { useState } from 'react';
 import { Payment } from '@/types/case.types';
 import {
   formatPaymentDate,
@@ -44,7 +45,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Receipt } from 'lucide-react';
+import { Receipt, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { ActionButton } from '@/components/shared/ActionButton';
 
 // ========================================
 // Types
@@ -65,6 +77,16 @@ export interface PaymentHistoryTableProps {
    * Optional CSS class name
    */
   className?: string;
+
+  /**
+   * Callback when payment should be deleted
+   */
+  onDelete?: (paymentId: string) => Promise<boolean>;
+
+  /**
+   * ID of payment currently being deleted
+   */
+  deletingPaymentId?: string | null;
 }
 
 // ========================================
@@ -75,7 +97,28 @@ export function PaymentHistoryTable({
   payments,
   isLoading = false,
   className = '',
+  onDelete,
+  deletingPaymentId,
 }: PaymentHistoryTableProps) {
+  // ========================================
+  // State
+  // ========================================
+  const [paymentToDelete, setPaymentToDelete] = useState<Payment | null>(null);
+
+  // ========================================
+  // Handlers
+  // ========================================
+
+  /**
+   * Handle delete confirmation
+   */
+  const handleDeleteConfirm = async () => {
+    if (paymentToDelete && onDelete) {
+      await onDelete(paymentToDelete.id);
+      setPaymentToDelete(null);
+    }
+  };
+
   // ========================================
   // Loading State
   // ========================================
@@ -137,6 +180,11 @@ export function PaymentHistoryTable({
               <TableHead className="text-right font-semibold text-slate-700">
                 הערות
               </TableHead>
+              {onDelete && (
+                <TableHead className="text-right font-semibold text-slate-700">
+                  פעולות
+                </TableHead>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -174,6 +222,23 @@ export function PaymentHistoryTable({
                 <TableCell className="text-slate-600 text-sm max-w-xs truncate">
                   {payment.notes || '-'}
                 </TableCell>
+
+                {/* Actions */}
+                {onDelete && (
+                  <TableCell>
+                    {payment.status === 'approved' && (
+                      <ActionButton
+                        variant="cancel"
+                        onClick={() => setPaymentToDelete(payment)}
+                        disabled={deletingPaymentId === payment.id}
+                        className="h-8 w-8 p-0"
+                        title="מחק תשלום"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </ActionButton>
+                    )}
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -220,9 +285,56 @@ export function PaymentHistoryTable({
                 <p className="text-sm text-slate-600">{payment.notes}</p>
               </div>
             )}
+
+            {/* Actions */}
+            {onDelete && payment.status === 'approved' && (
+              <div className="pt-2 border-t border-slate-100">
+                <ActionButton
+                  variant="cancel"
+                  onClick={() => setPaymentToDelete(payment)}
+                  disabled={deletingPaymentId === payment.id}
+                  className="w-full h-9 text-sm"
+                >
+                  <Trash2 className="h-4 w-4 ml-2" />
+                  מחק תשלום
+                </ActionButton>
+              </div>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!paymentToDelete} onOpenChange={() => setPaymentToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>מחיקת תשלום</AlertDialogTitle>
+            <AlertDialogDescription>
+              האם אתה בטוח שברצונך למחוק את התשלום?
+              <div className="mt-3 p-3 bg-slate-50 rounded-lg space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-600">סכום:</span>
+                  <span className="font-semibold">
+                    {paymentToDelete && `$${paymentToDelete.amount_usd} (₪${paymentToDelete.amount_ils})`}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-3 text-rose-600 text-sm font-medium">
+                פעולה זו לא ניתנת לביטול.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>ביטול</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-rose-600 hover:bg-rose-700"
+            >
+              מחק
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
