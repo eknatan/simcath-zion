@@ -72,7 +72,6 @@ export const RESPONSIVE_TESTS: ResponsiveTest[] = [
       if (breakpoint.name !== 'mobile') return true;
       // Test: Tab labels should be shortened on mobile
       const shortLabels = document.querySelectorAll('[data-tab-short]');
-      const longLabels = document.querySelectorAll('[data-tab-long]');
 
       // On mobile, short labels should be visible, long labels hidden
       return shortLabels.length > 0 &&
@@ -179,7 +178,8 @@ export const RESPONSIVE_TESTS: ResponsiveTest[] = [
     name: 'no-horizontal-scroll',
     description: 'No horizontal scroll should appear at any breakpoint',
     category: 'layout',
-    test: (breakpoint) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    test: (_breakpoint) => {
       // Test: Body should not have horizontal scroll
       const body = document.body;
       const html = document.documentElement;
@@ -193,7 +193,8 @@ export const RESPONSIVE_TESTS: ResponsiveTest[] = [
     name: 'content-readability',
     description: 'Content should remain readable across all breakpoints',
     category: 'typography',
-    test: (breakpoint) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    test: (_breakpoint) => {
       // Test: Text should have good contrast and readable font sizes
       const textElements = document.querySelectorAll('p, span, div');
 
@@ -265,10 +266,6 @@ export function runResponsiveTests(breakpoint: Breakpoint): {
  */
 export function simulateViewportResize(width: number, height: number = 800): Promise<void> {
   return new Promise((resolve) => {
-    // Store original dimensions
-    const originalWidth = window.innerWidth;
-    const originalHeight = window.innerHeight;
-
     // Mock viewport dimensions
     Object.defineProperty(window, 'innerWidth', {
       writable: true,

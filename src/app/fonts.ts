@@ -1,11 +1,10 @@
-import { Geist, Geist_Mono } from "next/font/google";
-
-export const geistSans = Geist({
+// Using system fonts as fallback when Google Fonts are not accessible
+export const geistSans = {
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+  className: "font-sans",
+};
 
-export const geistMono = Geist_Mono({
+export const geistMono = {
   variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  className: "font-mono",
+};

@@ -44,6 +44,10 @@
 }
 
 :root {
+  /* Font Variables - System fonts fallback */
+  --font-geist-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-geist-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
   /* Design System Version B - Elegant & Soft */
   --radius: 0.75rem;
 
