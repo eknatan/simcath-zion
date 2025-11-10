@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 import { TransferSummary as TransferSummaryType } from '@/types/transfers.types';
 import { DollarSign, TrendingUp, FileText } from 'lucide-react';

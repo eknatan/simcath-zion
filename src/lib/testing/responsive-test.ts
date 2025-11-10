@@ -72,7 +72,6 @@ export const RESPONSIVE_TESTS: ResponsiveTest[] = [
       if (breakpoint.name !== 'mobile') return true;
       // Test: Tab labels should be shortened on mobile
       const shortLabels = document.querySelectorAll('[data-tab-short]');
-      const _longLabels = document.querySelectorAll('[data-tab-long]');
 
       // On mobile, short labels should be visible, long labels hidden
       return shortLabels.length > 0 &&
@@ -265,10 +264,6 @@ export function runResponsiveTests(breakpoint: Breakpoint): {
  */
 export function simulateViewportResize(width: number, height: number = 800): Promise<void> {
   return new Promise((resolve) => {
-    // Store original dimensions
-    const _originalWidth = window.innerWidth;
-    const _originalHeight = window.innerHeight;
-
     // Mock viewport dimensions
     Object.defineProperty(window, 'innerWidth', {
       writable: true,

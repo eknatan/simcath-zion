@@ -15,7 +15,6 @@ import {
   ExportResult,
 } from '@/types/export.types';
 import {
-  validateBankDetails,
   validateTransfersForMasav,
 } from '@/lib/services/masav.service';
 import { getMasavOrganizationSettings } from '@/lib/services/settings.service';
