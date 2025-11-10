@@ -123,6 +123,7 @@ function WeddingFormView({
       <div style={{ width: '100%', backgroundColor: '#ffffff' }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '6mm' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
             alt="שמחת ציון"

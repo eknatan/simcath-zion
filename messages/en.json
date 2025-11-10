@@ -1039,5 +1039,143 @@
       "file_deleted": "File Deletion",
       "payment_approved": "Payment Approval"
     }
+  },
+  "transfers": {
+    "title": "Bank Transfers",
+    "subtitle": "Manage and transfer approved payments",
+    "tabs": {
+      "all": "All",
+      "wedding": "Orphan Weddings",
+      "cleaning": "Sick Children"
+    },
+    "status": {
+      "pending": "Pending Transfer",
+      "transferred": "Transferred",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "columns": {
+      "created_at": "Created Date",
+      "case_number": "Case #",
+      "names": "Groom & Bride",
+      "family_name": "Family Name",
+      "child_name": "Child Name",
+      "wedding_date": "Wedding Date",
+      "payment_month": "Payment Month",
+      "amount_usd": "Amount $",
+      "amount_ils": "Amount ₪",
+      "account_holder": "Account Holder",
+      "bank": "Bank",
+      "branch": "Branch",
+      "account": "Account",
+      "city": "City",
+      "status": "Status"
+    },
+    "actions": {
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "exportExcel": "Export Excel",
+      "exportMasav": "Export MASAV",
+      "sendEmail": "Send Email",
+      "refresh": "Refresh",
+      "clearFilters": "Clear Filters"
+    },
+    "filters": {
+      "title": "Filters",
+      "dateFrom": "From Date",
+      "dateTo": "To Date",
+      "amountMin": "Minimum Amount",
+      "amountMax": "Maximum Amount",
+      "city": "City",
+      "paymentMonth": "Payment Month",
+      "search": "Free Search...",
+      "searchPlaceholder": "Search by case number, name, or account holder"
+    },
+    "summary": {
+      "title": "Summary",
+      "totalCount": "Total Transfers",
+      "totalAmountILS": "Total Amount (₪)",
+      "totalAmountUSD": "Total Amount ($)",
+      "selectedCount": "Selected",
+      "selectedAmount": "Selected Amount",
+      "byStatus": "By Status"
+    },
+    "export": {
+      "title": "Export Transfers",
+      "selectType": "Select Export Type",
+      "excel": {
+        "title": "Export Excel",
+        "filename": "Filename",
+        "includeHeaders": "Include Headers",
+        "includeSummary": "Include Summary",
+        "selectColumns": "Select Columns"
+      },
+      "masav": {
+        "title": "Export MASAV",
+        "urgency": "Transfer Type",
+        "regular": "Regular",
+        "urgent": "Urgent",
+        "executionDate": "Execution Date",
+        "validateFirst": "Validate before export"
+      },
+      "success": "File exported successfully",
+      "error": "Error exporting file",
+      "exporting": "Exporting...",
+      "downloading": "Downloading...",
+      "validating": "Validating...",
+      "markAsTransferred": "Mark as transferred and remove from pending"
+    },
+    "email": {
+      "title": "Send Email",
+      "subject": "Transfers Summary - {date}",
+      "sending": "Sending...",
+      "success": "Email sent successfully",
+      "error": "Error sending email",
+      "recipients": "Recipients"
+    },
+    "validation": {
+      "noBankDetails": "Missing bank details",
+      "invalidBankNumber": "Invalid bank number",
+      "invalidBranch": "Invalid branch number",
+      "invalidAccount": "Invalid account number",
+      "invalidAmount": "Invalid amount",
+      "mustBeApproved": "Payment must be approved",
+      "alreadyTransferred": "Payment already transferred",
+      "noSelection": "No transfers selected",
+      "validationFailed": "Validation failed"
+    },
+    "messages": {
+      "noTransfersTitle": "No Transfers Available",
+      "noTransfers": "All approved payments have been transferred, or there are no approved payments in the system.",
+      "selectToExport": "Select transfers to export",
+      "confirmExport": "Export {count} transfers?",
+      "confirmMarkTransferred": "Mark {count} transfers as transferred?",
+      "exportComplete": "Export completed successfully",
+      "statusUpdated": "Status updated successfully",
+      "loading": "Loading transfers...",
+      "refreshing": "Refreshing..."
+    },
+    "errors": {
+      "FETCH_ERROR": "Error loading transfers",
+      "UPDATE_ERROR": "Error updating status",
+      "BULK_UPDATE_ERROR": "Error in bulk update",
+      "EXPORT_ERROR": "Error exporting file",
+      "VALIDATION_ERROR": "Validation error",
+      "NO_DATA": "No data to export",
+      "INVALID_BANK_CODE": "Invalid bank code",
+      "INVALID_BRANCH_CODE": "Invalid branch code",
+      "INVALID_ACCOUNT_NUMBER": "Invalid account number",
+      "RECORD_ERROR": "Error saving export history",
+      "UNKNOWN_ERROR": "Unexpected error",
+      "refreshFailed": "Error refreshing transfers",
+      "statusUpdateFailed": "Error updating status",
+      "transferMarkFailed": "Error updating status",
+      "pdfExportFailed": "Error exporting PDF"
+    },
+    "success": {
+      "statusUpdated": "Status updated successfully",
+      "transfersMarked": "{count} transfers marked as transferred",
+      "pdfExported": "PDF exported successfully"
+    }
   }
 }

@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings as SettingsIcon, Users, Bell, Server } from 'lucide-react';
 import { UsersTab } from './_components/UsersTab';
 import { EmailSettingsCard } from './_components/EmailSettingsCard';
+import { MasavSettingsCard } from './_components/MasavSettingsCard';
 
 export async function generateMetadata({
   params,
@@ -110,6 +111,7 @@ export default async function SettingsPage({
         {/* System Tab */}
         <TabsContent value="system" className="space-y-6">
           <EmailSettingsCard />
+          <MasavSettingsCard />
         </TabsContent>
       </Tabs>
     </div>

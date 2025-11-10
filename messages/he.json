@@ -1058,5 +1058,143 @@
       "file_deleted": "מחיקת קובץ",
       "payment_approved": "אישור תשלום"
     }
+  },
+  "transfers": {
+    "title": "העברות בנקאיות",
+    "subtitle": "ניהול והעברת תשלומים שאושרו",
+    "tabs": {
+      "all": "הכל",
+      "wedding": "חתונות יתומים",
+      "cleaning": "ילדים חולים"
+    },
+    "status": {
+      "pending": "ממתין להעברה",
+      "transferred": "הועבר",
+      "approved": "מאושר",
+      "rejected": "נדחה"
+    },
+    "columns": {
+      "created_at": "תאריך יצירה",
+      "case_number": "מס' תיק",
+      "names": "חתן וכלה",
+      "family_name": "שם משפחה",
+      "child_name": "שם הילד",
+      "wedding_date": "תאריך חתונה",
+      "payment_month": "חודש תשלום",
+      "amount_usd": "סכום $",
+      "amount_ils": "סכום ₪",
+      "account_holder": "בעל חשבון",
+      "bank": "בנק",
+      "branch": "סניף",
+      "account": "חשבון",
+      "city": "עיר",
+      "status": "סטטוס"
+    },
+    "actions": {
+      "selectAll": "סמן הכל",
+      "deselectAll": "בטל סימון",
+      "exportExcel": "ייצוא Excel",
+      "exportMasav": "ייצוא MASAV",
+      "sendEmail": "שלח מייל",
+      "refresh": "רענן",
+      "clearFilters": "נקה סינונים"
+    },
+    "filters": {
+      "title": "סינונים",
+      "dateFrom": "מתאריך",
+      "dateTo": "עד תאריך",
+      "amountMin": "סכום מינימלי",
+      "amountMax": "סכום מקסימלי",
+      "city": "עיר",
+      "paymentMonth": "חודש תשלום",
+      "search": "חיפוש חופשי...",
+      "searchPlaceholder": "חפש לפי מספר תיק, שם, או בעל חשבון"
+    },
+    "summary": {
+      "title": "סיכום",
+      "totalCount": "סה\"כ העברות",
+      "totalAmountILS": "סה\"כ סכום (₪)",
+      "totalAmountUSD": "סה\"כ סכום ($)",
+      "selectedCount": "נבחרו",
+      "selectedAmount": "סכום נבחר",
+      "byStatus": "לפי סטטוס"
+    },
+    "export": {
+      "title": "ייצוא העברות",
+      "selectType": "בחר סוג ייצוא",
+      "excel": {
+        "title": "ייצוא Excel",
+        "filename": "שם קובץ",
+        "includeHeaders": "כלול כותרות",
+        "includeSummary": "כלול סיכום",
+        "selectColumns": "בחר עמודות"
+      },
+      "masav": {
+        "title": "ייצוא MASAV",
+        "urgency": "סוג העברה",
+        "regular": "רגיל",
+        "urgent": "דחוף",
+        "executionDate": "תאריך ביצוע",
+        "validateFirst": "בדוק תקינות לפני ייצוא"
+      },
+      "success": "הקובץ יוצא בהצלחה",
+      "error": "שגיאה בייצוא הקובץ",
+      "exporting": "מייצא...",
+      "downloading": "מוריד...",
+      "validating": "בודק תקינות...",
+      "markAsTransferred": "סמן כהועבר ומחק ממתינים"
+    },
+    "email": {
+      "title": "שליחת מייל",
+      "subject": "סיכום העברות - {date}",
+      "sending": "שולח...",
+      "success": "המייל נשלח בהצלחה",
+      "error": "שגיאה בשליחת המייל",
+      "recipients": "נמענים"
+    },
+    "validation": {
+      "noBankDetails": "חסרים פרטי בנק",
+      "invalidBankNumber": "מספר בנק שגוי",
+      "invalidBranch": "מספר סניף שגוי",
+      "invalidAccount": "מספר חשבון שגוי",
+      "invalidAmount": "סכום שגוי",
+      "mustBeApproved": "התשלום חייב להיות מאושר",
+      "alreadyTransferred": "התשלום כבר הועבר",
+      "noSelection": "לא נבחרו העברות",
+      "validationFailed": "בדיקת התקינות נכשלה"
+    },
+    "messages": {
+      "noTransfersTitle": "אין העברות זמינות",
+      "noTransfers": "כל התשלומים שאושרו כבר הועברו, או שאין תשלומים מאושרים במערכת.",
+      "selectToExport": "בחר העברות לייצוא",
+      "confirmExport": "האם לייצא {count} העברות?",
+      "confirmMarkTransferred": "האם לסמן {count} העברות כהועברו?",
+      "exportComplete": "הייצוא הושלם בהצלחה",
+      "statusUpdated": "הסטטוס עודכן בהצלחה",
+      "loading": "טוען העברות...",
+      "refreshing": "מרענן..."
+    },
+    "errors": {
+      "FETCH_ERROR": "שגיאה בטעינת ההעברות",
+      "UPDATE_ERROR": "שגיאה בעדכון הסטטוס",
+      "BULK_UPDATE_ERROR": "שגיאה בעדכון מרובה",
+      "EXPORT_ERROR": "שגיאה בייצוא הקובץ",
+      "VALIDATION_ERROR": "שגיאת תקינות",
+      "NO_DATA": "אין נתונים לייצוא",
+      "INVALID_BANK_CODE": "קוד בנק שגוי",
+      "INVALID_BRANCH_CODE": "קוד סניף שגוי",
+      "INVALID_ACCOUNT_NUMBER": "מספר חשבון שגוי",
+      "RECORD_ERROR": "שגיאה בשמירת היסטוריית הייצוא",
+      "UNKNOWN_ERROR": "שגיאה לא צפויה",
+      "refreshFailed": "שגיאה ברענון ההעברות",
+      "statusUpdateFailed": "שגיאה בעדכון הסטטוס",
+      "transferMarkFailed": "שגיאה בעדכון הסטטוס",
+      "pdfExportFailed": "שגיאה ביצוא PDF"
+    },
+    "success": {
+      "statusUpdated": "הסטטוס עודכן בהצלחה",
+      "transfersMarked": "{count} העברות סומנו כהועברו",
+      "pdfExported": "PDF יוצא בהצלחה"
+    }
   }
 }
