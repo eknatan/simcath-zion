@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     // Record export in database
     try {
       await recordExport({
-        export_type: ExportType.MASAV,
+        export_type: payment_type,
         exported_by: user.id,
         filename: result.filename,
         cases_included: transfers.map((t) => ({
