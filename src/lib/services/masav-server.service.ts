@@ -95,8 +95,15 @@ export async function exportToMasavServer(
       `masav_${typeLabel}${urgencyLabel}_${formatDateForFilename(today)}.${fileOptions.fileExtension}`;
 
     // Create blob from file content
-    const fileBlob = new Blob([result.fileContent], {
-      type: 'text/plain;charset=ascii', // MASAV uses ASCII
+    // IMPORTANT: Convert string to Uint8Array byte-by-byte to preserve Hebrew encoding
+    // JavaScript strings are UTF-16, but MASAV needs single-byte encoding (128-154 for Hebrew)
+    const bytes = new Uint8Array(result.fileContent.length);
+    for (let i = 0; i < result.fileContent.length; i++) {
+      bytes[i] = result.fileContent.charCodeAt(i) & 0xFF; // Take only low byte
+    }
+
+    const fileBlob = new Blob([bytes], {
+      type: 'application/octet-stream', // Binary data, not text
     });
 
     // Return result
