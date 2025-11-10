@@ -55,8 +55,7 @@ export class MasavError extends Error {
  */
 export async function exportToMasav(
   transfers: TransferWithDetails[],
-  paymentType: PaymentType,
-  _options: MasavExportOptions = {}
+  paymentType: PaymentType
 ): Promise<ExportResult> {
   // Note: This function should be called from a server-side API route
   // because the masav package uses Node.js fs module
@@ -71,10 +70,9 @@ export async function exportToMasav(
  */
 export async function exportAndDownload(
   transfers: TransferWithDetails[],
-  paymentType: PaymentType,
-  options: MasavExportOptions = {}
+  paymentType: PaymentType
 ): Promise<ExportResult> {
-  const result = await exportToMasav(transfers, paymentType, options);
+  const result = await exportToMasav(transfers, paymentType);
 
   if (result.file_blob) {
     saveAs(result.file_blob, result.filename);

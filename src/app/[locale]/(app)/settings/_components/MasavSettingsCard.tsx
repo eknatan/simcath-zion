@@ -15,7 +15,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,7 +25,6 @@ import { toast } from 'sonner';
 import type { MasavOrganizationSettings } from '@/lib/services/settings.service';
 
 export function MasavSettingsCard() {
-  const t = useTranslations();
 
   // State
   const [settings, setSettings] = useState<MasavOrganizationSettings>({
