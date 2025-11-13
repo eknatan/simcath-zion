@@ -21,7 +21,6 @@
 import { saveAs } from 'file-saver';
 import { TransferWithDetails } from '@/types/transfers.types';
 import {
-  MasavExportOptions,
   ExportResult,
   MasavRecord,
   MasavValidationResult,
@@ -54,8 +53,8 @@ export class MasavError extends Error {
  * Export transfers to MASAV format
  */
 export async function exportToMasav(
-  transfers: TransferWithDetails[],
-  paymentType: PaymentType
+  _transfers: TransferWithDetails[],
+  _paymentType: PaymentType
 ): Promise<ExportResult> {
   // Note: This function should be called from a server-side API route
   // because the masav package uses Node.js fs module

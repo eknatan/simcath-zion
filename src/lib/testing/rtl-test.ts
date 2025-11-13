@@ -90,7 +90,7 @@ export const RTL_TESTS: RTLTest[] = [
     name: 'flex-direction',
     description: 'Flex containers should respect text direction',
     category: 'layout',
-    test: (locale, dir) => {
+    test: () => {
       const flexContainers = document.querySelectorAll('.flex');
 
       return Array.from(flexContainers).every(container => {
@@ -100,15 +100,8 @@ export const RTL_TESTS: RTLTest[] = [
         // Row and row-reverse should be handled correctly
         if (flexDirection === 'row' || flexDirection === 'row-reverse') {
           // Check if logical properties are used correctly
-          const _marginLeft = styles.marginLeft;
-          const _marginRight = styles.marginRight;
-
-          if (dir === 'rtl') {
-            // In RTL, logical start should map to right
-            return true; // Let this pass for now - detailed checking would require more specific logic
-          } else {
-            return true; // Same for LTR
-          }
+          // In both RTL and LTR, flexbox should handle direction automatically
+          return true; // Let this pass for now - detailed checking would require more specific logic
         }
 
         return true;
@@ -120,7 +113,7 @@ export const RTL_TESTS: RTLTest[] = [
     name: 'grid-layout',
     description: 'Grid layouts should work correctly in both directions',
     category: 'layout',
-    test: (_locale, _dir) => {
+    test: () => {
       const gridContainers = document.querySelectorAll('.grid');
 
       return Array.from(gridContainers).every(container => {
@@ -147,11 +140,8 @@ export const RTL_TESTS: RTLTest[] = [
       // Look for common directional icons that should be mirrored
       const directionalIcons = document.querySelectorAll('[data-icon="arrow"], [data-icon="chevron"], svg');
 
-      return Array.from(directionalIcons).every(icon => {
+      return Array.from(directionalIcons).every(() => {
         // This is a simplified test - in reality, you'd need specific icon logic
-        const styles = window.getComputedStyle(icon);
-        const _transform = styles.transform;
-
         if (dir === 'rtl') {
           // Check if icon should be mirrored (simplified)
           return true; // Pass for now - would need specific icon detection
@@ -166,7 +156,7 @@ export const RTL_TESTS: RTLTest[] = [
     name: 'margin-padding-logical',
     description: 'Margin and padding should use logical properties',
     category: 'layout',
-    test: (_locale, _dir) => {
+    test: () => {
       // Test that margins and paddings work correctly in both directions
       const elements = document.querySelectorAll('[class*="m-"], [class*="p-"]');
 
@@ -236,7 +226,7 @@ export const RTL_TESTS: RTLTest[] = [
     name: 'form-label-alignment',
     description: 'Form labels should align with inputs',
     category: 'layout',
-    test: (_locale, _dir) => {
+    test: () => {
       const formElements = document.querySelectorAll('input, textarea, select');
 
       return Array.from(formElements).every(element => {
@@ -245,9 +235,6 @@ export const RTL_TESTS: RTLTest[] = [
 
         const label = parent.querySelector('label');
         if (!label) return true;
-
-        const _labelStyles = window.getComputedStyle(label);
-        const _inputStyles = window.getComputedStyle(element);
 
         // Label and input should be properly aligned
         return true; // Simplified - would need more specific alignment checking
@@ -280,7 +267,7 @@ export const RTL_TESTS: RTLTest[] = [
     name: 'hebrew-font',
     description: 'Hebrew text should use appropriate font',
     category: 'text',
-    test: (locale, _dir) => {
+    test: (locale) => {
       if (locale !== 'he') return true;
 
       const hebrewTexts = document.querySelectorAll('[lang="he"], .hebrew, [data-lang="he"]');
@@ -303,7 +290,7 @@ export const RTL_TESTS: RTLTest[] = [
     name: 'english-font',
     description: 'English text should use appropriate font',
     category: 'text',
-    test: (locale, _dir) => {
+    test: (locale) => {
       if (locale !== 'en') return true;
 
       const englishTexts = document.querySelectorAll('[lang="en"], .english, [data-lang="en"]');

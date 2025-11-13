@@ -27,7 +27,6 @@ export class ManualTransfersService {
     error: Error | null;
   }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = this.supabase
         .from('manual_transfers' as any)
         .select('*');
@@ -91,7 +90,6 @@ export class ManualTransfersService {
     error: Error | null;
   }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await this.supabase
         .from('manual_transfers' as any)
         .select('*')
@@ -134,7 +132,6 @@ export class ManualTransfersService {
         imported_from_file: filename || null,
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await this.supabase
         .from('manual_transfers' as any)
         .insert(insertData)
@@ -205,7 +202,6 @@ export class ManualTransfersService {
         };
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await this.supabase
         .from('manual_transfers' as any)
         .insert(validData)
@@ -255,7 +251,6 @@ export class ManualTransfersService {
       if (validated.account_number !== undefined) updateData.account_number = validated.account_number;
       if (validated.amount !== undefined) updateData.amount = validated.amount;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await this.supabase
         .from('manual_transfers' as any)
         .update(updateData)
@@ -284,7 +279,6 @@ export class ManualTransfersService {
     error: Error | null;
   }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await this.supabase
         .from('manual_transfers' as any)
         .update({ status })
@@ -312,7 +306,6 @@ export class ManualTransfersService {
     error: Error | null;
   }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await this.supabase
         .from('manual_transfers' as any)
         .delete()
@@ -339,7 +332,6 @@ export class ManualTransfersService {
     error: Error | null;
   }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await this.supabase
         .from('manual_transfers' as any)
         .delete()
@@ -366,7 +358,6 @@ export class ManualTransfersService {
     error: Error | null;
   }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: allTransfers, error } = await this.supabase
         .from('manual_transfers' as any)
         .select('amount, status, imported_from_file, created_at');

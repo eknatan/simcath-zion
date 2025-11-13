@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 import { exportToExcel } from '@/lib/services/export.service';
 import { recordExport } from '@/lib/services/transfers.service';
 import { PaymentType } from '@/types/case.types';
-import { ExportType } from '@/types/export.types';
 import {
   authenticateExportRequest,
   validateExportRequest,

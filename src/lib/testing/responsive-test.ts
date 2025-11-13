@@ -178,7 +178,7 @@ export const RESPONSIVE_TESTS: ResponsiveTest[] = [
     name: 'no-horizontal-scroll',
     description: 'No horizontal scroll should appear at any breakpoint',
     category: 'layout',
-    test: (_breakpoint) => {
+    test: () => {
       // Test: Body should not have horizontal scroll
       const body = document.body;
       const html = document.documentElement;
@@ -192,7 +192,7 @@ export const RESPONSIVE_TESTS: ResponsiveTest[] = [
     name: 'content-readability',
     description: 'Content should remain readable across all breakpoints',
     category: 'typography',
-    test: (_breakpoint) => {
+    test: () => {
       // Test: Text should have good contrast and readable font sizes
       const textElements = document.querySelectorAll('p, span, div');
 

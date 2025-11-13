@@ -131,27 +131,47 @@ export const manualTransferBulkImportSchema = z.array(manualTransferCreateSchema
 
 /**
  * Excel row validation schema (allows string/number inputs before normalization)
- * Then validates against the main schema requirements
+ * Applies the same validation as israeliIdSchema and other schemas inline
  */
-export const excelRowSchema = z
-  .object({
-    recipient_name: z.union([z.string(), z.number()]).transform((val) => String(val).trim()),
-    id_number: z
-      .union([z.string(), z.number(), z.null(), z.undefined()])
-      .optional()
-      .transform((val) => (val ? String(val).trim() : undefined)),
-    bank_code: z.union([z.string(), z.number()]).transform((val) => String(val).trim()),
-    branch_code: z.union([z.string(), z.number()]).transform((val) => String(val).trim()),
-    account_number: z.union([z.string(), z.number()]).transform((val) => String(val).trim()),
-    amount: z
-      .union([z.string(), z.number()])
-      .transform((val) => {
-        const num = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.-]/g, '')) : val;
-        return isNaN(num) ? 0 : num;
-      })
-      .pipe(z.number()),
-  })
-  .pipe(manualTransferCreateSchema);
+export const excelRowSchema = z.object({
+  recipient_name: z
+    .union([z.string(), z.number()])
+    .transform((val) => String(val).trim())
+    .pipe(recipientNameSchema),
+  id_number: z
+    .union([z.string(), z.number()])
+    .nullish()
+    .transform((val) => {
+      if (val === null || val === undefined || val === '') return undefined;
+      const cleaned = String(val).replace(/\D/g, ''); // Remove non-digits
+      if (cleaned.length === 0) return undefined;
+      // Pad with zeros to make it 9 digits
+      return cleaned.padStart(9, '0');
+    })
+    .refine(
+      (val) => val === undefined || /^\d{9}$/.test(val),
+      { message: 'מספר תעודת זהות חייב להכיל עד 9 ספרות' }
+    ),
+  bank_code: z
+    .union([z.string(), z.number()])
+    .transform((val) => String(val).trim())
+    .pipe(bankCodeSchema),
+  branch_code: z
+    .union([z.string(), z.number()])
+    .transform((val) => String(val).trim())
+    .pipe(branchCodeSchema),
+  account_number: z
+    .union([z.string(), z.number()])
+    .transform((val) => String(val).trim())
+    .pipe(accountNumberSchema),
+  amount: z
+    .union([z.string(), z.number()])
+    .transform((val) => {
+      const num = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.-]/g, '')) : val;
+      return isNaN(num) ? 0 : num;
+    })
+    .pipe(amountSchema),
+});
 
 /**
  * Filters schema

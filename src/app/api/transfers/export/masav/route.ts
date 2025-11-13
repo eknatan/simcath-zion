@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { exportToMasavServer } from '@/lib/services/masav-server.service';
 import { recordExport } from '@/lib/services/transfers.service';
 import { PaymentType } from '@/types/case.types';
-import { ExportType, MasavUrgency } from '@/types/export.types';
+import { MasavUrgency } from '@/types/export.types';
 import {
   authenticateExportRequest,
   validateExportRequest,
