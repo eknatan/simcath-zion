@@ -113,7 +113,12 @@ export default function ManualTransfersPage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `manual_transfers_${new Date().toISOString().split('T')[0]}.txt`;
+      // Short filename: MT_YYMMDD.txt (13 chars)
+      const now = new Date();
+      const yy = now.getFullYear().toString().substring(2);
+      const mm = (now.getMonth() + 1).toString().padStart(2, '0');
+      const dd = now.getDate().toString().padStart(2, '0');
+      a.download = `MT_${yy}${mm}${dd}.txt`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
