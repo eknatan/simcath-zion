@@ -27,6 +27,11 @@ export class SettingsError extends Error {
 // ========================================
 
 /**
+ * Hebrew encoding type for MASAV files
+ */
+export type HebrewEncodingType = 'code-a' | 'code-b';
+
+/**
  * MASAV Organization Settings
  */
 export interface MasavOrganizationSettings {
@@ -36,6 +41,7 @@ export interface MasavOrganizationSettings {
   branch_code: string; // קוד סניף (3 digits)
   account_number: string; // מספר חשבון
   sequence_number: string; // מספר רצף (3 digits)
+  hebrew_encoding?: HebrewEncodingType; // קוד עברי א או ב (default: 'code-a')
 }
 
 /**

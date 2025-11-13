@@ -17,7 +17,7 @@
  */
 
 import { TransferWithDetails } from '@/types/transfers.types';
-import { MasavOrganizationSettings } from './settings.service';
+import { MasavOrganizationSettings, type HebrewEncodingType } from './settings.service';
 
 // ========================================
 // Constants (from official spec)
@@ -67,6 +67,7 @@ export class MasavGenerationError extends Error {
 export class MasavFileGenerator {
   private settings: MasavOrganizationSettings;
   private options: MasavFileOptions;
+  private hebrewEncoding: HebrewEncodingType;
 
   constructor(settings: MasavOrganizationSettings, options: MasavFileOptions) {
     this.settings = settings;
@@ -75,6 +76,8 @@ export class MasavFileGenerator {
       creationDate: options.creationDate || new Date(),
       fileExtension: options.fileExtension || 'txt',
     };
+    // Use Hebrew Code A by default (most common)
+    this.hebrewEncoding = settings.hebrew_encoding || 'code-a';
 
     this.validateSettings();
   }
@@ -318,9 +321,11 @@ export class MasavFileGenerator {
     parts.push('0'.repeat(8));
 
     // 15. Text code (pos 103-105, length 3)
-    parts.push('000');
+    // Use transaction type code here (006 for regular credit)
+    parts.push(TRANSACTION_TYPE);
 
     // 16. Transaction type (pos 106-108, length 3)
+    // This should also be the transaction type
     parts.push(TRANSACTION_TYPE);
 
     // 17. Filler (pos 109-126, length 18)
@@ -452,56 +457,101 @@ export class MasavFileGenerator {
   }
 
   /**
-   * Convert Hebrew characters to MASAV Hebrew Code B (CP862-like)
+   * Convert Hebrew characters to MASAV Hebrew encoding
    * According to the official MASAV Hebrew encoding table
    *
-   * This converts Unicode Hebrew characters to the proprietary MASAV encoding
-   * where Hebrew letters are mapped to bytes 128-154 (0x80-0x9A)
+   * Supports two encoding types:
+   * - Code A: Hebrew letters mapped to ASCII A-Z (0x41-0x5A)
+   * - Code B: Hebrew letters mapped to bytes 128-154 (0x80-0x9A)
    */
   private convertHebrewToMasav(text: string): string {
-    // Hebrew character mapping to MASAV Code B (128-154)
-    // Based on "טבלאות לעברית עבור מסב" - קוד עברי ב
-    const hebrewMap: Record<string, number> = {
-      א: 128, // 0x80
-      ב: 129, // 0x81
-      ג: 130, // 0x82
-      ד: 131, // 0x83
-      ה: 132, // 0x84
-      ו: 133, // 0x85
-      ז: 134, // 0x86
-      ח: 135, // 0x87
-      ט: 136, // 0x88
-      י: 137, // 0x89
-      ך: 138, // 0x8A (final kaf)
-      כ: 139, // 0x8B
-      ל: 140, // 0x8C
-      ם: 141, // 0x8D (final mem)
-      מ: 142, // 0x8E
-      ן: 143, // 0x8F (final nun)
-      נ: 144, // 0x90
-      ס: 145, // 0x91
-      ע: 146, // 0x92
-      ף: 147, // 0x93 (final pe)
-      פ: 148, // 0x94
-      ץ: 149, // 0x95 (final tsadi)
-      צ: 150, // 0x96
-      ק: 151, // 0x97
-      ר: 152, // 0x98
-      ש: 153, // 0x99
-      ת: 154, // 0x9A
-    };
+    // Hebrew character mapping based on "טבלאות לעברית עבור מסב"
 
-    let result = '';
-    for (const char of text) {
-      if (hebrewMap[char] !== undefined) {
-        // Convert Hebrew character to MASAV encoding
-        result += String.fromCharCode(hebrewMap[char]);
-      } else {
-        // Keep as-is (English letters, numbers, spaces, punctuation)
-        result += char;
+    if (this.hebrewEncoding === 'code-a') {
+      // קוד עברי א - Hebrew Code A (ASCII mapping)
+      const hebrewMapA: Record<string, string> = {
+        א: '&', // 0x26
+        ב: 'A', // 0x41
+        ג: 'B', // 0x42
+        ד: 'C', // 0x43
+        ה: 'D', // 0x44
+        ו: 'E', // 0x45
+        ז: 'F', // 0x46
+        ח: 'G', // 0x47
+        ט: 'H', // 0x48
+        י: 'I', // 0x49
+        ך: 'J', // 0x4A (final kaf)
+        כ: 'K', // 0x4B
+        ל: 'L', // 0x4C
+        ם: 'M', // 0x4D (final mem)
+        מ: 'N', // 0x4E
+        ן: 'O', // 0x4F (final nun)
+        נ: 'P', // 0x50
+        ס: 'Q', // 0x51
+        ע: 'R', // 0x52
+        ף: 'S', // 0x53 (final pe)
+        פ: 'T', // 0x54
+        ץ: 'U', // 0x55 (final tsadi)
+        צ: 'V', // 0x56
+        ק: 'W', // 0x57
+        ר: 'X', // 0x58
+        ש: 'Y', // 0x59
+        ת: 'Z', // 0x5A
+      };
+
+      let result = '';
+      for (const char of text) {
+        if (hebrewMapA[char] !== undefined) {
+          result += hebrewMapA[char];
+        } else {
+          // Keep as-is (numbers, spaces, punctuation)
+          result += char;
+        }
       }
+      return result;
+    } else {
+      // קוד עברי ב - Hebrew Code B (128-154 mapping)
+      const hebrewMapB: Record<string, number> = {
+        א: 128, // 0x80
+        ב: 129, // 0x81
+        ג: 130, // 0x82
+        ד: 131, // 0x83
+        ה: 132, // 0x84
+        ו: 133, // 0x85
+        ז: 134, // 0x86
+        ח: 135, // 0x87
+        ט: 136, // 0x88
+        י: 137, // 0x89
+        ך: 138, // 0x8A (final kaf)
+        כ: 139, // 0x8B
+        ל: 140, // 0x8C
+        ם: 141, // 0x8D (final mem)
+        מ: 142, // 0x8E
+        ן: 143, // 0x8F (final nun)
+        נ: 144, // 0x90
+        ס: 145, // 0x91
+        ע: 146, // 0x92
+        ף: 147, // 0x93 (final pe)
+        פ: 148, // 0x94
+        ץ: 149, // 0x95 (final tsadi)
+        צ: 150, // 0x96
+        ק: 151, // 0x97
+        ר: 152, // 0x98
+        ש: 153, // 0x99
+        ת: 154, // 0x9A
+      };
+
+      let result = '';
+      for (const char of text) {
+        if (hebrewMapB[char] !== undefined) {
+          result += String.fromCharCode(hebrewMapB[char]);
+        } else {
+          // Keep as-is (numbers, spaces, punctuation)
+          result += char;
+        }
+      }
+      return result;
     }
-    return result;
   }
 }
 
