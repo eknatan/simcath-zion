@@ -19,9 +19,9 @@ import {
 } from '@/lib/services/masav.service';
 import { getMasavOrganizationSettings } from '@/lib/services/settings.service';
 import {
-  generateMasavFile,
   MasavFileOptions,
 } from '@/lib/services/masav-file-generator.service';
+import { UnifiedMasavService } from '@/lib/services/masav-unified.service';
 
 // ========================================
 // Error Types
@@ -83,8 +83,12 @@ export async function exportToMasavServer(
       fileExtension: options.file_extension || 'txt', // Support txt, dat, msv
     };
 
-    // Generate MASAV file using our custom generator
-    const result = await generateMasavFile(orgSettings, transfers, fileOptions);
+    // Generate MASAV file using unified service (supports both regular and manual transfers)
+    const result = await UnifiedMasavService.generateFromRegularTransfers(
+      orgSettings,
+      transfers,
+      fileOptions
+    );
 
     // Generate filename (allow custom filename)
     const typeLabel =

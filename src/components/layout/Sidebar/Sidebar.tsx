@@ -13,6 +13,7 @@ import {
   ChevronRight,
   ChevronLeft,
   ClipboardList,
+  HandCoins,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -54,6 +55,11 @@ export function Sidebar() {
       title: t('transfers'),
       href: '/transfers',
       icon: <DollarSign className="h-5 w-5" />,
+    },
+    {
+      title: 'העברות ידניות',
+      href: '/manual-transfers',
+      icon: <HandCoins className="h-5 w-5" />,
     },
     {
       title: t('settings'),
