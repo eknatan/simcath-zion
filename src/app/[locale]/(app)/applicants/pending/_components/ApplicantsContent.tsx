@@ -15,7 +15,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, XCircle, Clock, ExternalLink } from 'lucide-react';
+import { FileText, XCircle, Clock, ExternalLink, Heart } from 'lucide-react';
 import { ApplicantsList } from './ApplicantsList';
 import { ApplicantStats } from './ApplicantStats';
 import { useApplicants } from '@/lib/hooks/useApplicants';
@@ -76,14 +76,23 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
             {t('page_description')}
           </p>
         </div>
-        {/* כפתור לטופס הציבורי */}
-        <Link href={`/${locale}/public-forms/wedding`} target="_blank">
-          <ActionButton variant="primary" size="default">
-            <FileText className="h-4 w-4 me-2" />
-            טופס חתונה ציבורי
-            <ExternalLink className="h-3 w-3 ms-2" />
-          </ActionButton>
-        </Link>
+        {/* כפתורים לטפסים ציבוריים */}
+        <div className="flex gap-2">
+          <Link href={`/${locale}/public-forms/wedding`} target="_blank">
+            <ActionButton variant="primary" size="default">
+              <FileText className="h-4 w-4 me-2" />
+              טופס חתונה
+              <ExternalLink className="h-3 w-3 ms-2" />
+            </ActionButton>
+          </Link>
+          <Link href={`/${locale}/public-forms/sick-children`} target="_blank">
+            <ActionButton size="default" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">
+              <Heart className="h-4 w-4 me-2" />
+              טופס ילדים חולים
+              <ExternalLink className="h-3 w-3 ms-2" />
+            </ActionButton>
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}

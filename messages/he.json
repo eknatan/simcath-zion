@@ -98,6 +98,9 @@
     "nameTooLong": "השם ארוך מדי (מקסימום 100 תווים)",
     "notesTooLong": "ההערות ארוכות מדי (מקסימום 1000 תווים)",
     "invalidRole": "תפקיד לא חוקי",
+    "invalidBankCode": "קוד בנק לא תקין (2-3 ספרות)",
+    "invalidBranchCode": "קוד סניף לא תקין (3 ספרות)",
+    "invalidAccountNumber": "מספר חשבון לא תקין (ספרות בלבד)",
     "invalidStatus": "סטטוס לא חוקי",
     "passwordMinLength": "הסיסמה חייבת להכיל לפחות 8 תווים",
     "passwordUppercase": "הסיסמה חייבת להכיל לפחות אות גדולה אחת",
@@ -433,6 +436,126 @@
       "cleaning_coming_soon": "בקרוב...",
       "cleaning_in_development": "הטופס בפיתוח",
       "cleaning_title": "בקשה לתמיכה בניקיון"
+    }
+  },
+  "sick_children_form": {
+    "title": "בקשה לתמיכה לילדים חולים",
+    "description": "אנא מלא את כל הפרטים הנדרשים",
+    "sections": {
+      "family_info": {
+        "title": "פרטי משפחה",
+        "description": "מידע על ההורים והמשפחה"
+      },
+      "child_info": {
+        "title": "פרטי הילד החולה",
+        "description": "מידע על הילד הזקוק לתמיכה"
+      },
+      "address": {
+        "title": "כתובת",
+        "description": "כתובת מגורים מלאה"
+      },
+      "contact": {
+        "title": "פרטי קשר",
+        "description": "פרטים ליצירת קשר"
+      },
+      "bank_details": {
+        "title": "פרטי בנק",
+        "description": "פרטי חשבון הבנק לקבלת התמיכה"
+      }
+    },
+    "fields": {
+      "parent1_id": {
+        "label": "ת.ז. הורה ראשי",
+        "placeholder": "123456789"
+      },
+      "parent2_id": {
+        "label": "ת.ז. הורה שני (אופציונלי)",
+        "placeholder": "987654321"
+      },
+      "family_name": {
+        "label": "שם משפחה",
+        "placeholder": "כהן"
+      },
+      "parent1_name": {
+        "label": "שם הורה 1",
+        "placeholder": "דוד כהן"
+      },
+      "parent2_name": {
+        "label": "שם הורה 2 (אופציונלי)",
+        "placeholder": "שרה כהן"
+      },
+      "child_name": {
+        "label": "שם הילד החולה",
+        "placeholder": "יוסי כהן"
+      },
+      "address": {
+        "label": "כתובת מלאה",
+        "placeholder": "רחוב הרצל 10, דירה 5"
+      },
+      "city": {
+        "label": "עיר",
+        "placeholder": "ירושלים"
+      },
+      "phone1": {
+        "label": "טלפון 1",
+        "placeholder": "050-1234567"
+      },
+      "phone2": {
+        "label": "טלפון 2 (אופציונלי)",
+        "placeholder": "02-6543210"
+      },
+      "phone3": {
+        "label": "טלפון 3 (אופציונלי)",
+        "placeholder": "054-9876543"
+      },
+      "email": {
+        "label": "דוא\"ל",
+        "placeholder": "example@gmail.com"
+      },
+      "bank_number": {
+        "label": "מספר בנק",
+        "placeholder": "12"
+      },
+      "branch": {
+        "label": "סניף",
+        "placeholder": "456"
+      },
+      "account_number": {
+        "label": "מספר חשבון",
+        "placeholder": "123456"
+      },
+      "account_holder_name": {
+        "label": "שם בעל החשבון",
+        "placeholder": "דוד כהן"
+      }
+    },
+    "buttons": {
+      "submit": "שלח בקשה",
+      "submitting": "שולח..."
+    },
+    "success": {
+      "title": "הבקשה נשלחה בהצלחה!",
+      "message": "תודה רבה על הבקשה. התיק נפתח אוטומטית ונמצא כעת בסטטוס פעיל. ניצור איתך קשר בהקדם."
+    },
+    "errors": {
+      "submission_failed": "שליחת הבקשה נכשלה. אנא נסה שוב.",
+      "network_error": "בעיית תקשורת. בדוק את החיבור לאינטרנט."
+    },
+    "public_page": {
+      "header": {
+        "system_name": "שמחת ציון",
+        "system_subtitle": "תמיכה למשפחות ילדים חולים"
+      },
+      "footer_info": {
+        "title": "מידע חשוב",
+        "privacy_note": "כל הפרטים נשמרים במאגר מוצפן ומאובטח",
+        "usage_note": "התיק ייפתח אוטומטית ויועבר לטיפול",
+        "contact": "שאלות? צור קשר בטלפון: 02-502-1751"
+      },
+      "footer": {
+        "copyright": "© {year} שמחת ציון - כל הזכויות שמורות",
+        "description": "מערכת תמיכה למשפחות ילדים חולים"
+      }
     }
   },
   "settings": {

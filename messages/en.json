@@ -90,6 +90,9 @@
     "minCost": "Cost must be at least 0",
     "maxCost": "Cost cannot exceed ₪10,000,000",
     "maxBackgroundLength": "Background description is too long (maximum 2000 characters)",
+    "invalidBankCode": "Invalid bank code (2-3 digits)",
+    "invalidBranchCode": "Invalid branch code (3 digits)",
+    "invalidAccountNumber": "Invalid account number (digits only)",
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordUppercase": "Password must contain at least one uppercase letter",
     "passwordLowercase": "Password must contain at least one lowercase letter",
@@ -424,6 +427,126 @@
       "cleaning_coming_soon": "Coming Soon...",
       "cleaning_in_development": "Form in development",
       "cleaning_title": "Sick Child Support Application"
+    }
+  },
+  "sick_children_form": {
+    "title": "Sick Child Support Application",
+    "description": "Please fill in all required details",
+    "sections": {
+      "family_info": {
+        "title": "Family Information",
+        "description": "Information about the parents and family"
+      },
+      "child_info": {
+        "title": "Sick Child Information",
+        "description": "Information about the child in need of support"
+      },
+      "address": {
+        "title": "Address",
+        "description": "Full residential address"
+      },
+      "contact": {
+        "title": "Contact Information",
+        "description": "Contact details"
+      },
+      "bank_details": {
+        "title": "Bank Details",
+        "description": "Bank account details for receiving support"
+      }
+    },
+    "fields": {
+      "parent1_id": {
+        "label": "Primary Parent ID",
+        "placeholder": "123456789"
+      },
+      "parent2_id": {
+        "label": "Secondary Parent ID (Optional)",
+        "placeholder": "987654321"
+      },
+      "family_name": {
+        "label": "Family Name",
+        "placeholder": "Cohen"
+      },
+      "parent1_name": {
+        "label": "Parent 1 Name",
+        "placeholder": "David Cohen"
+      },
+      "parent2_name": {
+        "label": "Parent 2 Name (Optional)",
+        "placeholder": "Sarah Cohen"
+      },
+      "child_name": {
+        "label": "Sick Child's Name",
+        "placeholder": "Joseph Cohen"
+      },
+      "address": {
+        "label": "Full Address",
+        "placeholder": "10 Herzl Street, Apt 5"
+      },
+      "city": {
+        "label": "City",
+        "placeholder": "Jerusalem"
+      },
+      "phone1": {
+        "label": "Phone 1",
+        "placeholder": "050-1234567"
+      },
+      "phone2": {
+        "label": "Phone 2 (Optional)",
+        "placeholder": "02-6543210"
+      },
+      "phone3": {
+        "label": "Phone 3 (Optional)",
+        "placeholder": "054-9876543"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "example@gmail.com"
+      },
+      "bank_number": {
+        "label": "Bank Number",
+        "placeholder": "12"
+      },
+      "branch": {
+        "label": "Branch",
+        "placeholder": "456"
+      },
+      "account_number": {
+        "label": "Account Number",
+        "placeholder": "123456"
+      },
+      "account_holder_name": {
+        "label": "Account Holder Name",
+        "placeholder": "David Cohen"
+      }
+    },
+    "buttons": {
+      "submit": "Submit Application",
+      "submitting": "Submitting..."
+    },
+    "success": {
+      "title": "Application Submitted Successfully!",
+      "message": "Thank you for your application. The case has been automatically opened and is now in active status. We will contact you soon."
+    },
+    "errors": {
+      "submission_failed": "Application submission failed. Please try again.",
+      "network_error": "Communication error. Please check your internet connection."
+    },
+    "public_page": {
+      "header": {
+        "system_name": "Simchat Zion",
+        "system_subtitle": "Support for Families with Sick Children"
+      },
+      "footer_info": {
+        "title": "Important Information",
+        "privacy_note": "All details are stored in an encrypted and secure database",
+        "usage_note": "The case will be automatically opened and processed",
+        "contact": "Questions? Contact us at: 02-502-1751"
+      },
+      "footer": {
+        "copyright": "© {year} Simchat Zion - All Rights Reserved",
+        "description": "Support System for Families with Sick Children"
+      }
     }
   },
   "settings": {
