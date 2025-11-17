@@ -155,8 +155,8 @@ export function validateBankDetails(
   branchCode: string,
   accountNumber: string
 ): MasavBankValidation {
-  // Validate bank code (2-3 digits)
-  const bankValid = /^\d{2,3}$/.test(bankCode);
+  // Validate bank code (1-3 digits)
+  const bankValid = /^\d{1,3}$/.test(bankCode);
   const bankNormalized = bankCode.padStart(MASAV_CONSTANTS.BANK_CODE_LENGTH, '0');
 
   // Validate branch code (3 digits)
@@ -213,7 +213,7 @@ export function validateTransferForMasav(
   );
 
   if (!validation.bank_code.valid) {
-    errors.push('Invalid bank code format (must be 2-3 digits)');
+    errors.push('Invalid bank code format (must be 1-3 digits)');
   }
 
   if (!validation.branch_code.valid) {

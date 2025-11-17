@@ -87,9 +87,9 @@ function adaptManualTransfer(transfer: ManualTransfer, index: number): MasavTran
 function validateTransferData(transfer: MasavTransferData, index: number): void {
   const errors: string[] = [];
 
-  // Validate bank details (allowing 2-3 digits for bank, 1-3 for branch)
-  if (!/^\d{2,3}$/.test(transfer.bank_number)) {
-    errors.push('Invalid bank code (must be 2-3 digits)');
+  // Validate bank details (allowing 1-3 digits for bank, 1-3 for branch)
+  if (!/^\d{1,3}$/.test(transfer.bank_number)) {
+    errors.push('Invalid bank code (must be 1-3 digits)');
   }
   if (!/^\d{1,3}$/.test(transfer.branch)) {
     errors.push('Invalid branch code (must be 1-3 digits)');

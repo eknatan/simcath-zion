@@ -108,7 +108,7 @@ export interface ExportError {
  */
 export interface MasavRecord {
   beneficiary_name: string; // שם המוטב
-  bank_code: string; // קוד בנק (2-3 ספרות)
+  bank_code: string; // קוד בנק (1-3 ספרות)
   branch_code: string; // קוד סניף (3 ספרות)
   account_number: string; // מספר חשבון
   amount: number; // סכום (אגורות)
@@ -251,7 +251,7 @@ export interface MasavBankValidation {
  */
 export const MASAV_CONSTANTS = {
   RECORD_LENGTH: 128, // Fixed record length
-  BANK_CODE_LENGTH: 2,
+  BANK_CODE_LENGTH: 3,
   BRANCH_CODE_LENGTH: 3,
   ACCOUNT_NUMBER_MAX_LENGTH: 20,
   BENEFICIARY_NAME_MAX_LENGTH: 30,
