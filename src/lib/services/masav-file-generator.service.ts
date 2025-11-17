@@ -96,8 +96,8 @@ export class MasavFileGenerator {
       );
     }
 
-    if (!/^\d{2}$/.test(bank_code)) {
-      throw new MasavGenerationError('Bank code must be 2 digits', 'INVALID_BANK_CODE');
+    if (!/^\d{1,3}$/.test(bank_code)) {
+      throw new MasavGenerationError('Bank code must be 1-3 digits', 'INVALID_BANK_CODE');
     }
 
     if (!/^\d{3}$/.test(branch_code)) {
@@ -169,8 +169,8 @@ export class MasavFileGenerator {
       if (!transfer.bank_details) {
         errors.push('Missing bank details');
       } else {
-        if (!/^\d{2}$/.test(transfer.bank_details.bank_number)) {
-          errors.push('Invalid bank code (must be 2 digits)');
+        if (!/^\d{1,3}$/.test(transfer.bank_details.bank_number)) {
+          errors.push('Invalid bank code (must be 1-3 digits)');
         }
         if (!/^\d{3}$/.test(transfer.bank_details.branch)) {
           errors.push('Invalid branch code (must be 3 digits)');
@@ -237,9 +237,11 @@ export class MasavFileGenerator {
     // 8. Creation date (pos 23-28, length 6) YYMMDD
     parts.push(this.formatDate(this.options.creationDate!));
 
-    // 9. Sending institution (pos 29-33, length 5)
-    // Use first 5 digits of institution_id
-    parts.push(this.settings.institution_id.substring(0, 5));
+    // 9. Sending bank and branch (pos 29-33, length 5)
+    // 2 digits bank + 3 digits branch (pad bank to 2 digits)
+    const sendingBank = this.padNumeric(this.settings.bank_code, 2);
+    const sendingBranch = this.padNumeric(this.settings.branch_code, 3);
+    parts.push(sendingBank + sendingBranch);
 
     // 10. Filler (pos 34-39, length 6)
     parts.push('0'.repeat(6));
@@ -286,7 +288,7 @@ export class MasavFileGenerator {
     // 4. Filler (pos 12-17, length 6)
     parts.push('0'.repeat(6));
 
-    // 5. Bank code (pos 18-19, length 2)
+    // 5. Bank code (pos 18-19, length 2) - pad to 2 digits (accepts 1-3 digit input)
     parts.push(this.padNumeric(bank_details.bank_number, 2));
 
     // 6. Branch code (pos 20-22, length 3)
