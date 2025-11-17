@@ -176,9 +176,9 @@ export interface RowValidationResult {
  */
 export const BANK_VALIDATION_RULES = {
   BANK_CODE: {
-    MIN_LENGTH: 2,
+    MIN_LENGTH: 1,
     MAX_LENGTH: 3,
-    PATTERN: /^[0-9]{2,3}$/,
+    PATTERN: /^[0-9]{1,3}$/,
   },
   BRANCH_CODE: {
     MIN_LENGTH: 1,
