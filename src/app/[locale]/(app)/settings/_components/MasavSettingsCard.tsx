@@ -20,9 +20,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Building2, Loader2, Save, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { MasavOrganizationSettings } from '@/lib/services/settings.service';
+import type { MasavOrganizationSettings, HebrewEncodingType } from '@/lib/services/settings.service';
 
 export function MasavSettingsCard() {
 
@@ -34,6 +35,7 @@ export function MasavSettingsCard() {
     branch_code: '',
     account_number: '',
     sequence_number: '001',
+    hebrew_encoding: 'code-a',
   });
   const [originalSettings, setOriginalSettings] = useState<MasavOrganizationSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -90,12 +92,12 @@ export function MasavSettingsCard() {
 
       case 'bank_code':
         if (!value) return 'קוד בנק הוא שדה חובה';
-        if (!/^\d{2}$/.test(value)) return 'קוד בנק חייב להכיל 2 ספרות';
+        if (!/^\d{1,3}$/.test(value)) return 'קוד בנק חייב להכיל 1-3 ספרות';
         return null;
 
       case 'branch_code':
         if (!value) return 'קוד סניף הוא שדה חובה';
-        if (!/^\d{3}$/.test(value)) return 'קוד סניף חייב להכיל 3 ספרות';
+        if (!/^\d{1,3}$/.test(value)) return 'קוד סניף חייב להכיל 1-3 ספרות';
         return null;
 
       case 'account_number':
@@ -248,7 +250,8 @@ export function MasavSettingsCard() {
                   <p className="text-xs text-amber-800">
                     פרטים אלה נדרשים להנפקת קבצי MASAV. יש לקבל את המידע מהבנק:<br />
                     • מספר מוסד (8 ספרות)<br />
-                    • פרטי חשבון המוסד (בנק, סניף, חשבון)
+                    • פרטי חשבון המוסד (בנק 1-3 ספרות, סניף 1-3 ספרות, חשבון)<br />
+                    • קידוד עברית - רוב הבנקים משתמשים בקוד עברי א (Code A)
                   </p>
                 </div>
               </div>
@@ -323,8 +326,8 @@ export function MasavSettingsCard() {
                   value={settings.bank_code}
                   onChange={(e) => handleFieldChange('bank_code', e.target.value)}
                   disabled={isSaving}
-                  placeholder="12"
-                  maxLength={2}
+                  placeholder="12 או 9 (בנק הדואר)"
+                  maxLength={3}
                   className={`border-2 ${
                     validationErrors.bank_code
                       ? 'border-red-300 focus:border-red-500'
@@ -337,7 +340,7 @@ export function MasavSettingsCard() {
                     {validationErrors.bank_code}
                   </p>
                 )}
-                <p className="text-xs text-muted-foreground">2 ספרות</p>
+                <p className="text-xs text-muted-foreground">1-3 ספרות</p>
               </div>
 
               {/* Branch Code */}
@@ -365,7 +368,7 @@ export function MasavSettingsCard() {
                     {validationErrors.branch_code}
                   </p>
                 )}
-                <p className="text-xs text-muted-foreground">3 ספרות</p>
+                <p className="text-xs text-muted-foreground">1-3 ספרות</p>
               </div>
 
               {/* Account Number */}
@@ -422,6 +425,39 @@ export function MasavSettingsCard() {
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground">3 ספרות (בדרך כלל 001)</p>
+              </div>
+
+              {/* Hebrew Encoding */}
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="hebrew_encoding" className="text-sm font-semibold text-emerald-900">
+                  קידוד עברית (Hebrew Encoding)
+                </Label>
+                <Select
+                  value={settings.hebrew_encoding || 'code-a'}
+                  onValueChange={(value) => handleFieldChange('hebrew_encoding', value as HebrewEncodingType)}
+                  disabled={isSaving}
+                >
+                  <SelectTrigger className="border-2 border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200">
+                    <SelectValue placeholder="בחר קידוד עברית" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="code-a">
+                      <div className="flex flex-col items-start">
+                        <span className="font-semibold">קוד עברי א (Code A)</span>
+                        <span className="text-xs text-muted-foreground">מיפוי ASCII - הנפוץ ביותר</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="code-b">
+                      <div className="flex flex-col items-start">
+                        <span className="font-semibold">קוד עברי ב (Code B)</span>
+                        <span className="text-xs text-muted-foreground">בייטים 128-154</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  קוד עברי א (Code A) הוא הנפוץ ביותר. יש לבדוק עם הבנק איזה קידוד הם דורשים.
+                </p>
               </div>
             </div>
 

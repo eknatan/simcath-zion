@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       locale?: string;
       include_headers?: boolean;
       include_summary?: boolean;
+      mark_as_transferred?: boolean;
     };
 
     const result = await exportToExcel(transfers, payment_type as PaymentType, {
@@ -55,10 +56,27 @@ export async function POST(request: NextRequest) {
         })),
         total_amount: result.total_amount,
         total_count: result.total_count,
-      });
+      }, supabase);
     } catch (recordError) {
       console.error('Failed to record export:', recordError);
       // Continue even if recording fails
+    }
+
+    // Update payment statuses to 'transferred' if requested
+    if (exportOptions.mark_as_transferred !== false) {
+      try {
+        await supabase
+          .from('payments')
+          .update({
+            status: 'transferred',
+            transferred_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .in('id', transfer_ids);
+      } catch (updateError) {
+        console.error('Failed to update payment statuses:', updateError);
+        // Continue even if update fails
+      }
     }
 
     // Convert blob to buffer for response

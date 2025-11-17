@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ActionButton } from '@/components/shared/ActionButton';
-import { Trash2, FileDown } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import type { ManualTransfer } from '@/types/manual-transfers.types';
+import { DataTable } from '@/components/shared/DataTable/DataTable';
 
 interface ManualTransfersTableProps {
   transfers: ManualTransfer[];
@@ -12,6 +14,9 @@ interface ManualTransfersTableProps {
   onSelectionChange: (ids: string[]) => void;
   onDelete: (id: string) => void;
   onRefresh: () => void;
+  showExportedDate?: boolean;
+  enablePagination?: boolean;
+  pageSize?: number;
 }
 
 export function ManualTransfersTable({
@@ -19,27 +24,10 @@ export function ManualTransfersTable({
   selectedIds,
   onSelectionChange,
   onDelete,
+  showExportedDate = false,
+  enablePagination = false,
+  pageSize = 50,
 }: ManualTransfersTableProps) {
-  const [selectAll, setSelectAll] = useState(false);
-
-  const handleSelectAll = (checked: boolean) => {
-    setSelectAll(checked);
-    if (checked) {
-      onSelectionChange(transfers.map((t) => t.id));
-    } else {
-      onSelectionChange([]);
-    }
-  };
-
-  const handleSelectOne = (id: string, checked: boolean) => {
-    if (checked) {
-      onSelectionChange([...selectedIds, id]);
-    } else {
-      onSelectionChange(selectedIds.filter((selectedId) => selectedId !== id));
-      setSelectAll(false);
-    }
-  };
-
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('he-IL', {
       style: 'currency',
@@ -76,82 +64,137 @@ export function ManualTransfersTable({
     );
   };
 
+  const columns = useMemo<ColumnDef<ManualTransfer>[]>(() => {
+    const handleSelectAllMemo = (checked: boolean) => {
+      if (checked) {
+        onSelectionChange(transfers.map((t) => t.id));
+      } else {
+        onSelectionChange([]);
+      }
+    };
+
+    const handleSelectOneMemo = (id: string) => {
+      if (selectedIds.includes(id)) {
+        onSelectionChange(selectedIds.filter((selectedId) => selectedId !== id));
+      } else {
+        onSelectionChange([...selectedIds, id]);
+      }
+    };
+
+    return [
+    {
+      id: 'select',
+      header: () => (
+        <Checkbox
+          checked={selectedIds.length === transfers.length && transfers.length > 0}
+          onCheckedChange={handleSelectAllMemo}
+          aria-label="בחר הכל"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={selectedIds.includes(row.original.id)}
+          onCheckedChange={() => handleSelectOneMemo(row.original.id)}
+          aria-label={`בחר ${row.original.recipient_name}`}
+        />
+      ),
+      size: 50,
+    },
+    {
+      accessorKey: 'recipient_name',
+      header: 'שם מקבל',
+      cell: ({ row }) => (
+        <span className="font-medium">{row.original.recipient_name}</span>
+      ),
+    },
+    {
+      accessorKey: 'id_number',
+      header: 'תעודת זהות',
+      cell: ({ row }) => (
+        <span className="text-muted-foreground font-mono text-xs">
+          {row.original.id_number || '-'}
+        </span>
+      ),
+    },
+    {
+      accessorKey: 'amount',
+      header: 'סכום',
+      cell: ({ row }) => (
+        <span className="font-semibold">{formatCurrency(row.original.amount)}</span>
+      ),
+    },
+    {
+      accessorKey: 'bank_code',
+      header: 'בנק',
+      cell: ({ row }) => (
+        <span className="font-mono text-xs">{row.original.bank_code}</span>
+      ),
+    },
+    {
+      accessorKey: 'branch_code',
+      header: 'סניף',
+      cell: ({ row }) => (
+        <span className="font-mono text-xs">{row.original.branch_code}</span>
+      ),
+    },
+    {
+      accessorKey: 'account_number',
+      header: 'חשבון',
+      cell: ({ row }) => (
+        <span className="font-mono text-xs">{row.original.account_number}</span>
+      ),
+    },
+    {
+      accessorKey: 'status',
+      header: 'סטטוס',
+      cell: ({ row }) => getStatusBadge(row.original.status),
+    },
+    {
+      accessorKey: showExportedDate ? 'exported_at' : 'created_at',
+      header: showExportedDate ? 'תאריך ייצוא' : 'תאריך יצירה',
+      cell: ({ row }) => (
+        <span className="text-muted-foreground text-xs">
+          {showExportedDate
+            ? (row.original.exported_at ? formatDate(row.original.exported_at) : formatDate(row.original.created_at))
+            : formatDate(row.original.created_at)
+          }
+        </span>
+      ),
+    },
+    {
+      id: 'actions',
+      header: () => <div className="text-center">פעולות</div>,
+      cell: ({ row }) => (
+        <div className="flex gap-2 justify-center">
+          <ActionButton
+            variant="reject"
+            size="sm"
+            onClick={() => onDelete(row.original.id)}
+          >
+            <Trash2 className="h-3 w-3" />
+          </ActionButton>
+        </div>
+      ),
+      size: 100,
+    },
+  ];
+  }, [selectedIds, transfers, showExportedDate, onDelete, onSelectionChange]);
+
   return (
-    <div className="border rounded-lg overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b">
-            <tr>
-              <th className="px-4 py-3 text-start w-[50px]">
-                <Checkbox
-                  checked={selectAll}
-                  onCheckedChange={handleSelectAll}
-                  aria-label="בחר הכל"
-                />
-              </th>
-              <th className="px-4 py-3 text-start font-semibold">שם מקבל</th>
-              <th className="px-4 py-3 text-start font-semibold">תעודת זהות</th>
-              <th className="px-4 py-3 text-start font-semibold">סכום</th>
-              <th className="px-4 py-3 text-start font-semibold">בנק</th>
-              <th className="px-4 py-3 text-start font-semibold">סניף</th>
-              <th className="px-4 py-3 text-start font-semibold">חשבון</th>
-              <th className="px-4 py-3 text-start font-semibold">סטטוס</th>
-              <th className="px-4 py-3 text-start font-semibold">תאריך</th>
-              <th className="px-4 py-3 text-center font-semibold w-[100px]">פעולות</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transfers.length === 0 ? (
-              <tr>
-                <td colSpan={10} className="px-4 py-12 text-center text-muted-foreground">
-                  <FileDown className="h-12 w-12 mx-auto mb-3 text-slate-300" />
-                  <p>אין העברות להצגה</p>
-                  <p className="text-xs mt-1">העלה קובץ אקסל כדי להתחיל</p>
-                </td>
-              </tr>
-            ) : (
-              transfers.map((transfer) => (
-                <tr key={transfer.id} className="border-t hover:bg-slate-50">
-                  <td className="px-4 py-3">
-                    <Checkbox
-                      checked={selectedIds.includes(transfer.id)}
-                      onCheckedChange={(checked) => handleSelectOne(transfer.id, checked as boolean)}
-                      aria-label={`בחר ${transfer.recipient_name}`}
-                    />
-                  </td>
-                  <td className="px-4 py-3 font-medium">{transfer.recipient_name}</td>
-                  <td className="px-4 py-3 text-muted-foreground font-mono text-xs">
-                    {transfer.id_number || '-'}
-                  </td>
-                  <td className="px-4 py-3 font-semibold">{formatCurrency(transfer.amount)}</td>
-                  <td className="px-4 py-3 font-mono text-xs">{transfer.bank_code}</td>
-                  <td className="px-4 py-3 font-mono text-xs">{transfer.branch_code}</td>
-                  <td className="px-4 py-3 font-mono text-xs">{transfer.account_number}</td>
-                  <td className="px-4 py-3">{getStatusBadge(transfer.status)}</td>
-                  <td className="px-4 py-3 text-muted-foreground text-xs">
-                    {formatDate(transfer.created_at)}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2 justify-center">
-                      <ActionButton
-                        variant="reject"
-                        size="sm"
-                        onClick={() => onDelete(transfer.id)}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </ActionButton>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+    <div className="space-y-0">
+      <DataTable
+        columns={columns}
+        data={transfers}
+        isLoading={false}
+        pagination={{
+          showPagination: enablePagination,
+          pageSize: pageSize,
+        }}
+      />
 
       {/* Summary footer */}
       {transfers.length > 0 && (
-        <div className="bg-slate-50 border-t px-4 py-3 flex justify-between items-center text-sm">
+        <div className="bg-slate-50 border border-t-0 rounded-b-lg px-4 py-3 flex justify-between items-center text-sm">
           <div className="text-muted-foreground">
             <span className="font-semibold">{selectedIds.length}</span> נבחרו מתוך{' '}
             <span className="font-semibold">{transfers.length}</span>

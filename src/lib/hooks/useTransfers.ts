@@ -36,6 +36,7 @@ import {
 interface UseTransfersOptions {
   paymentType?: PaymentType | null; // null means "ALL"
   initialFilters?: TransferFilters;
+  showTransferred?: boolean; // true = show transferred, false = show pending
 }
 
 interface UseTransfersReturn {
@@ -63,6 +64,7 @@ interface UseTransfersReturn {
 export function useTransfers({
   paymentType,
   initialFilters = {},
+  showTransferred = false,
 }: UseTransfersOptions): UseTransfersReturn {
   const t = useTranslations('transfers');
 
@@ -73,7 +75,7 @@ export function useTransfers({
   });
 
   // Build unique key for SWR
-  const swrKey = ['transfers', paymentType, JSON.stringify(filters)];
+  const swrKey = ['transfers', paymentType, showTransferred, JSON.stringify(filters)];
 
   // Fetch data with SWR
   const { data, error, isLoading, mutate } = useSWR(
@@ -107,9 +109,20 @@ export function useTransfers({
             )
           )
         `
-        )
-        .eq('status', PaymentStatus.APPROVED)
-        .is('transferred_at', null);
+        );
+
+      // Filter by transferred status
+      if (showTransferred) {
+        // Show transferred payments (status='transferred' OR has transferred_at)
+        query = query
+          .eq('status', PaymentStatus.TRANSFERRED)
+          .not('transferred_at', 'is', null);
+      } else {
+        // Show pending payments (status='approved' AND no transferred_at)
+        query = query
+          .eq('status', PaymentStatus.APPROVED)
+          .is('transferred_at', null);
+      }
 
       // Filter by payment type only if specified (null means "ALL")
       if (paymentType) {

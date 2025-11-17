@@ -65,10 +65,6 @@ export function PaymentsTab({ caseData }: PaymentsTabProps) {
   const [bankDetailsErrors, setBankDetailsErrors] = useState<Record<string, string>>({});
   const [isBankDetailsLocked, setIsBankDetailsLocked] = useState(false);
 
-  // State for bank and branch selection
-  const [selectedBankCode, setSelectedBankCode] = useState<string>('');
-  const [selectedBranchCode, setSelectedBranchCode] = useState<string>('');
-
   const [weddingCost, setWeddingCost] = useState('');
   const [donationUsd, setDonationUsd] = useState('');
   const [exchangeRate, setExchangeRate] = useState('');
@@ -86,8 +82,6 @@ export function PaymentsTab({ caseData }: PaymentsTabProps) {
     if (bankDetails) {
       console.log('[PaymentsTab] Loading bank details into form:', bankDetails);
       setLocalBankDetails(bankDetails);
-      setSelectedBankCode(bankDetails.bank_number || '');
-      setSelectedBranchCode(bankDetails.branch || '');
       setIsBankDetailsLocked(true);
     } else {
       console.log('[PaymentsTab] No bank details found - form will be empty');
@@ -118,30 +112,6 @@ export function PaymentsTab({ caseData }: PaymentsTabProps) {
   // ========================================
   // Handlers
   // ========================================
-
-  /**
-   * Handle bank selection
-   */
-  const handleBankSelect = (bankCode: string) => {
-    setSelectedBankCode(bankCode);
-    setSelectedBranchCode(''); // Reset branch when bank changes
-    setLocalBankDetails({
-      ...localBankDetails,
-      bank_number: bankCode,
-      branch: '', // Reset branch when bank changes
-    });
-  };
-
-  /**
-   * Handle branch selection
-   */
-  const handleBranchSelect = (branchCode: string) => {
-    setSelectedBranchCode(branchCode);
-    setLocalBankDetails({
-      ...localBankDetails,
-      branch: branchCode,
-    });
-  };
 
   /**
    * Validate bank details form
@@ -314,10 +284,6 @@ export function PaymentsTab({ caseData }: PaymentsTabProps) {
         isBankDetailsLocked={isBankDetailsLocked}
         isLoadingBankDetails={isLoadingBankDetails}
         isSavingBankDetails={isSavingBankDetails}
-        selectedBankCode={selectedBankCode}
-        selectedBranchCode={selectedBranchCode}
-        onBankSelect={handleBankSelect}
-        onBranchSelect={handleBranchSelect}
         onLocalBankDetailsChange={setLocalBankDetails}
         onSave={handleSaveBankDetails}
         onUnlock={handleUnlockBankDetails}

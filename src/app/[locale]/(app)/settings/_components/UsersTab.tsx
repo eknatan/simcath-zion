@@ -13,23 +13,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-} from '@tanstack/react-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { ColumnDef } from '@tanstack/react-table';
+import { DataTable } from '@/components/shared/DataTable/DataTable';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,7 +69,6 @@ export function UsersTab() {
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<UserStatus | 'all'>('all');
   const [page, setPage] = useState(1);
-  const [sorting, setSorting] = useState<SortingState>([]);
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -250,19 +234,6 @@ export function UsersTab() {
     },
   ];
 
-  const table = useReactTable({
-    data: data?.users || [],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    state: {
-      sorting,
-    },
-    manualPagination: true,
-    pageCount: data?.pagination.totalPages || 0,
-  });
 
   const handleConfirmAction = async () => {
     if (!alertUser) return;
@@ -369,46 +340,11 @@ export function UsersTab() {
 
       {/* Table */}
       <div className="rounded-lg border-2 shadow-sm">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="font-bold">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center">
-                  <Loader2 className="mx-auto h-8 w-8 animate-spin text-blue-600" />
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center">
-                  <p className="text-muted-foreground">{t('users.noUsers')}</p>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <DataTable
+          columns={columns}
+          data={data?.users || []}
+          isLoading={isLoading}
+        />
       </div>
 
       {/* Pagination */}

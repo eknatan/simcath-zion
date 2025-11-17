@@ -586,6 +586,54 @@ export type Database = {
           },
         ]
       }
+      manual_transfers: {
+        Row: {
+          id: string
+          recipient_name: string
+          id_number: string | null
+          bank_code: string
+          branch_code: string
+          account_number: string
+          amount: number
+          status: string
+          imported_from_file: string | null
+          created_by: string | null
+          exported_at: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          recipient_name: string
+          id_number?: string | null
+          bank_code: string
+          branch_code: string
+          account_number: string
+          amount: number
+          status?: string
+          imported_from_file?: string | null
+          created_by?: string | null
+          exported_at?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          recipient_name?: string
+          id_number?: string | null
+          bank_code?: string
+          branch_code?: string
+          account_number?: string
+          amount?: number
+          status?: string
+          imported_from_file?: string | null
+          created_by?: string | null
+          exported_at?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_audit_log: {
         Row: {
           action: string

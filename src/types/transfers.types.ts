@@ -188,6 +188,14 @@ export const TRANSFER_LIMITS = {
  * Transfer tab types
  */
 export enum TransferTab {
+  PENDING = 'pending',
+  TRANSFERRED = 'transferred',
+}
+
+/**
+ * Transfer type filter
+ */
+export enum TransferTypeFilter {
   ALL = 'all',
   WEDDING = 'wedding',
   CLEANING = 'cleaning',

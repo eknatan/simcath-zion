@@ -159,8 +159,8 @@ export function validateBankDetails(
   const bankValid = /^\d{1,3}$/.test(bankCode);
   const bankNormalized = bankCode.padStart(MASAV_CONSTANTS.BANK_CODE_LENGTH, '0');
 
-  // Validate branch code (3 digits)
-  const branchValid = /^\d{3}$/.test(branchCode);
+  // Validate branch code (1-3 digits)
+  const branchValid = /^\d{1,3}$/.test(branchCode);
   const branchNormalized = branchCode.padStart(MASAV_CONSTANTS.BRANCH_CODE_LENGTH, '0');
 
   // Validate account number (up to 20 chars, typically digits)
@@ -217,7 +217,7 @@ export function validateTransferForMasav(
   }
 
   if (!validation.branch_code.valid) {
-    errors.push('Invalid branch code format (must be 3 digits)');
+    errors.push('Invalid branch code format (must be 1-3 digits)');
   }
 
   if (!validation.account_number.valid) {

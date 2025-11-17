@@ -162,6 +162,9 @@
     "exchangeRate": "שער החליפין",
     "updateRate": "עדכן שער",
     "convert": "המר",
+    "common": {
+      "saving": "שומר..."
+    },
     "status": {
       "pending": "ממתין",
       "approved": "מאושר",
@@ -172,9 +175,11 @@
       "title": "פרטי חשבון בנק",
       "bank": "בנק",
       "bankNumber": "מספר בנק",
+      "bankPlaceholder": "12",
+      "bankHelp": "קוד בנק (1-3 ספרות)",
       "selectBank": "בחר בנק",
       "branch": "סניף",
-      "branchHelp": "3 ספרות",
+      "branchHelp": "קוד סניף (1-3 ספרות)",
       "branchPlaceholder": "123",
       "accountNumber": "מספר חשבון",
       "accountNumberHelp": "2-20 ספרות",
@@ -189,8 +194,8 @@
       "errors": {
         "bankRequired": "יש לבחור בנק",
         "branchRequired": "סניף הוא שדה חובה",
-        "branchInvalid": "סניף חייב להיות 3 ספרות",
-        "branchFormat": "סניף חייב להיות 3 ספרות בדיוק",
+        "branchInvalid": "סניף לא תקין",
+        "branchFormat": "סניף חייב להכיל ספרות בלבד",
         "accountRequired": "מספר חשבון הוא שדה חובה",
         "accountInvalid": "מספר חשבון חייב להיות בין 2-20 ספרות",
         "accountFormat": "מספר חשבון חייב להיות בין 2 ל-20 ספרות",
@@ -275,6 +280,29 @@
       "pleaseFillBankDetails": "אנא מלא את פרטי הבנק קודם",
       "tryAgainLater": "אנא נסה שוב מאוחר יותר",
       "refreshFailed": "רענון נכשל"
+    }
+  },
+  "paymentHistory": {
+    "title": "היסטוריית תשלומים",
+    "date": "תאריך",
+    "amount": "סכום",
+    "status": "סטטוס",
+    "notes": "הערות",
+    "actions": "פעולות",
+    "noPayments": "אין תשלומים",
+    "headers": {
+      "date": "תאריך",
+      "amountUSD": "סכום ($)",
+      "amountILS": "סכום (₪)",
+      "status": "סטטוס",
+      "notes": "הערות",
+      "actions": "פעולות"
+    },
+    "delete": {
+      "title": "מחיקת תשלום",
+      "description": "האם אתה בטוח שברצונך למחוק תשלום זה?",
+      "confirm": "מחק תשלום",
+      "cancel": "ביטול"
     }
   },
   "calendar": {
@@ -1186,9 +1214,17 @@
     "title": "העברות בנקאיות",
     "subtitle": "ניהול והעברת תשלומים שאושרו",
     "tabs": {
+      "pending": "ממתין להעברה",
+      "transferred": "הועבר"
+    },
+    "typeFilter": {
       "all": "הכל",
       "wedding": "חתונות יתומים",
       "cleaning": "ילדים חולים"
+    },
+    "types": {
+      "wedding": "חתונה",
+      "cleaning": "ילד חולה"
     },
     "status": {
       "pending": "ממתין להעברה",
@@ -1198,6 +1234,7 @@
     },
     "columns": {
       "created_at": "תאריך יצירה",
+      "transferred_at": "תאריך העברה",
       "case_number": "מס' תיק",
       "names": "חתן וכלה",
       "family_name": "שם משפחה",
@@ -1211,7 +1248,10 @@
       "branch": "סניף",
       "account": "חשבון",
       "city": "עיר",
-      "status": "סטטוס"
+      "status": "סטטוס",
+      "type": "סוג",
+      "details": "פרטים",
+      "actions": "פעולות"
     },
     "actions": {
       "selectAll": "סמן הכל",
@@ -1220,7 +1260,8 @@
       "exportMasav": "ייצוא MASAV",
       "sendEmail": "שלח מייל",
       "refresh": "רענן",
-      "clearFilters": "נקה סינונים"
+      "clearFilters": "נקה סינונים",
+      "viewCase": "צפה בתיק"
     },
     "filters": {
       "title": "סינונים",
@@ -1318,6 +1359,153 @@
       "statusUpdated": "הסטטוס עודכן בהצלחה",
       "transfersMarked": "{count} העברות סומנו כהועברו",
       "pdfExported": "PDF יוצא בהצלחה"
+    },
+    "manualTransfer": {
+      "title": "הוספת העברה ידנית",
+      "description": "הזן את פרטי ההעברה הידנית",
+      "addButton": "הוסף העברה ידנית",
+      "submit": "צור העברה",
+      "submitting": "יוצר...",
+      "success": "ההעברה נוצרה בהצלחה",
+      "sections": {
+        "bankDetails": "פרטי בנק"
+      },
+      "fields": {
+        "caseNumber": "מספר תיק",
+        "paymentType": "סוג העברה",
+        "amountIls": "סכום בשקלים",
+        "amountUsd": "סכום בדולר",
+        "exchangeRate": "שער חליפין",
+        "paymentMonth": "חודש תשלום",
+        "bankNumber": "מספר בנק",
+        "branch": "סניף",
+        "accountNumber": "מספר חשבון",
+        "accountHolderName": "שם בעל החשבון",
+        "notes": "הערות"
+      },
+      "placeholders": {
+        "caseNumber": "הזן מספר תיק קיים",
+        "amountIls": "0.00",
+        "accountHolderName": "שם מלא",
+        "notes": "הערות נוספות (אופציונלי)"
+      },
+      "paymentTypes": {
+        "wedding": "חתונה",
+        "cleaning": "ילד חולה"
+      },
+      "errors": {
+        "caseNotFound": "תיק לא נמצא במערכת",
+        "failed": "שגיאה ביצירת ההעברה"
+      }
+    }
+  },
+  "sickChildren": {
+    "title": "ילדים חולים",
+    "description": "ניהול תמיכה חודשית למשפחות עם ילד חולה",
+    "dashboard": {
+      "title": "משפחות פעילות",
+      "description": "משפחות המקבלות תמיכה חודשית",
+      "familyName": "שם משפחה",
+      "childName": "שם ילד",
+      "startDate": "תאריך התחלה",
+      "currentMonthPayment": "תשלום חודש נוכחי",
+      "paymentStatus": "סטטוס תשלום",
+      "missingPayment": "חסר תשלום",
+      "noPayment": "אין תשלום",
+      "searchPlaceholder": "חיפוש לפי שם משפחה, שם ילד או עיר...",
+      "quickEntry": "הזנה מהירה",
+      "inactiveFamilies": "משפחות לא פעילות"
+    },
+    "caseDetails": {
+      "familyInfo": "פרטי משפחה",
+      "contactInfo": "פרטי קשר",
+      "bankDetails": "פרטי בנק",
+      "caseSummary": "תקציר תיק",
+      "emailTracking": "מעקב מיילים",
+      "totalTransferred": "סה\"כ הועבר",
+      "activeMonths": "חודשים פעילים",
+      "lastEmailSent": "מייל אחרון נשלח"
+    },
+    "payments": {
+      "title": "תשלומים חודשיים",
+      "addPayment": "הוסף תשלום חודשי",
+      "month": "חודש",
+      "year": "שנה",
+      "amount": "סכום (₪)",
+      "cap": "תקרה",
+      "notes": "הערות",
+      "saveAndTransfer": "שמור והעבר לתשלום",
+      "history": "היסטוריית תשלומים",
+      "filterByYear": "סינון לפי שנה",
+      "exportExcel": "ייצא ל-Excel",
+      "totalYear": "סה\"כ שנה זו",
+      "warningOverCap": "הסכום עולה על התקרה ({cap} ₪). האם להמשיך?",
+      "warningDuplicate": "כבר קיים תשלום לחודש זה. האם לערוך?",
+      "paymentSaved": "תשלום נשמר והועבר לטבלת העברות"
+    },
+    "closeCase": {
+      "title": "סגירת תיק",
+      "confirm": "האם אתה בטוח שברצונך לסגור את התיק?",
+      "reason": "בחר סיבת סגירה",
+      "healed": "הילד החלים (ברוך השם)",
+      "deceased": "לצערנו הילד נפטר",
+      "other": "סיום תמיכה (סיבה אחרת)",
+      "notes": "הסבר נוסף (אופציונלי)",
+      "warningPendingPayments": "שים לב: קיים תשלום ממתין להעברה לחודש {month} ({amount} ₪). התשלום יישאר בטבלת העברות.",
+      "confirmButton": "אשר סגירה",
+      "reopenCase": "החזר לפעיל",
+      "confirmReopen": "האם אתה בטוח שברצונך להחזיר את התיק לסטטוס פעיל?"
+    },
+    "bulkEntry": {
+      "title": "הזנה מהירה - תשלומים חודשיים",
+      "selectMonth": "בחר חודש",
+      "totalSelected": "סה\"כ נבחרו",
+      "totalAmount": "סה\"כ לתשלום",
+      "alreadyReceived": "כבר קיבל החודש",
+      "transferAll": "העבר הכל לתשלום",
+      "success": "{count} תשלומים נשמרו והועברו לטבלת העברות (סה\"כ {amount} ₪)"
+    },
+    "email": {
+      "title": "שליחת מיילים חודשיים",
+      "sendToAll": "שלח לכולם",
+      "selectFamilies": "בחר משפחות ספציפיות",
+      "selectAll": "בחר הכל",
+      "deselectAll": "בטל הכל",
+      "alreadySent": "מייל נשלח ב-{date}",
+      "warningAlreadySent": "{count} משפחות כבר קיבלו מייל החודש. האם לשלוח שוב?",
+      "sendAgain": "כן, שלח שוב",
+      "skipSent": "דלג על משפחות שקיבלו",
+      "template": "תבנית המייל",
+      "language": "שפה",
+      "hebrew": "עברית",
+      "english": "English",
+      "subject": "נושא",
+      "body": "גוף המייל",
+      "preview": "תצוגה מקדימה",
+      "confirmSend": "האם אתה בטוח שברצונך לשלוח מיילים ל-{count} משפחות?",
+      "sendNow": "שלח עכשיו",
+      "success": "נשלחו {count} מיילים",
+      "failed": "שגיאה בשליחת מיילים",
+      "variables": "משתנים זמינים: {family_name}, {child_name}, {month}"
+    },
+    "inactiveFamilies": {
+      "title": "משפחות לא פעילות",
+      "description": "תיקים שנסגרו",
+      "endDate": "תאריך סגירה",
+      "endReason": "סיבת סגירה",
+      "totalInactive": "סה\"כ תיקים לא פעילים",
+      "reasons": {
+        "healed": "החלים",
+        "deceased": "נפטר",
+        "other": "אחר"
+      }
+    },
+    "settings": {
+      "title": "הגדרות ילדים חולים",
+      "monthlyCap": "תקרת תשלום חודשי",
+      "monthlyCapDescription": "סכום מקסימלי לחודש (₪)",
+      "emailTemplates": "תבניות מיילים",
+      "warningCapChange": "שים לב: שינוי התקרה ישפיע רק על תשלומים חדשים"
     }
   }
 }

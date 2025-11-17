@@ -70,10 +70,13 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // Update transfer statuses to 'exported' using server-side Supabase
+    // Update transfer statuses to 'exported' and set exported_at timestamp
     await (supabase as any)
       .from('manual_transfers')
-      .update({ status: ManualTransferStatus.EXPORTED })
+      .update({
+        status: ManualTransferStatus.EXPORTED,
+        exported_at: new Date().toISOString()
+      })
       .in('id', transfer_ids);
 
     // Create export record for audit trail

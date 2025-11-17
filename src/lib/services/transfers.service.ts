@@ -10,6 +10,8 @@
  */
 
 import { createClient } from '@/lib/supabase/client';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/supabase';
 import {
   Transfer,
   TransferWithDetails,
@@ -272,12 +274,13 @@ export async function updateTransferStatus(
  */
 export async function bulkUpdateTransfers(
   paymentIds: string[],
-  updateData: BulkUpdateData
+  updateData: BulkUpdateData,
+  supabase?: SupabaseClient<Database>
 ) {
-  const supabase = createClient();
+  const client = supabase || createClient();
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await client
       .from('payments')
       .update({
         ...updateData,
@@ -408,34 +411,52 @@ export interface CaseExportInfo {
 /**
  * Record export in transfers_export table
  */
-export async function recordExport(exportData: {
-  export_type: string;
-  exported_by: string;
-  filename: string;
-  file_url?: string;
-  cases_included: CaseExportInfo[];
-  total_amount: number;
-  total_count: number;
-}) {
-  const supabase = createClient();
+export async function recordExport(
+  exportData: {
+    export_type: string;
+    exported_by: string;
+    filename: string;
+    file_url?: string;
+    cases_included: CaseExportInfo[];
+    total_amount: number;
+    total_count: number;
+  },
+  supabase?: SupabaseClient<Database>
+) {
+  const client = supabase || createClient();
 
   try {
-    const { data, error } = await supabase
+    // Log the data being inserted for debugging
+    console.log('Recording export with data:', {
+      export_type: exportData.export_type,
+      exported_by: exportData.exported_by,
+      filename: exportData.filename,
+      cases_count: exportData.cases_included.length,
+      total_amount: exportData.total_amount,
+      total_count: exportData.total_count,
+    });
+
+    const insertData = {
+      export_type: exportData.export_type,
+      exported_by: exportData.exported_by,
+      filename: exportData.filename,
+      file_url: exportData.file_url,
+      cases_included: JSON.parse(JSON.stringify(exportData.cases_included)),
+      total_amount: exportData.total_amount,
+      total_count: exportData.total_count,
+      exported_at: new Date().toISOString(),
+    };
+
+    console.log('Insert data:', JSON.stringify(insertData, null, 2));
+
+    const { data, error } = await client
       .from('transfers_export')
-      .insert({
-        export_type: exportData.export_type,
-        exported_by: exportData.exported_by,
-        filename: exportData.filename,
-        file_url: exportData.file_url,
-        cases_included: exportData.cases_included as never,
-        total_amount: exportData.total_amount,
-        total_count: exportData.total_count,
-        exported_at: new Date().toISOString(),
-      })
+      .insert(insertData)
       .select()
       .single();
 
     if (error) {
+      console.error('Database error details:', error);
       throw new TransferError('Failed to record export', 'RECORD_ERROR', error);
     }
 

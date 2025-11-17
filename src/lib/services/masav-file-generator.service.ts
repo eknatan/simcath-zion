@@ -100,8 +100,8 @@ export class MasavFileGenerator {
       throw new MasavGenerationError('Bank code must be 1-3 digits', 'INVALID_BANK_CODE');
     }
 
-    if (!/^\d{3}$/.test(branch_code)) {
-      throw new MasavGenerationError('Branch code must be 3 digits', 'INVALID_BRANCH_CODE');
+    if (!/^\d{1,3}$/.test(branch_code)) {
+      throw new MasavGenerationError('Branch code must be 1-3 digits', 'INVALID_BRANCH_CODE');
     }
 
     if (!/^\d{3}$/.test(sequence_number)) {
@@ -172,8 +172,8 @@ export class MasavFileGenerator {
         if (!/^\d{1,3}$/.test(transfer.bank_details.bank_number)) {
           errors.push('Invalid bank code (must be 1-3 digits)');
         }
-        if (!/^\d{3}$/.test(transfer.bank_details.branch)) {
-          errors.push('Invalid branch code (must be 3 digits)');
+        if (!/^\d{1,3}$/.test(transfer.bank_details.branch)) {
+          errors.push('Invalid branch code (must be 1-3 digits)');
         }
         if (!/^\d+$/.test(transfer.bank_details.account_number)) {
           errors.push('Invalid account number (must be digits only)');

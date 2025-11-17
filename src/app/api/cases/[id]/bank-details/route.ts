@@ -112,13 +112,6 @@ export async function POST(
     }
 
     // Validate formats
-    if (branch.length !== 3) {
-      return NextResponse.json(
-        { message: 'Branch must be 3 digits' },
-        { status: 400 }
-      );
-    }
-
     if (account_number.length < 2 || account_number.length > 20) {
       return NextResponse.json(
         { message: 'Account number must be between 2-20 digits' },

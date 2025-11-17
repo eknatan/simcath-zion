@@ -99,11 +99,11 @@ export const sickChildrenFormSchema = z.object({
   bank_number: z
     .string()
     .min(1, 'validation.required')
-    .regex(/^\d{2,3}$/, 'validation.invalidBankCode'),
+    .regex(/^\d{1,3}$/, 'validation.invalidBankCode'),
   branch: z
     .string()
     .min(1, 'validation.required')
-    .regex(/^\d{3}$/, 'validation.invalidBranchCode'),
+    .regex(/^\d{1,3}$/, 'validation.invalidBranchCode'),
   account_number: z
     .string()
     .min(1, 'validation.required')

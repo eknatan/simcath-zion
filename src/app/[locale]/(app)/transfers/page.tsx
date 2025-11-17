@@ -5,13 +5,14 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PaymentType } from '@/types/case.types';
-import { TransferTab } from '@/types/transfers.types';
+import { TransferTab, TransferTypeFilter as TransferTypeFilterEnum } from '@/types/transfers.types';
 import { useTransfers } from '@/lib/hooks/useTransfers';
 import { useTransferSelection } from '@/lib/hooks/useTransferSelection';
 import { useExportTransfers } from '@/lib/hooks/useExportTransfers';
 import { TransfersTabs } from './_components/TransfersTabs';
 import { TransferSummary } from './_components/TransferSummary';
 import { TransferFilters } from './_components/TransferFilters';
+import { TransferTypeFilter } from './_components/TransferTypeFilter';
 import { BulkActions } from './_components/BulkActions';
 import { TransfersTable } from './_components/TransfersTable';
 import { ExportDialog, ExportDialogType } from './_components/ExportDialog';
@@ -20,20 +21,26 @@ import { Building2 } from 'lucide-react';
 export default function TransfersPage() {
   const t = useTranslations('transfers');
 
-  // Active tab state
-  const [activeTab, setActiveTab] = useState<TransferTab>(TransferTab.ALL);
+  // Tab state (Pending/Transferred)
+  const [activeTab, setActiveTab] = useState<TransferTab>(TransferTab.PENDING);
 
-  // Export dialog state
+  // Type filter state (All/Wedding/Cleaning)
+  const [typeFilter, setTypeFilter] = useState<TransferTypeFilterEnum>(TransferTypeFilterEnum.ALL);
+
+  // Dialog states
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportDialogType, setExportDialogType] = useState<ExportDialogType>(null);
 
-  // Determine payment type based on active tab (null for ALL)
+  // Determine payment type based on type filter (null for ALL)
   const paymentType =
-    activeTab === TransferTab.ALL
+    typeFilter === TransferTypeFilterEnum.ALL
       ? null
-      : activeTab === TransferTab.WEDDING
+      : typeFilter === TransferTypeFilterEnum.WEDDING
       ? PaymentType.WEDDING_TRANSFER
       : PaymentType.MONTHLY_CLEANING;
+
+  // Determine if we're showing transferred or pending
+  const showTransferred = activeTab === TransferTab.TRANSFERRED;
 
   // Hooks
   const {
@@ -44,7 +51,7 @@ export default function TransfersPage() {
     setFilters,
     resetFilters,
     refresh,
-  } = useTransfers({ paymentType });
+  } = useTransfers({ paymentType, showTransferred });
 
   const {
     selectedIds,
@@ -57,9 +64,9 @@ export default function TransfersPage() {
   } = useTransferSelection(transfers);
 
   // For export, we need a specific payment type
-  // If we're in ALL tab, we'll determine it from selected transfers
+  // If we're in ALL filter, we'll determine it from selected transfers
   const exportPaymentType =
-    activeTab === TransferTab.ALL
+    typeFilter === TransferTypeFilterEnum.ALL
       ? PaymentType.WEDDING_TRANSFER // Default, will be overridden in export handlers
       : paymentType!;
 
@@ -82,8 +89,8 @@ export default function TransfersPage() {
   const handleExportExcel = () => {
     if (selectedCount === 0) return;
 
-    // If in ALL tab, check that all selected transfers are of the same type
-    if (activeTab === TransferTab.ALL) {
+    // If in ALL filter, check that all selected transfers are of the same type
+    if (typeFilter === TransferTypeFilterEnum.ALL) {
       const paymentTypes = new Set(selectedTransfers.map(t => t.payment_type));
       if (paymentTypes.size > 1) {
         toast.error(t('export.mixedTypesError') || 'Cannot export mixed transfer types. Please select only one type.');
@@ -98,8 +105,8 @@ export default function TransfersPage() {
   const handleExportMasav = () => {
     if (selectedCount === 0) return;
 
-    // If in ALL tab, check that all selected transfers are of the same type
-    if (activeTab === TransferTab.ALL) {
+    // If in ALL filter, check that all selected transfers are of the same type
+    if (typeFilter === TransferTypeFilterEnum.ALL) {
       const paymentTypes = new Set(selectedTransfers.map(t => t.payment_type));
       if (paymentTypes.size > 1) {
         toast.error(t('export.mixedTypesError') || 'Cannot export mixed transfer types. Please select only one type.');
@@ -126,15 +133,27 @@ export default function TransfersPage() {
     resetFilters();
   };
 
+  // Type filter change handler
+  const handleTypeFilterChange = (filter: TransferTypeFilterEnum) => {
+    setTypeFilter(filter);
+    deselectAll();
+    resetFilters();
+  };
+
   // Common content for both tabs
   const renderTabContent = () => (
     <div className="space-y-6">
+      {/* Type Filter */}
+      <div className="flex items-center justify-start">
+        <TransferTypeFilter value={typeFilter} onChange={handleTypeFilterChange} />
+      </div>
+
       {/* Summary Cards */}
-      <TransferSummary
+      {/* <TransferSummary
         summary={summary}
         selectedCount={selectedCount}
         selectedAmount={selectedAmount}
-      />
+      /> */}
 
       {/* Filters */}
       <TransferFilters
@@ -145,17 +164,19 @@ export default function TransfersPage() {
       />
 
       {/* Bulk Actions */}
-      <BulkActions
-        isAllSelected={isAllSelected}
-        selectedCount={selectedCount}
-        totalCount={transfers.length}
-        onToggleAll={toggleAll}
-        onExportExcel={handleExportExcel}
-        onExportMasav={handleExportMasav}
-        onRefresh={refresh}
-        onDeselectAll={deselectAll}
-        isExporting={isExporting}
-      />
+      {!showTransferred && (
+        <BulkActions
+          isAllSelected={isAllSelected}
+          selectedCount={selectedCount}
+          totalCount={transfers.length}
+          onToggleAll={toggleAll}
+          onExportExcel={handleExportExcel}
+          onExportMasav={handleExportMasav}
+          onRefresh={refresh}
+          onDeselectAll={deselectAll}
+          isExporting={isExporting}
+        />
+      )}
 
       {/* Table */}
       <TransfersTable
@@ -163,6 +184,7 @@ export default function TransfersPage() {
         selectedIds={selectedIds}
         onToggleSelection={toggleSelection}
         activeTab={activeTab}
+        typeFilter={typeFilter}
         isLoading={isLoading}
       />
     </div>
@@ -193,9 +215,8 @@ export default function TransfersPage() {
       <TransfersTabs
         activeTab={activeTab}
         onTabChange={handleTabChange}
-        allContent={renderTabContent()}
-        weddingContent={renderTabContent()}
-        cleaningContent={renderTabContent()}
+        pendingContent={renderTabContent()}
+        transferredContent={renderTabContent()}
       />
 
       {/* Export Dialog */}

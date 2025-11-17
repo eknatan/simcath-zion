@@ -4,28 +4,29 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
-import { TransferFilters as TransferFiltersType, TransferTab } from '@/types/transfers.types';
 import { Search, X } from 'lucide-react';
 import { useState } from 'react';
 
-interface TransferFiltersProps {
-  filters: TransferFiltersType;
-  onChange: (filters: TransferFiltersType) => void;
-  onReset: () => void;
-  activeTab: TransferTab;
+export interface ManualTransferFiltersType {
+  search?: string;
+  date_from?: string;
+  date_to?: string;
 }
 
-export function TransferFilters({
+interface ManualTransferFiltersProps {
+  filters: ManualTransferFiltersType;
+  onChange: (filters: ManualTransferFiltersType) => void;
+  onReset: () => void;
+}
+
+export function ManualTransferFilters({
   filters,
   onChange,
   onReset,
-  activeTab,
-}: TransferFiltersProps) {
-  const t = useTranslations('transfers.filters');
+}: ManualTransferFiltersProps) {
   const [localFilters, setLocalFilters] = useState(filters);
 
-  const handleChange = (key: keyof TransferFiltersType, value: any) => {
+  const handleChange = (key: keyof ManualTransferFiltersType, value: any) => {
     const newFilters = { ...localFilters, [key]: value };
     setLocalFilters(newFilters);
     onChange(newFilters);
@@ -40,17 +41,17 @@ export function TransferFilters({
     <Card className="border border-slate-200 shadow-sm bg-gradient-to-br from-white to-slate-50/20">
       <CardContent className="pt-6">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {/* Search */}
+          {/* Search - Takes 2 columns */}
           <div className="space-y-2 lg:col-span-2">
             <Label htmlFor="search" className="text-sm font-medium text-slate-700">
-              {t('search')}
+              חיפוש
             </Label>
             <div className="relative">
               <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 id="search"
                 type="text"
-                placeholder={t('searchPlaceholder')}
+                placeholder="שם מקבל או תעודת זהות"
                 value={localFilters.search || ''}
                 onChange={(e) => handleChange('search', e.target.value)}
                 className="ps-10 border-slate-200"
@@ -61,7 +62,7 @@ export function TransferFilters({
           {/* Date From */}
           <div className="space-y-2">
             <Label htmlFor="dateFrom" className="text-sm font-medium text-slate-700">
-              {t('dateFrom')}
+              מתאריך
             </Label>
             <Input
               id="dateFrom"
@@ -75,7 +76,7 @@ export function TransferFilters({
           {/* Date To */}
           <div className="space-y-2">
             <Label htmlFor="dateTo" className="text-sm font-medium text-slate-700">
-              {t('dateTo')}
+              עד תאריך
             </Label>
             <Input
               id="dateTo"
@@ -86,60 +87,15 @@ export function TransferFilters({
             />
           </div>
 
-          {/* Amount Min */}
-          <div className="space-y-2">
-            <Label htmlFor="amountMin" className="text-sm font-medium text-slate-700">
-              {t('amountMin')}
-            </Label>
-            <Input
-              id="amountMin"
-              type="number"
-              placeholder="0"
-              value={localFilters.amount_min || ''}
-              onChange={(e) => handleChange('amount_min', parseFloat(e.target.value) || undefined)}
-              className="border-slate-200"
-            />
-          </div>
-
-          {/* Amount Max */}
-          <div className="space-y-2">
-            <Label htmlFor="amountMax" className="text-sm font-medium text-slate-700">
-              {t('amountMax')}
-            </Label>
-            <Input
-              id="amountMax"
-              type="number"
-              value={localFilters.amount_max || ''}
-              onChange={(e) => handleChange('amount_max', parseFloat(e.target.value) || undefined)}
-              className="border-slate-200"
-            />
-          </div>
-
-          {/* Payment Month */}
-          {false && (
-            <div className="space-y-2">
-              <Label htmlFor="paymentMonth" className="text-sm font-medium text-slate-700">
-                {t('paymentMonth')}
-              </Label>
-              <Input
-                id="paymentMonth"
-                type="month"
-                value={localFilters.payment_month || ''}
-                onChange={(e) => handleChange('payment_month', e.target.value)}
-                className="border-slate-200"
-              />
-            </div>
-          )}
-
-          {/* Clear Filters Button */}
-          <div className="flex items-end">
+          {/* Clear Filters Button - Full width on mobile, aligns at end on desktop */}
+          <div className="flex items-end lg:col-start-4">
             <Button
               variant="outline"
               onClick={handleReset}
               className="w-full border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm"
             >
               <X className="w-4 h-4 me-2" />
-              {t('title')}
+              נקה סינונים
             </Button>
           </div>
         </div>

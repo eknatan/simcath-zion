@@ -12,6 +12,20 @@ import {
 } from '@/lib/api/transfers-api.helpers';
 
 /**
+ * Convert PaymentType to export_type format expected by DB
+ */
+function convertPaymentTypeToExportType(paymentType: PaymentType): string {
+  switch (paymentType) {
+    case PaymentType.WEDDING_TRANSFER:
+      return 'wedding';
+    case PaymentType.MONTHLY_CLEANING:
+      return 'cleaning';
+    default:
+      return 'mixed';
+  }
+}
+
+/**
  * POST /api/transfers/export/masav
  * Export transfers to MASAV format
  */
@@ -34,6 +48,7 @@ export async function POST(request: NextRequest) {
       urgency?: MasavUrgency;
       execution_date?: string;
       validate_before_export?: boolean;
+      mark_as_transferred?: boolean;
     };
 
     const result = await exportToMasavServer(
@@ -50,7 +65,7 @@ export async function POST(request: NextRequest) {
     // Record export in database
     try {
       await recordExport({
-        export_type: payment_type,
+        export_type: convertPaymentTypeToExportType(payment_type as PaymentType),
         exported_by: user.id,
         filename: result.filename,
         cases_included: transfers.map((t) => ({
@@ -60,10 +75,27 @@ export async function POST(request: NextRequest) {
         })),
         total_amount: result.total_amount,
         total_count: result.total_count,
-      });
+      }, supabase);
     } catch (recordError) {
-      console.error('Failed to record export:', recordError);
+      console.error('Failed to record export - Full error:', JSON.stringify(recordError, null, 2));
       // Continue even if recording fails
+    }
+
+    // Update payment statuses to 'transferred' if requested
+    if (masavOptions.mark_as_transferred !== false) {
+      try {
+        await supabase
+          .from('payments')
+          .update({
+            status: 'transferred',
+            transferred_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .in('id', transfer_ids);
+      } catch (updateError) {
+        console.error('Failed to update payment statuses:', updateError);
+        // Continue even if update fails
+      }
     }
 
     // Convert blob to buffer for response

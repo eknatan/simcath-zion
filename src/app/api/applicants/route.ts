@@ -138,6 +138,57 @@ export async function POST(request: NextRequest) {
     // Create Supabase client
     const supabase = await createClient();
 
+    // For cleaning cases - create case directly without approval
+    if (case_type === 'cleaning') {
+      // Create case directly
+      const { data: caseData, error: caseError } = await supabase
+        .from('cases')
+        .insert({
+          case_type: 'cleaning',
+          status: 'active',
+          family_name: form_data.personal_info?.family_name,
+          child_name: form_data.personal_info?.child_name,
+          parent1_name: form_data.personal_info?.parent1_name,
+          parent1_id: form_data.personal_info?.parent1_id,
+          parent2_name: form_data.personal_info?.parent2_name,
+          parent2_id: form_data.personal_info?.parent2_id,
+          address: form_data.contact_info?.address,
+          city: form_data.contact_info?.city,
+          contact_phone: form_data.contact_info?.phone,
+          contact_phone2: form_data.contact_info?.phone2,
+          contact_phone3: form_data.contact_info?.phone3,
+          contact_email: form_data.contact_info?.email,
+          start_date: new Date().toISOString().split('T')[0], // Today's date
+          raw_form_json: form_data,
+        })
+        .select('case_number')
+        .single();
+
+      if (caseError || !caseData) {
+        console.error('Error creating case:', caseError);
+        return NextResponse.json(
+          { error: 'Failed to create case', details: caseError?.message },
+          { status: 500 }
+        );
+      }
+
+      // Send notification email
+      const locale = (form_data.locale || 'he') as 'he' | 'en';
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: 'Case created successfully',
+          data: {
+            case_number: caseData.case_number,
+            auto_approved: true,
+          },
+        },
+        { status: 201 }
+      );
+    }
+
+    // For wedding cases - keep existing flow
     // Insert into applicants table
     const { data, error } = await supabase
       .from('applicants')

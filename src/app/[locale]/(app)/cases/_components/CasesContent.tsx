@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from 'next-intl';
 import { CasesList } from './CasesList';
+import { CleaningCasesDashboard } from '@/components/features/sick-children/CleaningCasesDashboard';
 import { Case } from '@/types/case.types';
 
 interface CasesContentProps {
@@ -50,7 +51,7 @@ export function CasesContent({ cases }: CasesContentProps) {
           </TabsContent>
 
           <TabsContent value="cleaning">
-            <CasesList cases={cases.filter((c) => c.case_type === 'cleaning')} />
+            <CleaningCasesDashboard cases={cases.filter((c) => c.case_type === 'cleaning')} />
           </TabsContent>
         </Tabs>
       </CardContent>

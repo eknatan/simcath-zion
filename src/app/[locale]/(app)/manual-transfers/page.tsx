@@ -1,25 +1,32 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Upload, FileDown, Trash2 } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Upload, FileDown, Trash2, Plus, Clock, CheckCircle2, HandCoins } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { ExcelImportDialog } from '@/components/features/manual-transfers/ExcelImportDialog';
 import { ManualTransfersTable } from '@/components/features/manual-transfers/ManualTransfersTable';
+import { ManualTransferFilters, ManualTransferFiltersType } from '@/components/features/manual-transfers/ManualTransferFilters';
+import { SimpleManualTransferDialog } from '@/components/features/manual-transfers/SimpleManualTransferDialog';
 import { manualTransfersService } from '@/lib/services/manual-transfers.service';
 import type { ManualTransfer } from '@/types/manual-transfers.types';
 import { toast } from 'sonner';
 
+type ManualTransferTab = 'active' | 'history';
+
 export default function ManualTransfersPage() {
+  const [activeTab, setActiveTab] = useState<ManualTransferTab>('active');
   const [transfers, setTransfers] = useState<ManualTransfer[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [manualTransferDialogOpen, setManualTransferDialogOpen] = useState(false);
+  const [filters, setFilters] = useState<ManualTransferFiltersType>({});
 
   useEffect(() => {
     loadTransfers();
-  }, []);
+  }, [activeTab]);
 
   const loadTransfers = async () => {
     setLoading(true);
@@ -33,7 +40,18 @@ export default function ManualTransfersPage() {
         return;
       }
 
-      setTransfers(data || []);
+      // Filter by tab
+      const filteredData = (data || []).filter((transfer) => {
+        if (activeTab === 'history') {
+          // Show in history if exported_at is set OR status is 'exported'
+          return transfer.exported_at !== null || transfer.status === 'exported';
+        } else {
+          // Show in active if not exported
+          return transfer.exported_at === null && transfer.status !== 'exported';
+        }
+      });
+
+      setTransfers(filteredData);
     } catch {
       toast.error('שגיאה', {
         description: 'שגיאה בטעינת ההעברות',
@@ -138,24 +156,74 @@ export default function ManualTransfersPage() {
     }
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as ManualTransferTab);
+    setSelectedIds([]);
+    setFilters({});
+  };
+
+  const handleResetFilters = () => {
+    setFilters({});
+  };
+
+  // Filter and search transfers
+  const filteredTransfers = useMemo(() => {
+    let result = transfers;
+
+    // Search by name or ID number
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase().trim();
+      result = result.filter((transfer) => {
+        const nameMatch = transfer.recipient_name?.toLowerCase().includes(searchLower);
+        const idMatch = transfer.id_number?.includes(searchLower);
+        return nameMatch || idMatch;
+      });
+    }
+
+    // Filter by date range (based on created_at or exported_at depending on tab)
+    if (filters.date_from) {
+      const fromDate = new Date(filters.date_from);
+      result = result.filter((transfer) => {
+        const dateToCompare = activeTab === 'history'
+          ? (transfer.exported_at || transfer.created_at)
+          : transfer.created_at;
+        return dateToCompare && new Date(dateToCompare) >= fromDate;
+      });
+    }
+
+    if (filters.date_to) {
+      const toDate = new Date(filters.date_to);
+      toDate.setHours(23, 59, 59, 999); // End of day
+      result = result.filter((transfer) => {
+        const dateToCompare = activeTab === 'history'
+          ? (transfer.exported_at || transfer.created_at)
+          : transfer.created_at;
+        return dateToCompare && new Date(dateToCompare) <= toDate;
+      });
+    }
+
+    return result;
+  }, [transfers, filters, activeTab]);
+
   const summary = {
-    total: transfers.length,
-    totalAmount: transfers.reduce((sum, t) => sum + t.amount, 0),
+    total: filteredTransfers.length,
+    totalAmount: filteredTransfers.reduce((sum, t) => sum + t.amount, 0),
     selected: selectedIds.length,
-    selectedAmount: transfers
+    selectedAmount: filteredTransfers
       .filter((t) => selectedIds.includes(t.id))
       .reduce((sum, t) => sum + t.amount, 0),
   };
 
-  return (
+  const renderTabContent = () => (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">העברות ידניות</h1>
-        <p className="text-muted-foreground mt-1">
-          ניהול העברות שאינן קשורות לתיקים
-        </p>
-      </div>
+      {/* Filters - Only show in history tab */}
+      {activeTab === 'history' && (
+        <ManualTransferFilters
+          filters={filters}
+          onChange={setFilters}
+          onReset={handleResetFilters}
+        />
+      )}
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
@@ -221,18 +289,31 @@ export default function ManualTransfersPage() {
             <div>
               <CardTitle>רשימת העברות</CardTitle>
               <CardDescription>
-                ייבא קובץ אקסל או נהל העברות קיימות
+                {activeTab === 'active'
+                  ? 'ייבא קובץ אקסל או הוסף העברה ידנית'
+                  : 'העברות שכבר יוצאו'}
               </CardDescription>
             </div>
             <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setImportDialogOpen(true)}
-              >
-                <Upload className="h-4 w-4 me-2" />
-                העלה אקסל
-              </Button>
-              {selectedIds.length > 0 && (
+              {activeTab === 'active' && (
+                <>
+                  <ActionButton
+                    variant="primary"
+                    onClick={() => setManualTransferDialogOpen(true)}
+                  >
+                    <Plus className="h-4 w-4 me-2" />
+                    הוסף העברה ידנית
+                  </ActionButton>
+                  <ActionButton
+                    variant="view"
+                    onClick={() => setImportDialogOpen(true)}
+                  >
+                    <Upload className="h-4 w-4 me-2" />
+                    העלה אקסל
+                  </ActionButton>
+                </>
+              )}
+              {selectedIds.length > 0 && activeTab === 'active' && (
                 <>
                   <ActionButton
                     variant="reject"
@@ -260,21 +341,85 @@ export default function ManualTransfersPage() {
             </div>
           ) : (
             <ManualTransfersTable
-              transfers={transfers}
+              transfers={filteredTransfers}
               selectedIds={selectedIds}
               onSelectionChange={setSelectedIds}
               onDelete={handleDelete}
               onRefresh={loadTransfers}
+              showExportedDate={activeTab === 'history'}
+              enablePagination={activeTab === 'history'}
+              pageSize={50}
             />
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <Card className="border border-slate-200 shadow-sm bg-gradient-to-br from-white to-slate-50/30">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-200 text-emerald-700">
+              <HandCoins className="h-5 w-5" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl text-slate-900">
+                העברות ידניות
+              </CardTitle>
+              <CardDescription className="text-slate-600">
+                ניהול העברות שאינן קשורות לתיקים
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 bg-gradient-to-br from-white to-slate-50/30 border border-slate-200 shadow-sm">
+          <TabsTrigger
+            value="active"
+            className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-50 data-[state=active]:to-amber-100/50 data-[state=active]:text-amber-700 data-[state=active]:shadow-sm"
+          >
+            <Clock className="w-4 h-4 me-2" />
+            פעיל
+          </TabsTrigger>
+          <TabsTrigger
+            value="history"
+            className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-50 data-[state=active]:to-emerald-100/50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm"
+          >
+            <CheckCircle2 className="w-4 h-4 me-2" />
+            היסטוריה
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="active" className="mt-6">
+          {renderTabContent()}
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-6">
+          {renderTabContent()}
+        </TabsContent>
+      </Tabs>
 
       {/* Import Dialog */}
       <ExcelImportDialog
         open={importDialogOpen}
         onOpenChange={setImportDialogOpen}
         onSuccess={loadTransfers}
+      />
+
+      {/* Manual Transfer Dialog */}
+      <SimpleManualTransferDialog
+        open={manualTransferDialogOpen}
+        onOpenChange={setManualTransferDialogOpen}
+        onSuccess={() => {
+          loadTransfers();
+          setManualTransferDialogOpen(false);
+        }}
       />
     </div>
   );

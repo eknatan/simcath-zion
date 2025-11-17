@@ -37,8 +37,8 @@ export type HebrewEncodingType = 'code-a' | 'code-b';
 export interface MasavOrganizationSettings {
   institution_id: string; // מספר מוסד (8 digits)
   institution_name: string; // שם המוסד
-  bank_code: string; // קוד בנק (2 digits)
-  branch_code: string; // קוד סניף (3 digits)
+  bank_code: string; // קוד בנק (1-3 digits)
+  branch_code: string; // קוד סניף (1-3 digits)
   account_number: string; // מספר חשבון
   sequence_number: string; // מספר רצף (3 digits)
   hebrew_encoding?: HebrewEncodingType; // קוד עברי א או ב (default: 'code-a')

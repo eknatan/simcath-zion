@@ -163,9 +163,11 @@
       "title": "Bank Account Details",
       "bank": "Bank",
       "bankNumber": "Bank Number",
+      "bankPlaceholder": "12",
+      "bankHelp": "Bank code (1-3 digits)",
       "selectBank": "Select Bank",
       "branch": "Branch",
-      "branchHelp": "3 digits",
+      "branchHelp": "Branch code (1-3 digits)",
       "branchPlaceholder": "123",
       "accountNumber": "Account Number",
       "accountNumberHelp": "2-20 digits",
@@ -180,8 +182,8 @@
       "errors": {
         "bankRequired": "Please select a bank",
         "branchRequired": "Branch is required",
-        "branchInvalid": "Branch must be 3 digits",
-        "branchFormat": "Branch must be exactly 3 digits",
+        "branchInvalid": "Invalid branch",
+        "branchFormat": "Branch must contain digits only",
         "accountRequired": "Account number is required",
         "accountInvalid": "Account number must be 2-20 digits",
         "accountFormat": "Account number must be between 2 and 20 digits",
@@ -1167,9 +1169,17 @@
     "title": "Bank Transfers",
     "subtitle": "Manage and transfer approved payments",
     "tabs": {
+      "pending": "Pending Transfer",
+      "transferred": "Transferred"
+    },
+    "typeFilter": {
       "all": "All",
       "wedding": "Orphan Weddings",
       "cleaning": "Sick Children"
+    },
+    "types": {
+      "wedding": "Wedding",
+      "cleaning": "Sick Child"
     },
     "status": {
       "pending": "Pending Transfer",
@@ -1179,6 +1189,7 @@
     },
     "columns": {
       "created_at": "Created Date",
+      "transferred_at": "Transfer Date",
       "case_number": "Case #",
       "names": "Groom & Bride",
       "family_name": "Family Name",
@@ -1192,7 +1203,10 @@
       "branch": "Branch",
       "account": "Account",
       "city": "City",
-      "status": "Status"
+      "status": "Status",
+      "type": "Type",
+      "details": "Details",
+      "actions": "Actions"
     },
     "actions": {
       "selectAll": "Select All",
@@ -1201,7 +1215,8 @@
       "exportMasav": "Export MASAV",
       "sendEmail": "Send Email",
       "refresh": "Refresh",
-      "clearFilters": "Clear Filters"
+      "clearFilters": "Clear Filters",
+      "viewCase": "View Case"
     },
     "filters": {
       "title": "Filters",
@@ -1299,6 +1314,153 @@
       "statusUpdated": "Status updated successfully",
       "transfersMarked": "{count} transfers marked as transferred",
       "pdfExported": "PDF exported successfully"
+    },
+    "manualTransfer": {
+      "title": "Add Manual Transfer",
+      "description": "Enter manual transfer details",
+      "addButton": "Add Manual Transfer",
+      "submit": "Create Transfer",
+      "submitting": "Creating...",
+      "success": "Transfer created successfully",
+      "sections": {
+        "bankDetails": "Bank Details"
+      },
+      "fields": {
+        "caseNumber": "Case Number",
+        "paymentType": "Transfer Type",
+        "amountIls": "Amount (ILS)",
+        "amountUsd": "Amount (USD)",
+        "exchangeRate": "Exchange Rate",
+        "paymentMonth": "Payment Month",
+        "bankNumber": "Bank Number",
+        "branch": "Branch",
+        "accountNumber": "Account Number",
+        "accountHolderName": "Account Holder Name",
+        "notes": "Notes"
+      },
+      "placeholders": {
+        "caseNumber": "Enter existing case number",
+        "amountIls": "0.00",
+        "accountHolderName": "Full name",
+        "notes": "Additional notes (optional)"
+      },
+      "paymentTypes": {
+        "wedding": "Wedding",
+        "cleaning": "Sick Child"
+      },
+      "errors": {
+        "caseNotFound": "Case not found in system",
+        "failed": "Error creating transfer"
+      }
+    }
+  },
+  "sickChildren": {
+    "title": "Sick Children",
+    "description": "Monthly support management for families with sick children",
+    "dashboard": {
+      "title": "Active Families",
+      "description": "Families receiving monthly support",
+      "familyName": "Family Name",
+      "childName": "Child Name",
+      "startDate": "Start Date",
+      "currentMonthPayment": "Current Month Payment",
+      "paymentStatus": "Payment Status",
+      "missingPayment": "Missing Payment",
+      "noPayment": "No Payment",
+      "searchPlaceholder": "Search by family name, child name or city...",
+      "quickEntry": "Quick Entry",
+      "inactiveFamilies": "Inactive Families"
+    },
+    "caseDetails": {
+      "familyInfo": "Family Information",
+      "contactInfo": "Contact Information",
+      "bankDetails": "Bank Details",
+      "caseSummary": "Case Summary",
+      "emailTracking": "Email Tracking",
+      "totalTransferred": "Total Transferred",
+      "activeMonths": "Active Months",
+      "lastEmailSent": "Last Email Sent"
+    },
+    "payments": {
+      "title": "Monthly Payments",
+      "addPayment": "Add Monthly Payment",
+      "month": "Month",
+      "year": "Year",
+      "amount": "Amount (₪)",
+      "cap": "Cap",
+      "notes": "Notes",
+      "saveAndTransfer": "Save and Transfer",
+      "history": "Payment History",
+      "filterByYear": "Filter by Year",
+      "exportExcel": "Export to Excel",
+      "totalYear": "Total This Year",
+      "warningOverCap": "Amount exceeds cap ({cap} ₪). Continue?",
+      "warningDuplicate": "Payment already exists for this month. Edit?",
+      "paymentSaved": "Payment saved and transferred"
+    },
+    "closeCase": {
+      "title": "Close Case",
+      "confirm": "Are you sure you want to close this case?",
+      "reason": "Select closure reason",
+      "healed": "Child healed (Baruch Hashem)",
+      "deceased": "Child passed away (sadly)",
+      "other": "Support ended (other reason)",
+      "notes": "Additional explanation (optional)",
+      "warningPendingPayments": "Note: There is a pending payment for {month} ({amount} ₪). The payment will remain in transfers.",
+      "confirmButton": "Confirm Closure",
+      "reopenCase": "Reopen Case",
+      "confirmReopen": "Are you sure you want to reopen this case?"
+    },
+    "bulkEntry": {
+      "title": "Quick Entry - Monthly Payments",
+      "selectMonth": "Select Month",
+      "totalSelected": "Total Selected",
+      "totalAmount": "Total Amount",
+      "alreadyReceived": "Already Received This Month",
+      "transferAll": "Transfer All",
+      "success": "{count} payments saved and transferred (total {amount} ₪)"
+    },
+    "email": {
+      "title": "Send Monthly Emails",
+      "sendToAll": "Send to All",
+      "selectFamilies": "Select Specific Families",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "alreadySent": "Email sent on {date}",
+      "warningAlreadySent": "{count} families already received email this month. Send again?",
+      "sendAgain": "Yes, send again",
+      "skipSent": "Skip families who received",
+      "template": "Email Template",
+      "language": "Language",
+      "hebrew": "Hebrew",
+      "english": "English",
+      "subject": "Subject",
+      "body": "Body",
+      "preview": "Preview",
+      "confirmSend": "Are you sure you want to send emails to {count} families?",
+      "sendNow": "Send Now",
+      "success": "Sent {count} emails",
+      "failed": "Error sending emails",
+      "variables": "Available variables: {family_name}, {child_name}, {month}"
+    },
+    "inactiveFamilies": {
+      "title": "Inactive Families",
+      "description": "Closed cases",
+      "endDate": "Closure Date",
+      "endReason": "Closure Reason",
+      "totalInactive": "Total Inactive Cases",
+      "reasons": {
+        "healed": "Healed",
+        "deceased": "Deceased",
+        "other": "Other"
+      }
+    },
+    "settings": {
+      "title": "Sick Children Settings",
+      "monthlyCap": "Monthly Payment Cap",
+      "monthlyCapDescription": "Maximum amount per month (₪)",
+      "emailTemplates": "Email Templates",
+      "warningCapChange": "Note: Changing the cap will only affect new payments"
     }
   }
 }

@@ -55,43 +55,41 @@ export function BulkActions({
 
       {/* Action Buttons */}
       <div className="flex items-center gap-2">
+        {/* Export Excel */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onExportExcel}
+          disabled={isExporting || selectedCount === 0}
+          className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <FileSpreadsheet className="w-4 h-4 me-2" />
+          {t('exportExcel')}
+        </Button>
+
+        {/* Export MASAV */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onExportMasav}
+          disabled={isExporting || selectedCount === 0}
+          className="border-sky-200 text-sky-700 hover:bg-sky-50 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <Building2 className="w-4 h-4 me-2" />
+          {t('exportMasav')}
+        </Button>
+
+        {/* Deselect All */}
         {selectedCount > 0 && (
-          <>
-            {/* Export Excel */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onExportExcel}
-              disabled={isExporting}
-              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 shadow-sm"
-            >
-              <FileSpreadsheet className="w-4 h-4 me-2" />
-              {t('exportExcel')}
-            </Button>
-
-            {/* Export MASAV */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onExportMasav}
-              disabled={isExporting}
-              className="border-sky-200 text-sky-700 hover:bg-sky-50 shadow-sm"
-            >
-              <Building2 className="w-4 h-4 me-2" />
-              {t('exportMasav')}
-            </Button>
-
-            {/* Deselect All */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onDeselectAll}
-              className="border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm"
-            >
-              <X className="w-4 h-4 me-2" />
-              {t('deselectAll')}
-            </Button>
-          </>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onDeselectAll}
+            className="border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm"
+          >
+            <X className="w-4 h-4 me-2" />
+            {t('deselectAll')}
+          </Button>
         )}
 
         {/* Refresh */}

@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { DollarSign } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { BankSelector, BranchSelector } from '@/components/features/banks/BankBranchSelector';
 import type { BankDetailsFormData } from '@/components/shared/BankDetailsForm';
 
 interface BankDetailsSectionProps {
@@ -16,10 +15,6 @@ interface BankDetailsSectionProps {
   isBankDetailsLocked: boolean;
   isLoadingBankDetails: boolean;
   isSavingBankDetails: boolean;
-  selectedBankCode: string;
-  selectedBranchCode: string;
-  onBankSelect: (bankCode: string) => void;
-  onBranchSelect: (branchCode: string) => void;
   onLocalBankDetailsChange: (details: BankDetailsFormData) => void;
   onSave: () => void;
   onUnlock: () => void;
@@ -31,10 +26,6 @@ export function BankDetailsSection({
   isBankDetailsLocked,
   isLoadingBankDetails,
   isSavingBankDetails,
-  selectedBankCode,
-  selectedBranchCode,
-  onBankSelect,
-  onBranchSelect,
   onLocalBankDetailsChange,
   onSave,
   onUnlock
@@ -61,33 +52,48 @@ export function BankDetailsSection({
           <>
             {/* Grid Layout for Bank Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Bank Selector */}
+              {/* Bank Number */}
               <div className="space-y-2">
                 <Label htmlFor="bank_number" className="text-slate-700">
                   {t('bankDetails.bank')}
                 </Label>
-                <BankSelector
-                  value={selectedBankCode}
-                  onValueChange={onBankSelect}
-                  disabled={isBankDetailsLocked}
+                <Input
+                  id="bank_number"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={3}
+                  value={localBankDetails.bank_number}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    onLocalBankDetailsChange({ ...localBankDetails, bank_number: val });
+                  }}
+                  placeholder={t('bankDetails.bankPlaceholder')}
                   className="border-slate-300"
+                  readOnly={isBankDetailsLocked}
                 />
                 {bankDetailsErrors.bank_number && (
                   <p className="text-sm text-rose-600">{bankDetailsErrors.bank_number}</p>
                 )}
               </div>
 
-              {/* Branch Selector */}
+              {/* Branch Number */}
               <div className="space-y-2">
                 <Label htmlFor="branch" className="text-slate-700">
                   {t('bankDetails.branch')}
                 </Label>
-                <BranchSelector
-                  bankCode={selectedBankCode}
-                  value={selectedBranchCode}
-                  onValueChange={onBranchSelect}
-                  disabled={isBankDetailsLocked}
+                <Input
+                  id="branch"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={3}
+                  value={localBankDetails.branch}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    onLocalBankDetailsChange({ ...localBankDetails, branch: val });
+                  }}
+                  placeholder={t('bankDetails.branchPlaceholder')}
                   className="border-slate-300"
+                  readOnly={isBankDetailsLocked}
                 />
                 {bankDetailsErrors.branch && (
                   <p className="text-sm text-rose-600">{bankDetailsErrors.branch}</p>

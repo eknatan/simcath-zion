@@ -155,7 +155,7 @@ export function PaymentCalculationSection({
               type="number"
               value={donationUsd}
               onChange={(e) => onDonationUsdChange(e.target.value)}
-              placeholder={t('costAndDonation.donationUsdPlaceholder')}
+              placeholder={""}
               className="border-slate-300"
             />
           </div>
