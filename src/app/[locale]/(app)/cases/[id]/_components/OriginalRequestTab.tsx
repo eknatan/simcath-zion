@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Heart, Users, Calendar, Edit3, Check, X, Loader2, FileText } from 'lucide-react';
+import { Heart, Users, Calendar, Edit3, Check, X, Loader2, FileText, Building2, DollarSign, Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { useCase } from '@/components/features/cases/hooks/useCase';
@@ -20,6 +20,8 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ActionButton } from '@/components/shared/ActionButton';
+import { formatCurrency } from '@/lib/utils/format';
+import { formatMonthYear } from '@/lib/utils/date';
 
 interface OriginalRequestTabProps {
   caseData: CaseWithRelations;
@@ -620,6 +622,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
 
       {/* Cleaning Case Section */}
       {!isWedding && (
+        <>
         <Card className="shadow-md border border-slate-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -758,6 +761,86 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
             />
           </CardContent>
         </Card>
+
+          {/* Bank Details Section */}
+          <Card className="shadow-md border border-slate-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-emerald-600" />
+                {t('bankDetails.title')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1">
+                <Label className="text-xs text-slate-600">{t('bankDetails.bankNumber')}</Label>
+                <div className="text-sm text-slate-900">
+                  {caseData.bank_details?.bank_number || <span className="text-slate-400">{t('notSpecified')}</span>}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-slate-600">{t('bankDetails.branch')}</Label>
+                <div className="text-sm text-slate-900">
+                  {caseData.bank_details?.branch || <span className="text-slate-400">{t('notSpecified')}</span>}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-slate-600">{t('bankDetails.accountNumber')}</Label>
+                <div className="text-sm text-slate-900">
+                  {caseData.bank_details?.account_number || <span className="text-slate-400">{t('notSpecified')}</span>}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-slate-600">{t('bankDetails.accountHolderName')}</Label>
+                <div className="text-sm text-slate-900">
+                  {caseData.bank_details?.account_holder_name || <span className="text-slate-400">{t('notSpecified')}</span>}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Case Summary Section */}
+          <Card className="shadow-md border border-slate-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="h-5 w-5 text-sky-600" />
+                {t('caseSummary.title')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-1">
+                  <Label className="text-xs text-slate-600">{t('caseSummary.totalTransferred')}</Label>
+                  <div className="text-lg font-bold text-emerald-700">
+                    {formatCurrency(
+                      caseData.payments
+                        ?.filter(p => p.status === 'transferred')
+                        .reduce((sum, p) => sum + (p.amount_ils || 0), 0) || 0
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-slate-600">{t('caseSummary.activeMonths')}</Label>
+                  <div className="text-lg font-bold text-slate-900">
+                    {caseData.payments?.filter(p => p.status === 'transferred').length || 0}
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-slate-600">{t('caseSummary.lastPayment')}</Label>
+                  <div className="text-sm text-slate-900">
+                    {(() => {
+                      const lastPayment = caseData.payments
+                        ?.filter(p => p.status === 'transferred' && p.payment_month)
+                        .sort((a, b) => new Date(b.payment_month!).getTime() - new Date(a.payment_month!).getTime())[0];
+                      return lastPayment?.payment_month
+                        ? formatMonthYear(lastPayment.payment_month)
+                        : <span className="text-slate-400">{t('notSpecified')}</span>;
+                    })()}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </>
       )}
     </div>
   );

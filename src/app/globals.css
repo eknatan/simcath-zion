@@ -6,8 +6,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-heebo);
+  --font-display: var(--font-space-grotesk);
+  --font-mono: var(--font-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -25,6 +26,10 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -96,6 +101,12 @@
   --sidebar-accent-foreground: oklch(0.28 0.01 230);
   --sidebar-border: oklch(0.88 0.01 230);
   --sidebar-ring: oklch(0.55 0.14 230);
+
+  /* Success & Warning colors */
+  --success: oklch(0.62 0.17 145);
+  --success-foreground: oklch(0.98 0 0);
+  --warning: oklch(0.75 0.15 85);
+  --warning-foreground: oklch(0.20 0.01 230);
 }
 
 .dark {
@@ -148,6 +159,12 @@
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.30 0.01 230);
   --sidebar-ring: oklch(0.65 0.14 230);
+
+  /* Success & Warning colors - Dark mode */
+  --success: oklch(0.65 0.17 145);
+  --success-foreground: oklch(0.98 0 0);
+  --warning: oklch(0.78 0.15 85);
+  --warning-foreground: oklch(0.20 0.01 230);
 }
 
 @layer base {
@@ -155,7 +172,37 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Typography Scale - Using extreme weights for impact */
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-black tracking-tight;
+  }
+  h2 {
+    @apply text-3xl md:text-4xl font-extrabold tracking-tight;
+  }
+  h3 {
+    @apply text-2xl md:text-3xl font-bold;
+  }
+  h4 {
+    @apply text-xl md:text-2xl font-bold;
+  }
+  h5 {
+    @apply text-lg md:text-xl font-semibold;
+  }
+  h6 {
+    @apply text-base md:text-lg font-semibold;
+  }
+
+  /* Light weight for contrast with heavy headings */
+  .text-light {
+    @apply font-extralight;
+  }
+
+  /* Display text - uses Space Grotesk for English headings */
+  .font-display {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
   }
 }
 
@@ -198,27 +245,72 @@
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-/* RTL Support for Tables */
+/* RTL Support - Using logical properties */
+[dir="rtl"] {
+  text-align: right;
+}
+
 [dir="rtl"] table {
   direction: rtl;
 }
 
 [dir="rtl"] th,
 [dir="rtl"] td {
+  text-align: start;
+}
+
+/* RTL fix for inputs and textareas */
+[dir="rtl"] input,
+[dir="rtl"] textarea {
   text-align: right;
 }
 
-/* RTL Support for Flex/Grid containers */
+[dir="rtl"] input::placeholder,
+[dir="rtl"] textarea::placeholder {
+  text-align: right;
+}
+
+/* RTL fix - set direction on flex containers to make flex-start/end work correctly */
 [dir="rtl"] .flex,
+[dir="rtl"] .inline-flex,
 [dir="rtl"] [class*="flex"] {
   direction: rtl;
 }
 
-/* Fix specific UI components that need special handling in RTL */
-[dir="rtl"] .flex-row-reverse {
-  flex-direction: row;
+/* Logical text alignment */
+[dir="rtl"] .text-left {
+  text-align: start;
 }
 
-[dir="rtl"] .flex-row {
-  flex-direction: row-reverse;
+[dir="rtl"] .text-right {
+  text-align: end;
 }
+
+/* Utility classes for logical properties */
+.ps-0 { padding-inline-start: 0; }
+.pe-0 { padding-inline-end: 0; }
+.ps-2 { padding-inline-start: 0.5rem; }
+.pe-2 { padding-inline-end: 0.5rem; }
+.ps-4 { padding-inline-start: 1rem; }
+.pe-4 { padding-inline-end: 1rem; }
+.ps-6 { padding-inline-start: 1.5rem; }
+.pe-6 { padding-inline-end: 1.5rem; }
+
+.ms-0 { margin-inline-start: 0; }
+.me-0 { margin-inline-end: 0; }
+.ms-2 { margin-inline-start: 0.5rem; }
+.me-2 { margin-inline-end: 0.5rem; }
+.ms-4 { margin-inline-start: 1rem; }
+.me-4 { margin-inline-end: 1rem; }
+.ms-auto { margin-inline-start: auto; }
+.me-auto { margin-inline-end: auto; }
+
+/* Border logical properties */
+.border-s { border-inline-start-width: 1px; }
+.border-e { border-inline-end-width: 1px; }
+.rounded-s { border-start-start-radius: var(--radius); border-end-start-radius: var(--radius); }
+.rounded-e { border-start-end-radius: var(--radius); border-end-end-radius: var(--radius); }
+
+/* Text alignment */
+.text-start { text-align: start; }
+.text-end { text-align: end; }

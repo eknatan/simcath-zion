@@ -41,6 +41,27 @@ async function sendApplicantEmails(data: {
     // The /api/email/send will automatically use secretary emails from DB
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://simcath-zion.vercel.app';
 
+    // Get applicant details based on case type
+    // Wedding uses nested structure (groom_info), cleaning uses flat structure
+    const getApplicantDetails = () => {
+      if (caseType === 'wedding') {
+        return {
+          name: `${formData.groom_info?.first_name || ''} ${formData.groom_info?.last_name || ''}`.trim() || 'לא צוין',
+          email: formData.groom_info?.email,
+          phone: formData.groom_info?.phone,
+        };
+      } else {
+        // Cleaning case - flat structure
+        return {
+          name: `${formData.family_name || ''} - ${formData.child_name || ''}`.trim() || 'לא צוין',
+          email: formData.email,
+          phone: formData.phone1,
+        };
+      }
+    };
+
+    const applicantDetails = getApplicantDetails();
+
     const secretaryResponse = await fetch(`${baseUrl}/api/email/send`, {
       method: 'POST',
       headers: {
@@ -53,15 +74,9 @@ async function sendApplicantEmails(data: {
         data: {
           caseNumber: requestNumber, // Use request_number from database
           caseType: caseType, // Send original value: 'wedding' or 'cleaning'
-          applicantName: caseType === 'wedding'
-            ? `${formData.groom_info?.first_name || ''} ${formData.groom_info?.last_name || ''}`.trim() || 'לא צוין'
-            : formData.personal_info?.full_name || 'לא צוין',
-          applicantEmail: caseType === 'wedding'
-            ? formData.groom_info?.email
-            : formData.personal_info?.email,
-          applicantPhone: caseType === 'wedding'
-            ? formData.groom_info?.phone
-            : formData.personal_info?.phone,
+          applicantName: applicantDetails.name,
+          applicantEmail: applicantDetails.email,
+          applicantPhone: applicantDetails.phone,
           caseUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://simcath-zion.vercel.app'}/applicants/pending`,
           fullFormData: formData, // Send entire form data for detailed email
         },
@@ -72,14 +87,11 @@ async function sendApplicantEmails(data: {
     secretaryEmailSent = secretaryResponse.ok;
 
     // 2. Send confirmation email to applicant (applicant-notification template)
-    // Get applicant email based on case type
-    const applicantEmail = caseType === 'wedding'
-      ? formData.groom_info?.email
-      : formData.personal_info?.email;
-
+    // Use the already computed applicant details
+    const applicantEmail = applicantDetails.email;
     const applicantName = caseType === 'wedding'
       ? `${formData.groom_info?.first_name || ''} ${formData.groom_info?.last_name || ''}`.trim() || 'שלום'
-      : formData.personal_info?.full_name || 'שלום';
+      : formData.family_name || 'שלום';
 
     if (applicantEmail) {
       const applicantResponse = await fetch(`${baseUrl}/api/email/send`, {
@@ -141,27 +153,28 @@ export async function POST(request: NextRequest) {
     // For cleaning cases - create case directly without approval
     if (case_type === 'cleaning') {
       // Create case directly
+      // Note: form_data has flat structure from sick children form
       const { data: caseData, error: caseError } = await supabase
         .from('cases')
         .insert({
           case_type: 'cleaning',
           status: 'active',
-          family_name: form_data.personal_info?.family_name,
-          child_name: form_data.personal_info?.child_name,
-          parent1_name: form_data.personal_info?.parent1_name,
-          parent1_id: form_data.personal_info?.parent1_id,
-          parent2_name: form_data.personal_info?.parent2_name,
-          parent2_id: form_data.personal_info?.parent2_id,
-          address: form_data.contact_info?.address,
-          city: form_data.contact_info?.city,
-          contact_phone: form_data.contact_info?.phone,
-          contact_phone2: form_data.contact_info?.phone2,
-          contact_phone3: form_data.contact_info?.phone3,
-          contact_email: form_data.contact_info?.email,
+          family_name: form_data.family_name,
+          child_name: form_data.child_name,
+          parent1_name: form_data.parent1_name,
+          parent1_id: form_data.parent1_id,
+          parent2_name: form_data.parent2_name || null,
+          parent2_id: form_data.parent2_id || null,
+          address: form_data.address,
+          city: form_data.city,
+          contact_phone: form_data.phone1,
+          contact_phone2: form_data.phone2 || null,
+          contact_phone3: form_data.phone3 || null,
+          contact_email: form_data.email,
           start_date: new Date().toISOString().split('T')[0], // Today's date
           raw_form_json: form_data,
         })
-        .select('case_number')
+        .select('id, case_number')
         .single();
 
       if (caseError || !caseData) {
@@ -172,16 +185,44 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Send notification email
+      // Save bank details to bank_details table
+      const { error: bankError } = await supabase
+        .from('bank_details')
+        .insert({
+          case_id: caseData.id,
+          bank_number: form_data.bank_number,
+          branch: form_data.branch,
+          account_number: form_data.account_number,
+          account_holder_name: form_data.account_holder_name,
+        });
+
+      if (bankError) {
+        console.error('Error saving bank details:', bankError);
+        // Don't fail the whole request, case is already created
+      }
+
+      // Send notification emails
       const locale = (form_data.locale || 'he') as 'he' | 'en';
+      const emailResults = await sendApplicantEmails({
+        applicantId: caseData.id,
+        requestNumber: caseData.case_number,
+        caseType: 'cleaning',
+        formData: form_data,
+        locale,
+      });
 
       return NextResponse.json(
         {
           success: true,
           message: 'Case created successfully',
           data: {
+            id: caseData.id,
             case_number: caseData.case_number,
             auto_approved: true,
+          },
+          emails: {
+            secretaryNotified: emailResults.secretaryEmailSent,
+            applicantNotified: emailResults.applicantEmailSent,
           },
         },
         { status: 201 }

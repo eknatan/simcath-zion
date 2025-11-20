@@ -8,6 +8,7 @@
     "loading": "טוען...",
     "search": "חיפוש",
     "filter": "סינון",
+    "status": "סטטוס",
     "exportLabel": "ייצוא",
     "import": "ייבוא",
     "submit": "שלח",
@@ -957,6 +958,19 @@
         "email": "מייל",
         "startDate": "תאריך התחלה"
       },
+      "bankDetails": {
+        "title": "פרטי חשבון בנק",
+        "bankNumber": "מספר בנק",
+        "branch": "סניף",
+        "accountNumber": "מספר חשבון",
+        "accountHolderName": "שם בעל החשבון"
+      },
+      "caseSummary": {
+        "title": "תקציר תיק",
+        "totalTransferred": "סה\"כ הועבר",
+        "activeMonths": "חודשים פעילים",
+        "lastPayment": "תשלום אחרון"
+      },
       "notSpecified": "לא צוין"
     },
     "files": {
@@ -1414,7 +1428,9 @@
       "noPayment": "אין תשלום",
       "searchPlaceholder": "חיפוש לפי שם משפחה, שם ילד או עיר...",
       "quickEntry": "הזנה מהירה",
-      "inactiveFamilies": "משפחות לא פעילות"
+      "bulkEntry": "הזנה מהירה",
+      "inactiveFamilies": "משפחות לא פעילות",
+      "sendEmails": "שלח מיילים חודשיים"
     },
     "caseDetails": {
       "familyInfo": "פרטי משפחה",
@@ -1434,6 +1450,7 @@
       "amount": "סכום (₪)",
       "cap": "תקרה",
       "notes": "הערות",
+      "save": "שמור תשלום",
       "saveAndTransfer": "שמור והעבר לתשלום",
       "history": "היסטוריית תשלומים",
       "filterByYear": "סינון לפי שנה",
@@ -1441,7 +1458,26 @@
       "totalYear": "סה\"כ שנה זו",
       "warningOverCap": "הסכום עולה על התקרה ({cap} ₪). האם להמשיך?",
       "warningDuplicate": "כבר קיים תשלום לחודש זה. האם לערוך?",
-      "paymentSaved": "תשלום נשמר והועבר לטבלת העברות"
+      "paymentSaved": "תשלום נשמר בהצלחה",
+      "paymentUpdated": "תשלום עודכן בהצלחה",
+      "paymentDeleted": "תשלום נמחק בהצלחה",
+      "editPayment": "עריכת תשלום",
+      "updatePaymentDetails": "עדכן את פרטי התשלום",
+      "deletePayment": "מחיקת תשלום",
+      "confirmDelete": "האם אתה בטוח שברצונך למחוק את התשלום? פעולה זו לא ניתנת לביטול.",
+      "noPayments": "אין תשלומים להצגה",
+      "saveChanges": "שמור שינויים",
+      "entryDate": "תאריך הזנה",
+      "actions": "פעולות",
+      "selectMonth": "בחר חודש",
+      "allYears": "הכל",
+      "errorSaving": "שגיאה בשמירת תשלום",
+      "errorUpdating": "שגיאה בעדכון תשלום",
+      "errorDeleting": "שגיאה במחיקת תשלום",
+      "errorLoading": "שגיאה בטעינת תשלומים",
+      "fillAllFields": "יש למלא את כל השדות",
+      "invalidAmount": "יש להזין סכום תקין",
+      "duplicateMonth": "כבר קיים תשלום לחודש {month} {year}"
     },
     "closeCase": {
       "title": "סגירת תיק",

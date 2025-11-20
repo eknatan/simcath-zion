@@ -4,7 +4,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { RootProviders } from "@/lib/providers";
 import { Toaster } from "@/components/ui/sonner";
-import { geistSans, geistMono } from "@/app/fonts";
+import { heebo, spaceGrotesk, jetbrainsMono } from "@/app/fonts";
 
 const locales = ["he", "en"];
 
@@ -32,7 +32,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${heebo.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <NextIntlClientProvider messages={messages}>
           <RootProviders>

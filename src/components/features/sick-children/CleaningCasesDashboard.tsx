@@ -7,11 +7,12 @@ import { DataTable } from '@/components/shared/DataTable';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Search, Users, Calendar, DollarSign } from 'lucide-react';
+import { Search, Users, Calendar, DollarSign, Plus, Archive, Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Case, Payment } from '@/types/case.types';
 import { formatCurrency } from '@/lib/utils/format';
 import { formatMonthYear, isAfter15thOfMonth } from '@/lib/utils/date';
+import { Button } from '@/components/ui/button';
 
 interface CleaningCaseWithPayment extends Case {
   current_month_payment?: Payment | null;
@@ -184,6 +185,40 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
 
   return (
     <div className="space-y-4">
+      {/* Action Buttons */}
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          variant="default"
+          className="bg-emerald-600 hover:bg-emerald-700"
+          onClick={() => {
+            // TODO: Open bulk payment modal
+            console.log('Open bulk payment entry');
+          }}
+        >
+          <Plus className="h-4 w-4 me-2" />
+          {tCleaning('dashboard.bulkEntry')}
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => router.push('/cases/inactive')}
+        >
+          <Archive className="h-4 w-4 me-2" />
+          {tCleaning('dashboard.inactiveFamilies')}
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            // TODO: Open send emails modal
+            console.log('Open send emails flow');
+          }}
+        >
+          <Mail className="h-4 w-4 me-2" />
+          {tCleaning('dashboard.sendEmails')}
+        </Button>
+      </div>
+
       {/* Search */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">

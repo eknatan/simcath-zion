@@ -36,6 +36,11 @@ const PaymentsTab = dynamic(() => import('./PaymentsTab').then(mod => ({ default
   ssr: false
 });
 
+const CleaningPaymentsTab = dynamic(() => import('@/components/features/sick-children/CleaningPaymentsTab').then(mod => ({ default: mod.CleaningPaymentsTab })), {
+  loading: () => <TabLoadingSkeleton />,
+  ssr: false
+});
+
 const EnglishTab = dynamic(() => import('./EnglishTab').then(mod => ({ default: mod.EnglishTab })), {
   loading: () => <TabLoadingSkeleton />,
   ssr: false
@@ -335,7 +340,11 @@ export function CaseTabs({ caseData }: CaseTabsProps) {
         {/* Payments Tab Content */}
         <TabsContent value="payments" className="m-0">
           <Suspense fallback={<TabLoadingSkeleton />}>
-            <PaymentsTab caseData={caseData} />
+            {isWedding ? (
+              <PaymentsTab caseData={caseData} />
+            ) : (
+              <CleaningPaymentsTab caseData={caseData} />
+            )}
           </Suspense>
         </TabsContent>
       </div>
