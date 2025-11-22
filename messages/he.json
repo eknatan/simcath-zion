@@ -1450,7 +1450,11 @@
       "quickEntry": "הזנה מהירה",
       "bulkEntry": "הזנה מהירה",
       "inactiveFamilies": "משפחות לא פעילות",
-      "sendEmails": "שלח מיילים חודשיים"
+      "sendEmails": "שלח מיילים חודשיים",
+      "endDate": "תאריך סגירה",
+      "endReason": "סיבת סגירה",
+      "filterByReason": "סינון לפי סיבה",
+      "allReasons": "כל הסיבות"
     },
     "caseDetails": {
       "familyInfo": "פרטי משפחה",

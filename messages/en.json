@@ -1389,7 +1389,13 @@
       "noPayment": "No Payment",
       "searchPlaceholder": "Search by family name, child name or city...",
       "quickEntry": "Quick Entry",
-      "inactiveFamilies": "Inactive Families"
+      "bulkEntry": "Bulk Entry",
+      "inactiveFamilies": "Inactive Families",
+      "sendEmails": "Send Monthly Emails",
+      "endDate": "End Date",
+      "endReason": "End Reason",
+      "filterByReason": "Filter by reason",
+      "allReasons": "All reasons"
     },
     "caseDetails": {
       "familyInfo": "Family Information",
