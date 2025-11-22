@@ -112,58 +112,58 @@ export const DesignTokensA = {
 // ==================== VERSION B: ELEGANT & SOFT ====================
 
 export const DesignTokensB = {
-  name: 'Elegant & Soft',
-  description: 'גרסה אלגנטית עם צבעים רכים ועומק עדין',
+  name: 'Elegant & Distinctive',
+  description: 'גרסה אלגנטית עם צבעים ייחודיים ועומק מקצועי',
 
   colors: {
-    // Primary - Soft Blue
+    // Primary - Deep Teal (distinctive, professional)
     primary: {
-      50: 'oklch(0.98 0.01 230)',
-      100: 'oklch(0.95 0.02 230)',
-      200: 'oklch(0.88 0.05 230)',
-      300: 'oklch(0.78 0.08 230)',
-      400: 'oklch(0.65 0.12 230)',
-      500: 'oklch(0.55 0.14 230)', // Main
-      600: 'oklch(0.50 0.15 230)',
-      700: 'oklch(0.43 0.13 230)',
-      800: 'oklch(0.35 0.10 230)',
-      900: 'oklch(0.28 0.08 230)',
+      50: 'oklch(0.97 0.02 195)',
+      100: 'oklch(0.93 0.04 195)',
+      200: 'oklch(0.85 0.07 195)',
+      300: 'oklch(0.75 0.09 195)',
+      400: 'oklch(0.62 0.11 195)',
+      500: 'oklch(0.52 0.12 195)', // Main
+      600: 'oklch(0.47 0.12 195)',
+      700: 'oklch(0.40 0.10 195)',
+      800: 'oklch(0.32 0.08 195)',
+      900: 'oklch(0.25 0.06 195)',
     },
 
-    // Success - Soft Emerald
+    // Success - Rich Emerald
     success: {
-      50: 'oklch(0.97 0.01 150)',
-      100: 'oklch(0.93 0.04 150)',
-      500: 'oklch(0.62 0.14 150)',
-      600: 'oklch(0.56 0.15 150)',
-      700: 'oklch(0.48 0.13 150)',
+      50: 'oklch(0.97 0.02 155)',
+      100: 'oklch(0.92 0.05 155)',
+      500: 'oklch(0.60 0.16 155)',
+      600: 'oklch(0.54 0.17 155)',
+      700: 'oklch(0.46 0.15 155)',
     },
 
-    // Warning - Soft Orange
+    // Warning - Warm Amber
     warning: {
-      50: 'oklch(0.98 0.01 75)',
-      100: 'oklch(0.94 0.04 75)',
-      500: 'oklch(0.72 0.12 75)',
-      600: 'oklch(0.65 0.13 75)',
-      700: 'oklch(0.58 0.12 75)',
+      50: 'oklch(0.98 0.02 70)',
+      100: 'oklch(0.94 0.05 70)',
+      500: 'oklch(0.72 0.16 70)',
+      600: 'oklch(0.65 0.17 70)',
+      700: 'oklch(0.58 0.15 70)',
     },
 
-    // Error - Soft Red
+    // Error - Rich Coral
     error: {
-      50: 'oklch(0.97 0.02 20)',
-      100: 'oklch(0.93 0.05 20)',
-      500: 'oklch(0.58 0.18 20)',
-      600: 'oklch(0.52 0.19 20)',
-      700: 'oklch(0.45 0.17 20)',
+      50: 'oklch(0.97 0.03 25)',
+      100: 'oklch(0.93 0.06 25)',
+      500: 'oklch(0.55 0.20 25)',
+      600: 'oklch(0.50 0.21 25)',
+      700: 'oklch(0.43 0.19 25)',
     },
 
-    // Info - Soft Indigo
+    // Info - Deep Violet
     info: {
-      50: 'oklch(0.97 0.01 255)',
-      100: 'oklch(0.93 0.03 255)',
-      500: 'oklch(0.58 0.14 255)',
-      600: 'oklch(0.52 0.15 255)',
-      700: 'oklch(0.45 0.13 255)',
+      50: 'oklch(0.97 0.02 280)',
+      100: 'oklch(0.93 0.04 280)',
+      500: 'oklch(0.55 0.15 280)',
+      600: 'oklch(0.50 0.16 280)',
+      700: 'oklch(0.43 0.14 280)',
     },
   },
 
@@ -177,7 +177,7 @@ export const DesignTokensB = {
     },
 
     button: {
-      primary: 'bg-sky-600 hover:bg-sky-700 shadow-sm',
+      primary: 'bg-teal-600 hover:bg-teal-700 shadow-sm',
       outline: 'border',
     },
 
