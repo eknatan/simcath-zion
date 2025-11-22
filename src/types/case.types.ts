@@ -402,9 +402,11 @@ export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const ALLOWED_FILE_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png'];
 
 /**
- * Maximum monthly payment for cleaning cases (in ILS)
+ * Default maximum monthly payment for cleaning cases (in ILS)
+ * Note: This is a fallback value. The actual cap is stored in system_settings
+ * and should be fetched using useMonthlyCapSetting hook or getMonthlyCapFromSettings()
  */
-export const MAX_MONTHLY_CLEANING_PAYMENT = 720;
+export const DEFAULT_MONTHLY_CLEANING_PAYMENT = 720;
 
 /**
  * Required files for wedding cases

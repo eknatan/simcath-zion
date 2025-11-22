@@ -237,8 +237,8 @@ export const monthlyPaymentSchema = z.object({
     .min(1, 'נדרש לבחור חודש'),
   amount_ils: z.coerce
     .number()
-    .min(1, 'סכום חייב להיות לפחות 1 ₪')
-    .max(720, 'סכום חודשי מקסימלי הוא 720 ₪'),
+    .min(1, 'סכום חייב להיות לפחות 1 ₪'),
+    // Note: Max validation is done dynamically based on system_settings (cleaning_monthly_cap)
   notes: z.string().optional(),
 });
 

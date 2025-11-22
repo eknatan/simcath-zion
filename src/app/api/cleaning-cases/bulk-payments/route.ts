@@ -68,10 +68,20 @@ export async function POST(request: NextRequest) {
       .from('payments')
       .select('case_id')
       .in('case_id', caseIds)
-      .eq('payment_type', 'cleaning_monthly')
+      .eq('payment_type', 'monthly_cleaning')
       .eq('payment_month', formattedMonth);
 
     const existingCaseIds = new Set(existingPayments?.map(p => p.case_id) || []);
+
+    // Get case statuses to filter out inactive cases
+    const { data: casesData } = await supabase
+      .from('cases')
+      .select('id, status')
+      .in('id', caseIds);
+
+    const inactiveCaseIds = new Set(
+      casesData?.filter(c => c.status !== 'active').map(c => c.id) || []
+    );
 
     // Prepare results
     const results = {
@@ -82,12 +92,19 @@ export async function POST(request: NextRequest) {
       totalAmount: 0,
     };
 
-    // Filter out payments for cases that already have a payment this month
+    // Filter out invalid payments
     const validPayments = payments.filter(p => {
+      // Skip inactive cases
+      if (inactiveCaseIds.has(p.case_id)) {
+        results.errors.push(`Case ${p.case_id} is inactive`);
+        return false;
+      }
+      // Skip duplicates
       if (existingCaseIds.has(p.case_id)) {
         results.skipped++;
         return false;
       }
+      // Validate amount
       if (!p.amount_ils || p.amount_ils <= 0) {
         results.errors.push(`Invalid amount for case ${p.case_id}`);
         return false;
@@ -103,13 +120,13 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Prepare payment records
+    // Prepare payment records with 'approved' status for transfer integration
     const paymentRecords = validPayments.map(p => ({
       case_id: p.case_id,
-      payment_type: 'cleaning_monthly',
+      payment_type: 'monthly_cleaning',
       payment_month: formattedMonth,
       amount_ils: p.amount_ils,
-      status: 'pending',
+      status: 'approved', // Phase 9: Set to 'approved' for immediate transfer integration
       notes: p.notes || null,
       created_at: new Date().toISOString(),
     }));
@@ -216,7 +233,7 @@ export async function GET(request: NextRequest) {
       .from('payments')
       .select('case_id, amount_ils, status')
       .in('case_id', caseIds)
-      .eq('payment_type', 'cleaning_monthly')
+      .eq('payment_type', 'monthly_cleaning')
       .eq('payment_month', formattedMonth);
 
     const paymentsMap = new Map();

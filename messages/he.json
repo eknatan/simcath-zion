@@ -1546,7 +1546,30 @@
       "sendNow": "שלח עכשיו",
       "success": "נשלחו {count} מיילים",
       "failed": "שגיאה בשליחת מיילים",
-      "variables": "משתנים זמינים: {family_name}, {child_name}, {month}"
+      "variables": "משתנים זמינים: {family_name}, {child_name}, {month}",
+      "steps": {
+        "selectRecipients": "בחירת נמענים",
+        "editTemplate": "עריכת תבנית",
+        "previewEmail": "תצוגה מקדימה",
+        "sendConfirm": "אישור ושליחה"
+      },
+      "noFamilies": "אין משפחות פעילות לשליחת מיילים",
+      "noEmail": "אין מייל",
+      "phone": "טלפון",
+      "selectedCount": "נבחרו {count} משפחות",
+      "totalToSend": "סה\"כ לשליחה: {count}",
+      "next": "הבא",
+      "back": "חזור",
+      "close": "סגור",
+      "sending": "שולח מיילים...",
+      "results": "תוצאות שליחה",
+      "sentCount": "נשלחו בהצלחה: {count}",
+      "failedCount": "נכשלו: {count}",
+      "errorDetails": "פרטי שגיאות",
+      "done": "סיום",
+      "previewNote": "זוהי תצוגה מקדימה של המייל שיישלח. המשתנים יוחלפו בפרטי כל משפחה.",
+      "defaultBody": "גוף ברירת מחדל",
+      "customBody": "גוף מותאם אישית"
     },
     "inactiveFamilies": {
       "title": "משפחות לא פעילות",

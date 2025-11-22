@@ -59,7 +59,7 @@ export async function hasPaymentForMonth(
       .from('payments')
       .select('id')
       .eq('case_id', caseId)
-      .eq('payment_type', 'cleaning_monthly')
+      .eq('payment_type', 'monthly_cleaning')
       .eq('payment_month', monthStr)
       .maybeSingle();
 
@@ -92,7 +92,7 @@ export async function getCurrentMonthPayments(
       .from('payments')
       .select('*')
       .in('case_id', caseIds)
-      .eq('payment_type', 'cleaning_monthly')
+      .eq('payment_type', 'monthly_cleaning')
       .eq('payment_month', monthStr);
 
     if (error) {

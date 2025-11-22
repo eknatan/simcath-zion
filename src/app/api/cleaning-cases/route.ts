@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
         .from('payments')
         .select('*')
         .in('case_id', caseIds)
-        .eq('payment_type', 'cleaning_monthly')
+        .eq('payment_type', 'monthly_cleaning')
         .eq('payment_month', monthStr);
 
       // Map payments to cases

@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, context: RouteParams) {
       .from('payments')
       .select('*')
       .eq('case_id', id)
-      .eq('payment_type', 'cleaning_monthly')
+      .eq('payment_type', 'monthly_cleaning')
       .order('payment_month', { ascending: false });
 
     // Filter by year if provided
@@ -103,6 +103,34 @@ export async function POST(request: NextRequest, context: RouteParams) {
 
     const { payment_month, amount_ils, notes } = body;
 
+    // Check if case exists and is active
+    const { data: caseData, error: caseError } = await supabase
+      .from('cases')
+      .select('id, status, case_type')
+      .eq('id', id)
+      .single();
+
+    if (caseError || !caseData) {
+      return NextResponse.json(
+        { error: 'Case not found' },
+        { status: 404 }
+      );
+    }
+
+    if (caseData.case_type !== 'cleaning') {
+      return NextResponse.json(
+        { error: 'This endpoint is only for cleaning cases' },
+        { status: 400 }
+      );
+    }
+
+    if (caseData.status !== 'active') {
+      return NextResponse.json(
+        { error: 'Cannot add payment to inactive case' },
+        { status: 400 }
+      );
+    }
+
     // Validation
     if (!payment_month) {
       return NextResponse.json(
@@ -127,7 +155,7 @@ export async function POST(request: NextRequest, context: RouteParams) {
       .from('payments')
       .select('id, amount_ils, status')
       .eq('case_id', id)
-      .eq('payment_type', 'cleaning_monthly')
+      .eq('payment_type', 'monthly_cleaning')
       .eq('payment_month', formattedMonth)
       .single();
 
@@ -149,15 +177,15 @@ export async function POST(request: NextRequest, context: RouteParams) {
     const monthlyCap = await getMonthlyCapFromSettings();
     const exceedsCap = amount_ils > monthlyCap;
 
-    // Create payment
+    // Create payment with 'approved' status so it appears in transfers module
     const { data: newPayment, error: createError } = await supabase
       .from('payments')
       .insert({
         case_id: id,
-        payment_type: 'cleaning_monthly',
+        payment_type: 'monthly_cleaning',
         payment_month: formattedMonth,
         amount_ils,
-        status: 'pending',
+        status: 'approved', // Phase 9: Set to 'approved' for immediate transfer integration
         notes: notes || null,
         created_at: new Date().toISOString(),
       })
@@ -237,9 +265,10 @@ export async function PUT(request: NextRequest, context: RouteParams) {
       );
     }
 
-    if (existingPayment.status !== 'pending') {
+    // Allow editing both pending and approved payments (not transferred)
+    if (existingPayment.status !== 'pending' && existingPayment.status !== 'approved') {
       return NextResponse.json(
-        { error: 'Cannot edit payment that is not pending', status: existingPayment.status },
+        { error: 'Cannot edit payment that has been transferred', status: existingPayment.status },
         { status: 400 }
       );
     }
@@ -266,7 +295,7 @@ export async function PUT(request: NextRequest, context: RouteParams) {
           .from('payments')
           .select('id')
           .eq('case_id', id)
-          .eq('payment_type', 'cleaning_monthly')
+          .eq('payment_type', 'monthly_cleaning')
           .eq('payment_month', updateData.payment_month)
           .neq('id', paymentId)
           .single();
@@ -373,9 +402,10 @@ export async function DELETE(request: NextRequest, context: RouteParams) {
       );
     }
 
-    if (payment.status !== 'pending') {
+    // Allow deleting both pending and approved payments (not transferred)
+    if (payment.status !== 'pending' && payment.status !== 'approved') {
       return NextResponse.json(
-        { error: 'Cannot delete payment that is not pending', status: payment.status },
+        { error: 'Cannot delete payment that has been transferred', status: payment.status },
         { status: 400 }
       );
     }

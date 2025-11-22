@@ -194,7 +194,7 @@ export function TransfersTable({
           header: t('columns.details'),
           cell: ({ row }) => {
             const isWedding = row.original.payment_type === 'wedding_transfer';
-            const isCleaning = row.original.payment_type === 'monthly_cleaning';
+            const isCleaning = row.original.payment_type === 'cleaning_monthly';
 
             return (
               <span className="text-sm text-slate-700">

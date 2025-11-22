@@ -173,6 +173,10 @@ export interface TransferValidationResult {
 /**
  * Amount limits for transfers
  */
+/**
+ * Transfer amount limits
+ * Note: CLEANING.MAX is a default fallback. The actual cap is in system_settings.
+ */
 export const TRANSFER_LIMITS = {
   WEDDING: {
     MIN: 1000,
@@ -180,7 +184,7 @@ export const TRANSFER_LIMITS = {
   },
   CLEANING: {
     MIN: 100,
-    MAX: 720,
+    MAX: 720, // Default fallback - actual value from system_settings
   },
 } as const;
 

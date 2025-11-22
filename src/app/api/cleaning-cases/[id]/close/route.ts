@@ -75,12 +75,12 @@ export async function POST(request: NextRequest, context: RouteParams) {
       );
     }
 
-    // Check for pending payments (warning only, not blocking)
+    // Check for pending/approved payments (warning only, not blocking)
     const { data: pendingPayments } = await supabase
       .from('payments')
-      .select('id, payment_month, amount_ils')
+      .select('id, payment_month, amount_ils, status')
       .eq('case_id', id)
-      .eq('status', 'pending');
+      .in('status', ['pending', 'approved']);
 
     // Update case status
     const { data: updatedCase, error: updateError } = await supabase

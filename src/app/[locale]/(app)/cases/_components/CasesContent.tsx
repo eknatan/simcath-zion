@@ -30,14 +30,14 @@ export function CasesContent({ cases }: CasesContentProps) {
 
       <CardContent className="pt-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-slate-100 p-1 mb-6">
-            <TabsTrigger value="all" className="data-[state=active]:bg-white">
+          <TabsList className="grid w-full grid-cols-3 bg-muted p-1 mb-6">
+            <TabsTrigger value="all" className="data-[state=active]:bg-card">
               {t('tabs.all')}
             </TabsTrigger>
-            <TabsTrigger value="wedding" className="data-[state=active]:bg-white">
+            <TabsTrigger value="wedding" className="data-[state=active]:bg-card">
               {t('tabs.wedding')}
             </TabsTrigger>
-            <TabsTrigger value="cleaning" className="data-[state=active]:bg-white">
+            <TabsTrigger value="cleaning" className="data-[state=active]:bg-card">
               {t('tabs.cleaning')}
             </TabsTrigger>
           </TabsList>

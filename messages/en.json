@@ -1467,7 +1467,30 @@
       "sendNow": "Send Now",
       "success": "Sent {count} emails",
       "failed": "Error sending emails",
-      "variables": "Available variables: {family_name}, {child_name}, {month}"
+      "variables": "Available variables: {family_name}, {child_name}, {month}",
+      "steps": {
+        "selectRecipients": "Select Recipients",
+        "editTemplate": "Edit Template",
+        "previewEmail": "Preview",
+        "sendConfirm": "Confirm & Send"
+      },
+      "noFamilies": "No active families to send emails",
+      "noEmail": "No email",
+      "phone": "Phone",
+      "selectedCount": "{count} families selected",
+      "totalToSend": "Total to send: {count}",
+      "next": "Next",
+      "back": "Back",
+      "close": "Close",
+      "sending": "Sending emails...",
+      "results": "Send Results",
+      "sentCount": "Sent successfully: {count}",
+      "failedCount": "Failed: {count}",
+      "errorDetails": "Error Details",
+      "done": "Done",
+      "previewNote": "This is a preview of the email that will be sent. Variables will be replaced with each family's details.",
+      "defaultBody": "Default body",
+      "customBody": "Custom body"
     },
     "inactiveFamilies": {
       "title": "Inactive Families",

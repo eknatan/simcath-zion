@@ -14,6 +14,7 @@ import { formatCurrency, formatDate } from '@/lib/utils/format';
 import { formatMonthYear, isAfter15thOfMonth } from '@/lib/utils/date';
 import { Button } from '@/components/ui/button';
 import { BulkPaymentEntry } from './BulkPaymentEntry';
+import { SendEmailsFlow } from './SendEmailsFlow';
 import {
   Select,
   SelectContent,
@@ -47,6 +48,7 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
   const [cases, setCases] = useState<CleaningCaseWithPayment[]>(initialCases);
   const [isLoading, setIsLoading] = useState(false);
   const [showBulkEntry, setShowBulkEntry] = useState(false);
+  const [showSendEmails, setShowSendEmails] = useState(false);
   const [showInactive, setShowInactive] = useState(false);
   const [endReasonFilter, setEndReasonFilter] = useState<string>('all');
 
@@ -315,10 +317,7 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
 
             <Button
               variant="outline"
-              onClick={() => {
-                // TODO: Open send emails modal
-                console.log('Open send emails flow');
-              }}
+              onClick={() => setShowSendEmails(true)}
             >
               <Mail className="h-4 w-4 me-2" />
               {tCleaning('dashboard.sendEmails')}
@@ -400,6 +399,15 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
             .then(res => res.json())
             .then(data => setCases(data))
             .finally(() => setIsLoading(false));
+        }}
+      />
+
+      {/* Send Emails Flow Modal */}
+      <SendEmailsFlow
+        open={showSendEmails}
+        onOpenChange={setShowSendEmails}
+        onSuccess={() => {
+          // Optional: refresh data after sending emails
         }}
       />
     </div>
