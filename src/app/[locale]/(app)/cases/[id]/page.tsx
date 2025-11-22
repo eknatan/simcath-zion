@@ -53,17 +53,20 @@ export default async function CasePage({
     .select(
       `
       *,
-      profiles:changed_by(name)
+      profiles!case_history_changed_by_profiles_fkey(name)
     `
     )
     .eq('case_id', id)
     .order('changed_at', { ascending: false })
     .limit(50);
 
-  // Combine data
+  // Combine data - map profiles.name to changed_by_name for history entries
   const caseWithRelations: CaseWithRelations = {
     ...caseData,
-    history: historyData || [],
+    history: (historyData || []).map((entry: any) => ({
+      ...entry,
+      changed_by_name: entry.profiles?.name || null,
+    })),
   };
 
   // ========================================

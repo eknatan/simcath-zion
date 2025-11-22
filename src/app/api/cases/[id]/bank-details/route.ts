@@ -179,8 +179,8 @@ export async function POST(
         changed_by: user.id,
         field_changed: 'bank_details',
         old_value: null,
-        new_value: `Updated bank details: ${bank_number}-${branch}-${account_number}`,
-        note: `Bank account holder: ${account_holder_name}`,
+        new_value: `${bank_number}-${branch}-${account_number}`,
+        note: `bank_details_updated|holder:${account_holder_name}`,
       });
     } else {
       // Create new
@@ -216,8 +216,8 @@ export async function POST(
         changed_by: user.id,
         field_changed: 'bank_details',
         old_value: null,
-        new_value: `Added bank details: ${bank_number}-${branch}-${account_number}`,
-        note: `Bank account holder: ${account_holder_name}`,
+        new_value: `${bank_number}-${branch}-${account_number}`,
+        note: `bank_details_added|holder:${account_holder_name}`,
       });
     }
 

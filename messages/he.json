@@ -1222,6 +1222,26 @@
       "file_uploaded": "העלאת קובץ",
       "file_deleted": "מחיקת קובץ",
       "payment_approved": "אישור תשלום"
+    },
+    "notes": {
+      "payment_approved": "התשלום אושר והסטטוס שונה לממתין להעברה",
+      "payment_approved_with_amount": "התשלום אושר: {amount}",
+      "bank_details_added": "פרטי בנק נוספו. בעל החשבון: {holder}",
+      "bank_details_updated": "פרטי בנק עודכנו. בעל החשבון: {holder}",
+      "case_deleted": "התיק נמחק",
+      "file_uploaded": "הקובץ הועלה: {filename}",
+      "file_deleted": "הקובץ נמחק: {filename}",
+      "case_details_updated": "פרטי התיק עודכנו",
+      "case_closed": "התיק נסגר. סיבה: {reason}",
+      "case_closed_with_notes": "התיק נסגר. סיבה: {reason} - {notes}",
+      "case_reopened": "התיק הוחזר לפעיל (סיבת סגירה קודמת: {previousReason})",
+      "case_created_from_applicant": "התיק נוצר מבקשה #{applicantId}",
+      "close_reasons": {
+        "healed": "הילד החלים",
+        "deceased": "הילד נפטר",
+        "support_ended": "סיום תמיכה",
+        "other": "אחר"
+      }
     }
   },
   "transfers": {

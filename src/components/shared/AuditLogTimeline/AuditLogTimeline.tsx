@@ -38,6 +38,25 @@ interface AuditLogTimelineProps {
 }
 
 /**
+ * Parse note string with format "key|param1:value1|param2:value2"
+ * Returns { key, params } object
+ */
+function parseNoteKey(note: string): { key: string; params: Record<string, string> } {
+  const parts = note.split('|');
+  const key = parts[0];
+  const params: Record<string, string> = {};
+
+  for (let i = 1; i < parts.length; i++) {
+    const [paramKey, ...valueParts] = parts[i].split(':');
+    if (paramKey) {
+      params[paramKey] = valueParts.join(':'); // rejoin in case value contains ':'
+    }
+  }
+
+  return { key, params };
+}
+
+/**
  * AuditLogTimeline - Displays case history in a timeline format
  *
  * Features:
@@ -194,6 +213,56 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
     return entry.note || `ביצע פעולה: ${field}`;
   };
 
+  /**
+   * Translate note using i18n keys
+   * Supports format: "key|param1:value1|param2:value2"
+   */
+  const translateNote = (note: string): string | null => {
+    if (!note) return null;
+
+    // Check if it's a translatable key (contains | or matches known keys)
+    const isTranslatableKey = note.includes('|') ||
+      ['payment_approved', 'bank_details_added', 'bank_details_updated', 'case_deleted',
+       'file_uploaded', 'file_deleted', 'case_details_updated', 'case_closed',
+       'case_closed_with_notes', 'case_reopened', 'case_created_from_applicant'].some(
+        key => note.startsWith(key)
+      );
+
+    if (!isTranslatableKey) {
+      // Return original note if it's not a translatable key (legacy data)
+      return note;
+    }
+
+    const { key, params } = parseNoteKey(note);
+
+    // Translate close reason if present
+    if (params.reason) {
+      const reasonKey = `notes.close_reasons.${params.reason}`;
+      try {
+        params.reason = t(reasonKey);
+      } catch {
+        // Keep original reason if translation not found
+      }
+    }
+
+    // Translate previousReason if present
+    if (params.previousReason) {
+      const reasonKey = `notes.close_reasons.${params.previousReason}`;
+      try {
+        params.previousReason = t(reasonKey);
+      } catch {
+        // Keep original reason if translation not found
+      }
+    }
+
+    try {
+      return t(`notes.${key}`, params);
+    } catch {
+      // Return original note if translation fails
+      return note;
+    }
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -256,7 +325,7 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
                       </div>
                       {entry.note && (
                         <div className="text-sm text-muted-foreground mt-2 bg-slate-50 p-2 rounded border">
-                          {entry.note}
+                          {translateNote(entry.note)}
                         </div>
                       )}
                     </div>

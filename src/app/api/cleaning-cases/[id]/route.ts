@@ -180,7 +180,7 @@ export async function PUT(request: NextRequest, context: RouteParams) {
       changed_by: user.id,
       field_changed: 'details',
       new_value: JSON.stringify(body),
-      note: 'עדכון פרטי תיק',
+      note: 'case_details_updated',
       changed_at: new Date().toISOString(),
     });
 

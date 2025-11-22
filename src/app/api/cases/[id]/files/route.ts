@@ -128,7 +128,7 @@ export async function POST(
     const auditLogger = createAuditLogger(supabase);
     await auditLogger.logAction(id, user.id, 'file_uploaded', {
       newValue: fileType,
-      note: `Uploaded ${file.name}`
+      note: `file_uploaded|filename:${file.name}`
     });
 
     return NextResponse.json(savedFile, { status: 201 });

@@ -63,7 +63,7 @@ export async function DELETE(
       changed_by: user.id,
       field_changed: 'file_deleted',
       old_value: file.file_type,
-      note: `Deleted ${file.filename}`,
+      note: `file_deleted|filename:${file.filename}`,
     });
 
     return NextResponse.json({ success: true });

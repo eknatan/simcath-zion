@@ -149,11 +149,10 @@ export async function POST(
     // Log in Case History using middleware
     // ========================================
     const auditLogger = createAuditLogger(supabase);
+    const amountStr = `₪${amount_ils}${amount_usd ? ` ($${amount_usd})` : ''}`;
     await auditLogger.logAction(caseId, user.id, 'payment_approved', {
-      newValue: `Approved payment: ₪${amount_ils}${
-        amount_usd ? ` ($${amount_usd})` : ''
-      }`,
-      note: `Payment approved and case status changed to pending_transfer`
+      newValue: amountStr,
+      note: `payment_approved_with_amount|amount:${amountStr}`
     });
 
     // ========================================

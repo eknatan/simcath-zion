@@ -208,7 +208,7 @@ export async function POST(request: NextRequest, context: RouteParams) {
       field_changed: 'status',
       old_value: null,
       new_value: 'new',
-      note: `תיק נוצר מבקשה #${applicantId.substring(0, 8)}`,
+      note: `case_created_from_applicant|applicantId:${applicantId.substring(0, 8)}`,
       changed_at: new Date().toISOString(),
     });
 

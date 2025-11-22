@@ -13,6 +13,7 @@ import { Case, Payment } from '@/types/case.types';
 import { formatCurrency } from '@/lib/utils/format';
 import { formatMonthYear, isAfter15thOfMonth } from '@/lib/utils/date';
 import { Button } from '@/components/ui/button';
+import { BulkPaymentEntry } from './BulkPaymentEntry';
 
 interface CleaningCaseWithPayment extends Case {
   current_month_payment?: Payment | null;
@@ -38,6 +39,7 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
   const [searchTerm, setSearchTerm] = useState('');
   const [cases, setCases] = useState<CleaningCaseWithPayment[]>(initialCases);
   const [isLoading, setIsLoading] = useState(false);
+  const [showBulkEntry, setShowBulkEntry] = useState(false);
 
   // Fetch cases with current month payment
   useEffect(() => {
@@ -190,10 +192,7 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
         <Button
           variant="default"
           className="bg-emerald-600 hover:bg-emerald-700"
-          onClick={() => {
-            // TODO: Open bulk payment modal
-            console.log('Open bulk payment entry');
-          }}
+          onClick={() => setShowBulkEntry(true)}
         >
           <Plus className="h-4 w-4 me-2" />
           {tCleaning('dashboard.bulkEntry')}
@@ -252,6 +251,20 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
           {t('resultsCount', { count: filteredCases.length })}
         </div>
       )}
+
+      {/* Bulk Payment Entry Modal */}
+      <BulkPaymentEntry
+        open={showBulkEntry}
+        onOpenChange={setShowBulkEntry}
+        onSuccess={() => {
+          // Refresh the cases list after successful bulk entry
+          setIsLoading(true);
+          fetch('/api/cleaning-cases?status=active')
+            .then(res => res.json())
+            .then(data => setCases(data))
+            .finally(() => setIsLoading(false));
+        }}
+      />
     </div>
   );
 }

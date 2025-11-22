@@ -1163,6 +1163,26 @@
       "file_uploaded": "File Upload",
       "file_deleted": "File Deletion",
       "payment_approved": "Payment Approval"
+    },
+    "notes": {
+      "payment_approved": "Payment approved and status changed to pending transfer",
+      "payment_approved_with_amount": "Payment approved: {amount}",
+      "bank_details_added": "Bank details added. Account holder: {holder}",
+      "bank_details_updated": "Bank details updated. Account holder: {holder}",
+      "case_deleted": "Case deleted",
+      "file_uploaded": "File uploaded: {filename}",
+      "file_deleted": "File deleted: {filename}",
+      "case_details_updated": "Case details updated",
+      "case_closed": "Case closed. Reason: {reason}",
+      "case_closed_with_notes": "Case closed. Reason: {reason} - {notes}",
+      "case_reopened": "Case restored to active (previous close reason: {previousReason})",
+      "case_created_from_applicant": "Case created from application #{applicantId}",
+      "close_reasons": {
+        "healed": "Child recovered",
+        "deceased": "Child passed away",
+        "support_ended": "Support ended",
+        "other": "Other"
+      }
     }
   },
   "transfers": {

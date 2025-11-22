@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { StatusBadge } from '@/components/shared/StatusBadge';
@@ -30,6 +32,7 @@ import { formatCurrency } from '@/lib/utils/format';
 import { ExportDocument } from '@/components/shared/ExportDocument';
 import { CaseSummary } from '@/components/shared/CaseSummary';
 import { AuditLogTimeline } from '@/components/shared/AuditLogTimeline';
+import { CloseDialog, ReopenDialog } from '@/components/features/sick-children/CloseDialog';
 
 interface CaseHeaderProps {
   caseData: CaseWithRelations;
@@ -48,9 +51,27 @@ interface CaseHeaderProps {
  */
 export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
   const t = useTranslations('case');
+  const router = useRouter();
   const dir = locale === 'he' ? 'rtl' : 'ltr';
   const isWedding = caseData.case_type === CaseType.WEDDING;
   const isCleaning = caseData.case_type === CaseType.CLEANING;
+
+  // Dialog states for cleaning cases
+  const [showCloseDialog, setShowCloseDialog] = useState(false);
+  const [showReopenDialog, setShowReopenDialog] = useState(false);
+
+  // Check for pending payments
+  const pendingPayments = caseData.payments?.filter(p => p.status === 'pending') || [];
+  const hasPendingPayments = pendingPayments.length > 0;
+  const pendingPaymentInfo = hasPendingPayments && pendingPayments[0]?.payment_month
+    ? {
+        month: new Date(pendingPayments[0].payment_month).toLocaleDateString('he-IL', {
+          month: 'long',
+          year: 'numeric',
+        }),
+        amount: pendingPayments[0].amount_ils || 0,
+      }
+    : undefined;
 
   // Calculate total transferred for cleaning cases
   const totalTransferred = caseData.payments?.reduce(
@@ -284,14 +305,22 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
             </ActionButton>
 
             {caseData.status === 'active' && (
-              <ActionButton variant="reject" size="sm">
+              <ActionButton
+                variant="reject"
+                size="sm"
+                onClick={() => setShowCloseDialog(true)}
+              >
                 <XCircle className="h-4 w-4 me-1" />
                 {t('actions.closeCase')}
               </ActionButton>
             )}
 
             {caseData.status === 'inactive' && (
-              <ActionButton variant="restore" size="sm">
+              <ActionButton
+                variant="restore"
+                size="sm"
+                onClick={() => setShowReopenDialog(true)}
+              >
                 <RotateCcw className="h-4 w-4 me-1" />
                 {t('actions.restoreCase')}
               </ActionButton>
@@ -342,6 +371,31 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
         </DropdownMenu>
       </div>
 
+      {/* Close/Reopen Dialogs for Cleaning Cases */}
+      {isCleaning && (
+        <>
+          <CloseDialog
+            open={showCloseDialog}
+            onOpenChange={setShowCloseDialog}
+            caseId={caseData.id}
+            hasPendingPayments={hasPendingPayments}
+            pendingPaymentInfo={pendingPaymentInfo}
+            onSuccess={() => {
+              // Refresh the page to show updated status
+              router.refresh();
+            }}
+          />
+          <ReopenDialog
+            open={showReopenDialog}
+            onOpenChange={setShowReopenDialog}
+            caseId={caseData.id}
+            onSuccess={() => {
+              // Refresh the page to show updated status
+              router.refresh();
+            }}
+          />
+        </>
+      )}
   </div>
   );
 }
