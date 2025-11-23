@@ -1,6 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { MonthNavigationProps } from './types';
 import { HDate } from '@hebcal/core';
 import { getHebrewMonthName } from '@/lib/hebcal-utils';
@@ -17,63 +19,78 @@ export default function MonthNavigation({
   const monthNameHe = getHebrewMonthName(currentMonth, isLeap, 'he');
   const monthNameEn = getHebrewMonthName(currentMonth, isLeap, 'en');
 
+  // Format Hebrew year in Gematria
+  const formatHebrewYear = (year: number): string => {
+    // Simple format for years in 5700s
+    const hundreds = Math.floor((year % 1000) / 100);
+    const tens = Math.floor((year % 100) / 10);
+    const ones = year % 10;
+
+    const letters: Record<number, string> = {
+      1: 'א', 2: 'ב', 3: 'ג', 4: 'ד', 5: 'ה', 6: 'ו', 7: 'ז', 8: 'ח', 9: 'ט',
+    };
+    const tensLetters: Record<number, string> = {
+      1: 'י', 2: 'כ', 3: 'ל', 4: 'מ', 5: 'נ', 6: 'ס', 7: 'ע', 8: 'פ', 9: 'צ',
+    };
+    const hundredsLetters: Record<number, string> = {
+      1: 'ק', 2: 'ר', 3: 'ש', 4: 'ת', 5: 'תק', 6: 'תר', 7: 'תש',
+    };
+
+    let result = hundredsLetters[hundreds] || '';
+    if (tens === 1 && ones === 5) {
+      result += 'ט״ו';
+    } else if (tens === 1 && ones === 6) {
+      result += 'ט״ז';
+    } else {
+      if (tens) result += tensLetters[tens];
+      if (ones) result += (tens ? '״' : '') + letters[ones];
+    }
+
+    return result;
+  };
+
   return (
-    <div className="flex items-center justify-between mb-6 px-4">
+    <div className="flex items-center justify-between">
       {/* Previous Month Button */}
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={onPrevMonth}
-        className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
         aria-label={t('previousMonth')}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className={`w-6 h-6 ${language === 'he' ? 'rotate-180' : ''}`}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
+        {language === 'he' ? (
+          <ChevronRight className="h-5 w-5" />
+        ) : (
+          <ChevronLeft className="h-5 w-5" />
+        )}
+      </Button>
 
       {/* Month and Year Display */}
       <div className="text-center" dir={language === 'he' ? 'rtl' : 'ltr'}>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        <h2 className="text-xl font-bold text-foreground">
           {language === 'he' ? monthNameHe : monthNameEn}
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          {language === 'he' ? `תשפ״${String.fromCharCode(1488 + (currentYear % 10))}` : currentYear}
+        <p className="text-sm text-muted-foreground">
+          {language === 'he' ? formatHebrewYear(currentYear) : currentYear}
         </p>
-        {language === 'en' && (
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-            {monthNameHe} {currentYear}
-          </p>
-        )}
-        {language === 'he' && (
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-            {monthNameEn} {currentYear}
-          </p>
-        )}
+        <p className="text-xs text-muted-foreground mt-0.5">
+          {language === 'he' ? `${monthNameEn} ${currentYear}` : `${monthNameHe}`}
+        </p>
       </div>
 
       {/* Next Month Button */}
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={onNextMonth}
-        className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
         aria-label={t('nextMonth')}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className={`w-6 h-6 ${language === 'he' ? 'rotate-180' : ''}`}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-        </svg>
-      </button>
+        {language === 'he' ? (
+          <ChevronLeft className="h-5 w-5" />
+        ) : (
+          <ChevronRight className="h-5 w-5" />
+        )}
+      </Button>
     </div>
   );
 }

@@ -105,6 +105,7 @@ export function generateDayData(hdate: HDate, language: Language): HebrewDayData
     hdate,
     gregDate,
     events,
+    calendarEvents: [], // Will be populated by the component
     isShabbat: isShabbat(gregDate),
     isHoliday: hasHoliday(events),
     isRoshChodesh: hasRoshChodesh(events),

@@ -274,22 +274,36 @@
     "title": "Hebrew Calendar",
     "subtitle": "יומן עברי",
     "backToDashboard": "Back to Dashboard",
+    "today": "Today",
     "footer": {
       "title": "Simchat Zion - Hebrew Calendar with Tax Tracking",
       "subtitle": "שמחת ציון - יומן עברי עם מעקב מסים"
     },
     "legend": {
+      "wedding": "Wedding",
       "shabbat": "Shabbat",
       "holiday": "Holiday",
       "roshChodesh": "Rosh Chodesh"
     },
     "loading": "Loading...",
     "switchLanguage": "עברית",
-    "clickForInfo": "Click any day for more information (coming soon)",
+    "clickForInfo": "Click on a wedding to view case details",
+    "caseNumber": "Case #",
+    "clickToView": "Click to view case",
     "navigation": {
       "previousMonth": "Previous month",
       "nextMonth": "Next month"
     }
+  },
+  "hebrew_date_picker": {
+    "gregorian_date": "Gregorian Date",
+    "hebrew_date": "Hebrew Date",
+    "manual_edit": "Manual Edit",
+    "cancel": "Cancel",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "no_date_selected": "No date selected"
   },
   "wedding_form": {
     "title": "Wedding Support Application",
@@ -1147,7 +1161,8 @@
       "rejected": "Rejected",
       "inactive": "Inactive",
       "expired": "Expired",
-      "deleted": "Deleted"
+      "deleted": "Deleted",
+      "null": "None"
     },
     "field": {
       "status": "Status",
@@ -1158,11 +1173,45 @@
       "city": "City",
       "date": "Date",
       "wedding_date": "Wedding Date",
+      "wedding_date_gregorian": "Gregorian Wedding Date",
+      "wedding_date_hebrew": "Hebrew Wedding Date",
+      "hebrew_day": "Hebrew Day",
+      "hebrew_month": "Hebrew Month",
+      "hebrew_year": "Hebrew Year",
       "bank_details": "Bank Details",
       "payment": "Payment",
       "file_uploaded": "File Upload",
       "file_deleted": "File Deletion",
-      "payment_approved": "Payment Approval"
+      "payment_approved": "Payment Approval",
+      "groom_first_name": "Groom First Name",
+      "groom_last_name": "Groom Last Name",
+      "groom_id": "Groom ID",
+      "groom_father_name": "Groom Father Name",
+      "groom_mother_name": "Groom Mother Name",
+      "groom_school": "Groom School",
+      "groom_memorial_day": "Groom Memorial Day",
+      "bride_first_name": "Bride First Name",
+      "bride_last_name": "Bride Last Name",
+      "bride_id": "Bride ID",
+      "bride_father_name": "Bride Father Name",
+      "bride_mother_name": "Bride Mother Name",
+      "bride_school": "Bride School",
+      "bride_memorial_day": "Bride Memorial Day",
+      "contact_phone": "Contact Phone",
+      "contact_phone2": "Secondary Phone",
+      "contact_phone3": "Additional Phone",
+      "contact_email": "Contact Email",
+      "venue": "Venue",
+      "guests_count": "Guests Count",
+      "total_cost": "Approved Amount",
+      "family_name": "Family Name",
+      "child_name": "Child Name",
+      "parent1_name": "Parent 1 Name",
+      "parent1_id": "Parent 1 ID",
+      "parent2_name": "Parent 2 Name",
+      "parent2_id": "Parent 2 ID",
+      "start_date": "Start Date",
+      "notes": "Notes"
     },
     "notes": {
       "payment_approved": "Payment approved and status changed to pending transfer",

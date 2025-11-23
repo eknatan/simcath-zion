@@ -41,11 +41,16 @@ function mapFormDataToCaseFields(formData: any, caseType: string) {
   };
 
   if (caseType === 'wedding') {
+    // Extract Hebrew date from structured format
+    const hebrewDate = formData.wedding_info?.hebrew_date;
+
     return {
       ...commonFields,
-      // Wedding specific
-      wedding_date_hebrew: formData.wedding_info?.date_hebrew,
-      wedding_date_gregorian: formData.wedding_info?.date_gregorian,
+      // Wedding specific - structured Hebrew date
+      hebrew_day: hebrewDate?.day || null,
+      hebrew_month: hebrewDate?.month || null,
+      hebrew_year: hebrewDate?.year || null,
+      wedding_date_gregorian: hebrewDate?.gregorianDate || formData.wedding_info?.date_gregorian,
       request_background: formData.wedding_info?.request_background,
       groom_first_name: formData.groom_info?.first_name,
       groom_last_name: formData.groom_info?.last_name,

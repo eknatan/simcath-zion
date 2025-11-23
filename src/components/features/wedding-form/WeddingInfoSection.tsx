@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, Controller } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { FormSection } from '@/components/shared/Forms/FormSection';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { HebrewDatePicker } from '@/components/shared/HebrewDatePicker';
 import { WeddingFormData } from '@/lib/validations/wedding-form.schema';
 import { translateValidationMessage } from '@/lib/validations/translate';
 
@@ -32,6 +33,7 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
 
   const {
     register,
+    control,
     formState: { errors },
   } = form;
 
@@ -45,46 +47,24 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
       withGradient
     >
       <div className="grid gap-6 md:grid-cols-2">
-        {/* תאריך עברי */}
-        <div className="space-y-2">
-          <Label htmlFor="date_hebrew">
-            {t('section_wedding_info.date_hebrew')}
-            <span className="text-destructive ms-1">*</span>
-          </Label>
-          <Input
-            id="date_hebrew"
-            {...register('wedding_info.date_hebrew')}
-            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            aria-invalid={!!weddingErrors?.date_hebrew}
+        {/* תאריך עברי - קומפוננטה חדשה */}
+        <div className="md:col-span-2">
+          <Controller
+            name="wedding_info.hebrew_date"
+            control={control}
+            render={({ field }) => (
+              <HebrewDatePicker
+                value={field.value}
+                onChange={field.onChange}
+                error={
+                  weddingErrors?.hebrew_date
+                    ? translateValidationMessage(tValidation, weddingErrors.hebrew_date.message)
+                    : undefined
+                }
+                required
+              />
+            )}
           />
-          {weddingErrors?.date_hebrew && (
-            <p className="text-sm text-destructive">
-              {translateValidationMessage(tValidation, weddingErrors.date_hebrew.message)}
-            </p>
-          )}
-          <p className="text-xs text-muted-foreground">
-            {t('section_wedding_info.date_hebrew_helper')}
-          </p>
-        </div>
-
-        {/* תאריך לועזי */}
-        <div className="space-y-2">
-          <Label htmlFor="date_gregorian">
-            {t('section_wedding_info.date_gregorian')}
-            <span className="text-destructive ms-1">*</span>
-          </Label>
-          <Input
-            id="date_gregorian"
-            type="date"
-            {...register('wedding_info.date_gregorian')}
-            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            aria-invalid={!!weddingErrors?.date_gregorian}
-          />
-          {weddingErrors?.date_gregorian && (
-            <p className="text-sm text-destructive">
-              {translateValidationMessage(tValidation, weddingErrors.date_gregorian.message)}
-            </p>
-          )}
         </div>
 
         {/* עיר */}

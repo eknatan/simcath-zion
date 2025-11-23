@@ -12,6 +12,11 @@ export default function CalendarLegend({ language }: CalendarLegendProps) {
 
   const legends = [
     {
+      color: 'bg-pink-100 dark:bg-pink-900/30',
+      labelKey: 'wedding',
+      border: 'border-pink-300 dark:border-pink-700',
+    },
+    {
       color: 'bg-blue-50 dark:bg-blue-900/20',
       labelKey: 'shabbat',
       border: 'border-blue-200 dark:border-blue-700',
@@ -30,15 +35,15 @@ export default function CalendarLegend({ language }: CalendarLegendProps) {
 
   return (
     <div
-      className="flex flex-wrap gap-4 justify-center mt-6 mb-4 px-4"
+      className="flex flex-wrap gap-3 justify-center py-3"
       dir={language === 'he' ? 'rtl' : 'ltr'}
     >
       {legends.map((legend, idx) => (
-        <div key={idx} className="flex items-center gap-2">
+        <div key={idx} className="flex items-center gap-1.5">
           <div
-            className={`w-6 h-6 rounded border ${legend.color} ${legend.border}`}
+            className={`w-4 h-4 rounded border ${legend.color} ${legend.border}`}
           />
-          <span className="text-sm text-gray-700 dark:text-gray-300">
+          <span className="text-xs text-muted-foreground">
             {t(legend.labelKey)}
           </span>
         </div>

@@ -167,6 +167,9 @@ export type Database = {
           groom_mother_occupation: string | null
           groom_school: string | null
           guests_count: number | null
+          hebrew_day: number | null
+          hebrew_month: number | null
+          hebrew_year: number | null
           id: string
           parent1_id: string | null
           parent1_name: string | null
@@ -218,6 +221,9 @@ export type Database = {
           groom_mother_occupation?: string | null
           groom_school?: string | null
           guests_count?: number | null
+          hebrew_day?: number | null
+          hebrew_month?: number | null
+          hebrew_year?: number | null
           id?: string
           parent1_id?: string | null
           parent1_name?: string | null
@@ -269,6 +275,9 @@ export type Database = {
           groom_mother_occupation?: string | null
           groom_school?: string | null
           guests_count?: number | null
+          hebrew_day?: number | null
+          hebrew_month?: number | null
+          hebrew_year?: number | null
           id?: string
           parent1_id?: string | null
           parent1_name?: string | null

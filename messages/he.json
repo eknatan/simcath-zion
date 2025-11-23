@@ -307,25 +307,39 @@
     }
   },
   "calendar": {
-    "title": "יומן עברי",
+    "title": "לוח שנה עברי",
     "subtitle": "Hebrew Calendar",
     "backToDashboard": "חזרה ללוח הבקרה",
+    "today": "היום",
     "footer": {
       "title": "שמחת ציון - יומן עברי עם מעקב מסים",
       "subtitle": "Simchat Zion - Hebrew Calendar with Tax Tracking"
     },
     "legend": {
+      "wedding": "חתונה",
       "shabbat": "שבת",
       "holiday": "חג",
       "roshChodesh": "ראש חודש"
     },
     "loading": "טוען...",
     "switchLanguage": "English",
-    "clickForInfo": "לחץ על כל יום לצפייה במידע נוסף (בקרוב)",
+    "clickForInfo": "לחץ על חתונה לצפייה בפרטי התיק",
+    "caseNumber": "תיק מספר",
+    "clickToView": "לחץ לצפייה בתיק",
     "navigation": {
       "previousMonth": "חודש קודם",
       "nextMonth": "חודש הבא"
     }
+  },
+  "hebrew_date_picker": {
+    "gregorian_date": "תאריך לועזי",
+    "hebrew_date": "תאריך עברי",
+    "manual_edit": "עריכה ידנית",
+    "cancel": "בטל",
+    "day": "יום",
+    "month": "חודש",
+    "year": "שנה",
+    "no_date_selected": "לא נבחר תאריך"
   },
   "wedding_form": {
     "title": "בקשה לתמיכה בחתונה",
@@ -1206,7 +1220,8 @@
       "rejected": "נדחה",
       "inactive": "לא פעיל",
       "expired": "פג תוקף",
-      "deleted": "נמחק"
+      "deleted": "נמחק",
+      "null": "ללא"
     },
     "field": {
       "status": "סטטוס",
@@ -1217,11 +1232,45 @@
       "city": "עיר",
       "date": "תאריך",
       "wedding_date": "תאריך חתונה",
+      "wedding_date_gregorian": "תאריך חתונה לועזי",
+      "wedding_date_hebrew": "תאריך חתונה עברי",
+      "hebrew_day": "יום עברי",
+      "hebrew_month": "חודש עברי",
+      "hebrew_year": "שנה עברית",
       "bank_details": "פרטי בנק",
       "payment": "תשלום",
       "file_uploaded": "העלאת קובץ",
       "file_deleted": "מחיקת קובץ",
-      "payment_approved": "אישור תשלום"
+      "payment_approved": "אישור תשלום",
+      "groom_first_name": "שם פרטי חתן",
+      "groom_last_name": "שם משפחה חתן",
+      "groom_id": "ת.ז. חתן",
+      "groom_father_name": "שם אב חתן",
+      "groom_mother_name": "שם אם חתן",
+      "groom_school": "בית ספר חתן",
+      "groom_memorial_day": "יום זיכרון חתן",
+      "bride_first_name": "שם פרטי כלה",
+      "bride_last_name": "שם משפחה כלה",
+      "bride_id": "ת.ז. כלה",
+      "bride_father_name": "שם אב כלה",
+      "bride_mother_name": "שם אם כלה",
+      "bride_school": "בית ספר כלה",
+      "bride_memorial_day": "יום זיכרון כלה",
+      "contact_phone": "טלפון ליצירת קשר",
+      "contact_phone2": "טלפון משני",
+      "contact_phone3": "טלפון נוסף",
+      "contact_email": "אימייל ליצירת קשר",
+      "venue": "מקום האירוע",
+      "guests_count": "מספר אורחים",
+      "total_cost": "סכום מאושר",
+      "family_name": "שם משפחה",
+      "child_name": "שם הילד",
+      "parent1_name": "שם הורה 1",
+      "parent1_id": "ת.ז. הורה 1",
+      "parent2_name": "שם הורה 2",
+      "parent2_id": "ת.ז. הורה 2",
+      "start_date": "תאריך התחלה",
+      "notes": "הערות"
     },
     "notes": {
       "payment_approved": "התשלום אושר והסטטוס שונה לממתין להעברה",

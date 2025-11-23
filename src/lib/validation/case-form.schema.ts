@@ -78,6 +78,11 @@ const hebrewDateSchema = z
  * Schema for wedding information section
  */
 export const weddingInfoSchema = z.object({
+  // Structured Hebrew date fields (new)
+  hebrew_day: z.number().min(1).max(30).nullable().optional(),
+  hebrew_month: z.number().min(1).max(13).nullable().optional(),
+  hebrew_year: z.number().min(5700).max(6000).nullable().optional(),
+  // Legacy field (for backward compatibility)
   wedding_date_hebrew: hebrewDateSchema,
   wedding_date_gregorian: dateSchema,
   city: nameSchema,

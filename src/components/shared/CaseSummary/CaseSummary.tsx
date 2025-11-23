@@ -2,7 +2,16 @@
 
 import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { formatCurrency } from '@/lib/utils/format';
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 import { ExportSection, ExportField } from '@/components/shared/ExportDocument';
+
+/**
+ * Format Hebrew date from structured fields
+ */
+function formatHebrewDate(day: number | null | undefined, month: number | null | undefined, year: number | null | undefined): string | null {
+  if (!day || !month || !year) return null;
+  return formatHebrewDateForDisplay(day, month, year, 'he');
+}
 
 interface CaseSummaryProps {
   caseData: CaseWithRelations;
@@ -55,7 +64,10 @@ export function CaseSummary({ caseData }: CaseSummaryProps) {
 
           {/* Wedding Details */}
           <ExportSection title="פרטי החתונה" icon="💒">
-            <ExportField label="תאריך עברי" value={caseData.wedding_date_hebrew} />
+            <ExportField
+              label="תאריך עברי"
+              value={formatHebrewDate(caseData.hebrew_day, caseData.hebrew_month, caseData.hebrew_year) || caseData.wedding_date_hebrew}
+            />
             <ExportField label="תאריך לועזי" value={
               caseData.wedding_date_gregorian
                 ? new Date(caseData.wedding_date_gregorian).toLocaleDateString('he-IL')

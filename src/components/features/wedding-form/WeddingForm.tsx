@@ -54,8 +54,12 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
     mode: 'onBlur',
     defaultValues: {
       wedding_info: {
-        date_hebrew: '',
-        date_gregorian: '',
+        hebrew_date: {
+          day: null,
+          month: null,
+          year: null,
+          gregorianDate: null,
+        },
         city: '',
         venue: '',
         guests_count: undefined,

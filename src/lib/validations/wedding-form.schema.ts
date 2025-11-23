@@ -37,12 +37,23 @@ const israeliPhoneSchema = z
   .regex(/^0\d{1,2}-?\d{7}$/, 'validation.invalidPhone');
 
 /**
- * וולידציה לתאריך עברי
+ * וולידציה לתאריך עברי מובנה
  */
-const hebrewDateSchema = z
-  .string()
-  .min(1, 'validation.required')
-  .regex(/^[\u0590-\u05FF\s\d"']+$/, 'validation.invalidHebrewDate');
+const hebrewDateStructuredSchema = z.object({
+  day: z.number().min(1).max(30).nullable(),
+  month: z.number().min(1).max(13).nullable(),
+  year: z.number().min(5700).max(6000).nullable(),
+  gregorianDate: z.string().nullable(),
+}).refine(
+  (data) => {
+    // Either all fields are set or all are null
+    const hasDay = data.day !== null;
+    const hasMonth = data.month !== null;
+    const hasYear = data.year !== null;
+    return (hasDay && hasMonth && hasYear) || (!hasDay && !hasMonth && !hasYear);
+  },
+  { message: 'validation.invalidHebrewDate' }
+);
 
 // === Section Schemas ===
 
@@ -51,7 +62,7 @@ const hebrewDateSchema = z
  * Single Responsibility - אחראי רק על נתוני החתונה הבסיסיים
  */
 export const weddingInfoSchema = z.object({
-  date_hebrew: hebrewDateSchema,
+  hebrew_date: hebrewDateStructuredSchema,
   date_gregorian: z
     .string()
     .min(1, 'validation.required')

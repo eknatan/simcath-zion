@@ -2,10 +2,31 @@ import type { HDate, Event } from '@hebcal/core';
 
 export type Language = 'he' | 'en';
 
+/**
+ * Event type for calendar display
+ */
+export type CalendarEventType = 'wedding' | 'holiday' | 'rosh_chodesh' | 'parsha';
+
+/**
+ * Calendar event from the system (weddings, etc.)
+ */
+export interface CalendarEvent {
+  id: string;
+  type: CalendarEventType;
+  title: string;
+  titleEn?: string;
+  hebrewDate: string;
+  hebrewDay: number;
+  gregorianDate: Date;
+  status?: string;
+  caseNumber?: number;
+}
+
 export interface HebrewDayData {
   hdate: HDate;
   gregDate: Date;
   events: Event[];
+  calendarEvents: CalendarEvent[];
   isShabbat: boolean;
   isHoliday: boolean;
   isRoshChodesh: boolean;

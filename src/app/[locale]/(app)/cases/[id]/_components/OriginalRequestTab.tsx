@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Heart, Users, Calendar, Edit3, Check, X, Loader2, FileText, Building2, DollarSign, Mail } from 'lucide-react';
+import { Heart, Users, Calendar, Edit3, Check, X, Loader2, FileText, Building2, DollarSign } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { useCase } from '@/components/features/cases/hooks/useCase';
 import {
@@ -189,7 +190,11 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
     resolver: zodResolver(isWedding ? weddingFormSchema : cleaningFormSchema) as any,
     defaultValues: isWedding
       ? {
-          // Wedding info
+          // Wedding info - Structured Hebrew date
+          hebrew_day: caseData.hebrew_day || null,
+          hebrew_month: caseData.hebrew_month || null,
+          hebrew_year: caseData.hebrew_year || null,
+          // Legacy fields
           wedding_date_hebrew: caseData.wedding_date_hebrew || '',
           wedding_date_gregorian: caseData.wedding_date_gregorian || '',
           city: caseData.city || '',
@@ -313,15 +318,17 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-2">
-              <Field
-                name="wedding_date_hebrew"
-                label={t('weddingInfo.dateHebrew')}
-                value={formValues.wedding_date_hebrew}
-                onSave={handleFieldSave}
-                notSpecifiedText={t('notSpecified')}
-                error={formErrors.wedding_date_hebrew?.message as string}
-                isGlobalEditMode={isGlobalEditMode}
-              />
+              {/* Hebrew Date - Display from structured fields */}
+              <div className="space-y-1">
+                <Label className="text-xs text-slate-600">{t('weddingInfo.dateHebrew')}</Label>
+                <div className="text-sm text-slate-900">
+                  {caseData.hebrew_day && caseData.hebrew_month && caseData.hebrew_year ? (
+                    formatHebrewDateForDisplay(caseData.hebrew_day, caseData.hebrew_month, caseData.hebrew_year, 'he')
+                  ) : (
+                    caseData.wedding_date_hebrew || <span className="text-slate-400">{t('notSpecified')}</span>
+                  )}
+                </div>
+              </div>
               <Field
                 name="wedding_date_gregorian"
                 label={t('weddingInfo.dateGregorian')}

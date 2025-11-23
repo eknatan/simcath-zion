@@ -1,6 +1,9 @@
+'use client';
+
 import HebrewDayCell from './HebrewDayCell';
 import type { HebrewMonthData, Language } from './types';
 import { DAY_NAMES_HE, DAY_NAMES_EN, getFirstDayOfWeek } from '@/lib/hebcal-utils';
+import { cn } from '@/lib/utils';
 
 interface HebrewMonthGridProps {
   monthData: HebrewMonthData;
@@ -35,11 +38,12 @@ export default function HebrewMonthGrid({ monthData, language, showBothLanguages
         {dayNames.map((dayName, idx) => (
           <div
             key={idx}
-            className={`text-center font-semibold py-2 text-sm ${
+            className={cn(
+              'text-center font-medium py-2 text-sm',
               idx === 6
-                ? 'text-blue-700 dark:text-blue-300'
-                : 'text-gray-700 dark:text-gray-300'
-            }`}
+                ? 'text-blue-600 dark:text-blue-400'
+                : 'text-muted-foreground'
+            )}
           >
             {dayName}
           </div>
@@ -57,7 +61,7 @@ export default function HebrewMonthGrid({ monthData, language, showBothLanguages
                 showBothLanguages={showBothLanguages}
               />
             ) : (
-              <div className="min-h-24 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-sm" />
+              <div className="min-h-28 bg-muted/30 border border-transparent rounded-md" />
             )}
           </div>
         ))}

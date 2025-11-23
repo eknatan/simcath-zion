@@ -1,5 +1,19 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { HDate } from '@hebcal/core';
 import { WeddingFormData, CleaningFormData, CaseType, TranslatedContent } from '@/types/case.types';
+
+/**
+ * Format Hebrew date from structured fields for translation
+ */
+function formatHebrewDateForTranslation(day: number | null | undefined, month: number | null | undefined, year: number | null | undefined): string {
+  if (!day || !month || !year) return '';
+  try {
+    const hdate = new HDate(day, month, year);
+    return hdate.render('he');
+  } catch {
+    return '';
+  }
+}
 
 // ========================================
 // Types
@@ -121,11 +135,14 @@ Respond with valid JSON only, no additional text or explanations.`;
    * Build wedding-specific prompt
    */
   private buildWeddingPrompt(data: WeddingFormData): string {
+    // Use structured date fields if available, fallback to legacy field
+    const hebrewDateStr = formatHebrewDateForTranslation(data.hebrew_day, data.hebrew_month, data.hebrew_year) || data.wedding_date_hebrew || '';
+
     return `
 WEDDING CASE TRANSLATION:
 Hebrew Data:
 {
-  "wedding_date_hebrew": "${data.wedding_date_hebrew || ''}",
+  "wedding_date_hebrew": "${hebrewDateStr}",
   "wedding_date_gregorian": "${data.wedding_date_gregorian || ''}",
   "city": "${data.city || ''}",
   "venue": "${data.venue || ''}",

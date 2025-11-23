@@ -280,7 +280,7 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
           </SheetTitle>
         </SheetHeader>
 
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 space-y-4 overflow-y-auto max-h-[calc(100vh-120px)] pe-2">
           {history.length === 0 ? (
             <div className="text-center py-8">
               <FileText className="h-12 w-12 text-slate-300 mx-auto mb-3" />

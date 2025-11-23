@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { formatCurrency } from '@/lib/utils/format';
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 import { ExportDocument } from '@/components/shared/ExportDocument';
 import { CaseSummary } from '@/components/shared/CaseSummary';
 import { AuditLogTimeline } from '@/components/shared/AuditLogTimeline';
@@ -156,11 +157,17 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
               className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-sm"
             >
               {/* Date */}
-              {caseData.wedding_date_hebrew && (
+              {(caseData.hebrew_day && caseData.hebrew_month && caseData.hebrew_year) || caseData.wedding_date_hebrew ? (
                 <div className="flex items-center gap-2 text-slate-700">
                   <Calendar className="h-4 w-4 text-sky-600" />
                   <div>
-                    <div className="font-medium">{caseData.wedding_date_hebrew}</div>
+                    <div className="font-medium">
+                      {caseData.hebrew_day && caseData.hebrew_month && caseData.hebrew_year ? (
+                        formatHebrewDateForDisplay(caseData.hebrew_day, caseData.hebrew_month, caseData.hebrew_year, 'he')
+                      ) : (
+                        caseData.wedding_date_hebrew
+                      )}
+                    </div>
                     {caseData.wedding_date_gregorian && (
                       <div className="text-xs text-slate-500">
                         ({new Date(caseData.wedding_date_gregorian).toLocaleDateString('he-IL')})
@@ -168,7 +175,7 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
                     )}
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* City */}
               {caseData.city && (

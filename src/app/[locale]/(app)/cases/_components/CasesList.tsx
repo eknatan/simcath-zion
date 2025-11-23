@@ -12,6 +12,15 @@ import { Eye, Heart, Users, Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Case } from '@/types/case.types';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
+
+/**
+ * Format Hebrew date from structured fields
+ */
+function formatHebrewDate(day: number | null | undefined, month: number | null | undefined, year: number | null | undefined): string | null {
+  if (!day || !month || !year) return null;
+  return formatHebrewDateForDisplay(day, month, year, 'he');
+}
 
 interface CasesListProps {
   cases: Case[];
@@ -131,13 +140,19 @@ export function CasesList({ cases }: CasesListProps) {
         header: t('table.date'),
         cell: ({ row }) => {
           if (row.original.case_type === 'wedding' && row.original.wedding_date_gregorian) {
+            const hebrewDateStr = formatHebrewDate(
+              row.original.hebrew_day,
+              row.original.hebrew_month,
+              row.original.hebrew_year
+            ) || row.original.wedding_date_hebrew;
+
             return (
               <div className="text-sm">
                 <div className="font-medium text-slate-900">
                   {formatDate(row.original.wedding_date_gregorian)}
                 </div>
-                {row.original.wedding_date_hebrew && (
-                  <div className="text-slate-600">{row.original.wedding_date_hebrew}</div>
+                {hebrewDateStr && (
+                  <div className="text-slate-600">{hebrewDateStr}</div>
                 )}
               </div>
             );

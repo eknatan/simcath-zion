@@ -138,7 +138,11 @@ export interface CaseHistoryWithUser extends CaseHistory {
  * Wedding-specific form data
  */
 export interface WeddingFormData {
-  // Wedding info
+  // Wedding info - Structured Hebrew date (new)
+  hebrew_day?: number | null;
+  hebrew_month?: number | null;
+  hebrew_year?: number | null;
+  // Legacy field (for backward compatibility)
   wedding_date_hebrew?: string;
   wedding_date_gregorian?: string;
   city?: string;
