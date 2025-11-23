@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import { FileX, List } from 'lucide-react';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/routing';
 
 /**
  * 404 Not Found page for cases

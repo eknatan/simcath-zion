@@ -26,11 +26,17 @@ export default async function CasesPage() {
   const cases: Case[] = allCases || [];
 
   // Calculate statistics from fetched cases
+  // Active cases: cleaning with status 'active' + weddings that are not completed/rejected
+  const activeWeddings = cases.filter(
+    (c) => c.case_type === 'wedding' && !['transferred', 'rejected', 'expired'].includes(c.status)
+  ).length;
+  const activeCleaning = cases.filter((c) => c.case_type === 'cleaning' && c.status === 'active').length;
+
   const stats = {
     total: cases.length,
     wedding: cases.filter((c) => c.case_type === 'wedding').length,
     cleaning: cases.filter((c) => c.case_type === 'cleaning').length,
-    active: cases.filter((c) => c.status === 'active').length,
+    active: activeWeddings + activeCleaning,
     pendingTransfer: cases.filter((c) => c.status === 'pending_transfer').length,
   };
 

@@ -207,3 +207,33 @@ export function getFirstDayOfWeek(month: number, year: number): number {
   const firstDay = new HDate(1, month, year);
   return firstDay.greg().getDay();
 }
+
+/**
+ * Convert number to Hebrew letters (Gematria)
+ * Used for Hebrew day numbers (1-30)
+ */
+export function numberToHebrewLetters(num: number): string {
+  if (num < 1 || num > 30) return String(num);
+
+  const ones = ['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
+  const tens = ['', 'י', 'כ', 'ל'];
+
+  // Special cases for 15 and 16 (avoid writing God's name)
+  if (num === 15) return 'ט״ו';
+  if (num === 16) return 'ט״ז';
+
+  const tensPart = Math.floor(num / 10);
+  const onesPart = num % 10;
+
+  let result = tens[tensPart] + ones[onesPart];
+
+  // Add gershayim (״) before last letter if more than one letter
+  if (result.length > 1) {
+    result = result.slice(0, -1) + '״' + result.slice(-1);
+  } else if (result.length === 1) {
+    // Add geresh (׳) for single letter
+    result = result + '׳';
+  }
+
+  return result;
+}

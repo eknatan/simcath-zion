@@ -58,11 +58,46 @@
       "totalCases": "סה״כ תיקים",
       "pending": "ממתינים",
       "active": "פעילים",
-      "transferred": "הועברו"
+      "transferred": "הועברו",
+      "totalDescription": "תיקים רשומים במערכת",
+      "activeDescription": "תיקים פעילים כרגע",
+      "pendingDescription": "ממתינים להעברה",
+      "transferredDescription": "סכום מועבר השנה",
+      "fromLastMonth": "מהחודש שעבר",
+      "ofTotal": "מהתיקים",
+      "needsAttention": "דורש",
+      "attention": "תשומת לב",
+      "yearlyTarget": "יעד שנתי"
+    },
+    "miniCalendar": {
+      "title": "7 ימים קרובים",
+      "viewFull": "לוח מלא"
+    },
+    "upcomingWeddings": {
+      "title": "חתונות קרובות",
+      "viewAll": "כל התיקים",
+      "noWeddings": "אין חתונות ב-7 הימים הקרובים",
+      "today": "היום!",
+      "tomorrow": "מחר",
+      "inDays": "בעוד {days} ימים",
+      "error": "שגיאה בטעינת הנתונים"
+    },
+    "quickActions": {
+      "title": "פעולות מהירות",
+      "newCase": "פתח תיק חדש",
+      "viewCases": "צפה בתיקים",
+      "sendEmails": "שלח מיילים",
+      "exportMasav": "ייצא MASAV"
+    },
+    "alerts": {
+      "title": "דורש תשומת לב",
+      "noAlerts": "אין התראות - הכל תקין!",
+      "error": "שגיאה בטעינת ההתראות"
     },
     "recentActivity": {
       "title": "פעילות אחרונה",
-      "noActivity": "אין פעילות אחרונה להצגה"
+      "noActivity": "אין פעילות אחרונה להצגה",
+      "error": "שגיאה בטעינת הפעילות"
     }
   },
   "status": {

@@ -56,11 +56,46 @@
       "totalCases": "Total Cases",
       "pending": "Pending",
       "active": "Active",
-      "transferred": "Transferred"
+      "transferred": "Transferred",
+      "totalDescription": "Cases registered in the system",
+      "activeDescription": "Currently active cases",
+      "pendingDescription": "Awaiting transfer",
+      "transferredDescription": "Amount transferred this year",
+      "fromLastMonth": "from last month",
+      "ofTotal": "of total",
+      "needsAttention": "Needs",
+      "attention": "attention",
+      "yearlyTarget": "Yearly target"
+    },
+    "miniCalendar": {
+      "title": "Next 7 Days",
+      "viewFull": "Full Calendar"
+    },
+    "upcomingWeddings": {
+      "title": "Upcoming Weddings",
+      "viewAll": "All Cases",
+      "noWeddings": "No weddings in the next 7 days",
+      "today": "Today!",
+      "tomorrow": "Tomorrow",
+      "inDays": "In {days} days",
+      "error": "Error loading data"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "newCase": "Open New Case",
+      "viewCases": "View Cases",
+      "sendEmails": "Send Emails",
+      "exportMasav": "Export MASAV"
+    },
+    "alerts": {
+      "title": "Needs Attention",
+      "noAlerts": "No alerts - all good!",
+      "error": "Error loading alerts"
     },
     "recentActivity": {
       "title": "Recent Activity",
-      "noActivity": "No recent activity to display"
+      "noActivity": "No recent activity to display",
+      "error": "Error loading activity"
     }
   },
   "status": {
