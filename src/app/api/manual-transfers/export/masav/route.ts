@@ -83,10 +83,17 @@ export async function POST(request: NextRequest) {
     // TODO: Save to manual_transfers_export table
 
     // Return file as download
-    return new NextResponse(result.fileContent, {
+    // IMPORTANT: Convert string to Uint8Array byte-by-byte to preserve MASAV Hebrew encoding
+    // JavaScript strings are UTF-16, but MASAV needs single-byte encoding
+    const bytes = new Uint8Array(result.fileContent.length);
+    for (let i = 0; i < result.fileContent.length; i++) {
+      bytes[i] = result.fileContent.charCodeAt(i) & 0xFF; // Take only low byte
+    }
+
+    return new NextResponse(bytes, {
       status: 200,
       headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
+        'Content-Type': 'text/plain; charset=windows-1255',
         'Content-Disposition': `attachment; filename="${result.fileName}"`,
       },
     });

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { Upload, FileDown, Trash2, Plus, Clock, CheckCircle2, HandCoins } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,6 +18,7 @@ import { toast } from 'sonner';
 type ManualTransferTab = 'active' | 'history';
 
 export default function ManualTransfersPage() {
+  const t = useTranslations('manualTransfers');
   const [activeTab, setActiveTab] = useState<ManualTransferTab>('active');
   const [transfers, setTransfers] = useState<ManualTransfer[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -92,7 +94,7 @@ export default function ManualTransfersPage() {
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
 
-    if (!confirm(`האם אתה בטוח שברצונך למחוק ${selectedIds.length} העברות?`)) return;
+    if (!confirm(t('messages.deleteConfirm', { count: selectedIds.length }))) return;
 
     const { error } = await manualTransfersService.bulkDelete(selectedIds);
 
@@ -104,7 +106,7 @@ export default function ManualTransfersPage() {
     }
 
     toast.success('הצלחה', {
-      description: `${selectedIds.length} העברות נמחקו בהצלחה`,
+      description: t('messages.deleteSuccess', { count: selectedIds.length }),
     });
 
     loadTransfers();
@@ -114,7 +116,7 @@ export default function ManualTransfersPage() {
   const handleExport = async () => {
     if (selectedIds.length === 0) {
       toast.error('שגיאה', {
-        description: 'יש לבחור לפחות העברה אחת',
+        description: t('messages.selectAtLeastOne'),
       });
       return;
     }
@@ -151,7 +153,7 @@ export default function ManualTransfersPage() {
       document.body.removeChild(a);
 
       toast.success('הצלחה', {
-        description: `קובץ מס"ב עבור ${selectedIds.length} העברות הורד בהצלחה`,
+        description: t('messages.exportSuccess', { count: selectedIds.length }),
       });
 
       // Refresh to update statuses
@@ -159,7 +161,7 @@ export default function ManualTransfersPage() {
       setSelectedIds([]);
     } catch (error) {
       toast.error('שגיאה', {
-        description: error instanceof Error ? error.message : 'שגיאה ביצירת קובץ מס"ב',
+        description: error instanceof Error ? error.message : t('messages.exportError'),
       });
     }
   };
@@ -238,7 +240,7 @@ export default function ManualTransfersPage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              סה&quot;כ העברות
+              {t('stats.total')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -249,7 +251,7 @@ export default function ManualTransfersPage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              סכום כולל
+              {t('stats.totalAmount')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -265,7 +267,7 @@ export default function ManualTransfersPage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              נבחרו
+              {t('stats.selected')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -276,7 +278,7 @@ export default function ManualTransfersPage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              סכום נבחר
+              {t('stats.selectedAmount')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -295,11 +297,11 @@ export default function ManualTransfersPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>רשימת העברות</CardTitle>
+              <CardTitle>{t('table.title')}</CardTitle>
               <CardDescription>
                 {activeTab === 'active'
-                  ? 'ייבא קובץ אקסל או הוסף העברה ידנית'
-                  : 'העברות שכבר יוצאו'}
+                  ? t('table.activeDescription')
+                  : t('table.historyDescription')}
               </CardDescription>
             </div>
             <div className="flex gap-3">
@@ -310,33 +312,35 @@ export default function ManualTransfersPage() {
                     onClick={() => setManualTransferDialogOpen(true)}
                   >
                     <Plus className="h-4 w-4 me-2" />
-                    הוסף העברה ידנית
+                    {t('actions.addManual')}
                   </ActionButton>
                   <ActionButton
                     variant="view"
                     onClick={() => setImportDialogOpen(true)}
                   >
                     <Upload className="h-4 w-4 me-2" />
-                    העלה אקסל
+                    {t('actions.uploadExcel')}
                   </ActionButton>
                 </>
               )}
-              {selectedIds.length > 0 && activeTab === 'active' && (
+              {selectedIds.length > 0 && (
                 <>
                   <ActionButton
                     variant="reject"
                     onClick={handleBulkDelete}
                   >
                     <Trash2 className="h-4 w-4 me-2" />
-                    מחק נבחרים ({selectedIds.length})
+                    {t('actions.deleteSelected', { count: selectedIds.length })}
                   </ActionButton>
-                  <ActionButton
-                    variant="approve-primary"
-                    onClick={handleExport}
-                  >
-                    <FileDown className="h-4 w-4 me-2" />
-                    ייצא למס&quot;ב ({selectedIds.length})
-                  </ActionButton>
+                  {activeTab === 'active' && (
+                    <ActionButton
+                      variant="approve-primary"
+                      onClick={handleExport}
+                    >
+                      <FileDown className="h-4 w-4 me-2" />
+                      {t('actions.exportMasav', { count: selectedIds.length })}
+                    </ActionButton>
+                  )}
                 </>
               )}
             </div>
@@ -376,10 +380,10 @@ export default function ManualTransfersPage() {
             </div>
             <div>
               <CardTitle className="text-2xl text-slate-900">
-                העברות ידניות
+                {t('title')}
               </CardTitle>
               <CardDescription className="text-slate-600">
-                ניהול העברות שאינן קשורות לתיקים
+                {t('subtitle')}
               </CardDescription>
             </div>
           </div>
@@ -394,14 +398,14 @@ export default function ManualTransfersPage() {
             className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-50 data-[state=active]:to-amber-100/50 data-[state=active]:text-amber-700 data-[state=active]:shadow-sm"
           >
             <Clock className="w-4 h-4 me-2" />
-            פעיל
+            {t('tabs.active')}
           </TabsTrigger>
           <TabsTrigger
             value="history"
             className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-50 data-[state=active]:to-emerald-100/50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm"
           >
             <CheckCircle2 className="w-4 h-4 me-2" />
-            היסטוריה
+            {t('tabs.history')}
           </TabsTrigger>
         </TabsList>
 

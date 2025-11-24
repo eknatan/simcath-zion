@@ -1458,6 +1458,38 @@
       }
     }
   },
+  "manualTransfers": {
+    "title": "Manual Transfers",
+    "subtitle": "Manage transfers not linked to cases",
+    "tabs": {
+      "active": "Active",
+      "history": "History"
+    },
+    "actions": {
+      "addManual": "Add Manual Transfer",
+      "uploadExcel": "Upload Excel",
+      "deleteSelected": "Delete Selected ({count})",
+      "exportMasav": "Export to MASAV ({count})"
+    },
+    "stats": {
+      "total": "Total Transfers",
+      "totalAmount": "Total Amount",
+      "selected": "Selected",
+      "selectedAmount": "Selected Amount"
+    },
+    "table": {
+      "title": "Transfer List",
+      "activeDescription": "Import Excel file or add manual transfer",
+      "historyDescription": "Transfers already exported"
+    },
+    "messages": {
+      "deleteConfirm": "Are you sure you want to delete {count} transfers?",
+      "deleteSuccess": "{count} transfers deleted successfully",
+      "exportSuccess": "MASAV file for {count} transfers downloaded successfully",
+      "selectAtLeastOne": "Please select at least one transfer",
+      "exportError": "Error creating MASAV file"
+    }
+  },
   "sickChildren": {
     "title": "Sick Children",
     "description": "Monthly support management for families with sick children",

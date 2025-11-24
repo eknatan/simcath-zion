@@ -155,7 +155,8 @@ export class UnifiedMasavFileGenerator extends MasavFileGenerator {
       approved_by: null,
       transferred_at: null,
       receipt_reference: null,
-      notes: null,
+      // Store ID number in notes field temporarily for MASAV generation
+      notes: transfer.id_number || null,
       created_at: null,
       updated_at: null,
       case: {

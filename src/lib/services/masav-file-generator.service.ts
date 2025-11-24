@@ -134,7 +134,9 @@ export class MasavFileGenerator {
 
     // 2. Detail Records (1)
     transfers.forEach((transfer) => {
-      lines.push(this.generateDetailRecord(transfer));
+      // Use notes field as ID number if available (for manual transfers)
+      const idNumber = transfer.notes || undefined;
+      lines.push(this.generateDetailRecord(transfer, idNumber));
     });
 
     // 3. Trailer Record (5)
@@ -272,7 +274,7 @@ export class MasavFileGenerator {
    * Generate Detail Record (Type 1)
    * Position layout according to spec section 3.2
    */
-  private generateDetailRecord(transfer: TransferWithDetails): string {
+  private generateDetailRecord(transfer: TransferWithDetails, idNumber?: string): string {
     const parts: string[] = [];
     const { bank_details } = transfer;
 
@@ -304,8 +306,8 @@ export class MasavFileGenerator {
     parts.push('0');
 
     // 10. Beneficiary ID (pos 37-45, length 9)
-    // ID number - not available in our system, using zeros
-    parts.push(this.padNumeric('000000000', 9));
+    // Use provided ID number if available, otherwise zeros
+    parts.push(this.padNumeric(idNumber || '000000000', 9));
 
     // 11. Beneficiary name (pos 46-61, length 16)
     parts.push(this.padText(bank_details.account_holder_name, 16, 'right'));
@@ -427,13 +429,13 @@ export class MasavFileGenerator {
   // ========================================
 
   /**
-   * Format date as YYMMDD
+   * Format date as DDMMYY (Israeli format)
    */
   private formatDate(date: Date): string {
     const yy = date.getFullYear().toString().substring(2);
     const mm = (date.getMonth() + 1).toString().padStart(2, '0');
     const dd = date.getDate().toString().padStart(2, '0');
-    return `${yy}${mm}${dd}`;
+    return `${dd}${mm}${yy}`;
   }
 
   /**

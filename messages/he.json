@@ -1517,6 +1517,38 @@
       }
     }
   },
+  "manualTransfers": {
+    "title": "העברות ידניות",
+    "subtitle": "ניהול העברות שאינן קשורות לתיקים",
+    "tabs": {
+      "active": "פעיל",
+      "history": "היסטוריה"
+    },
+    "actions": {
+      "addManual": "הוסף העברה ידנית",
+      "uploadExcel": "העלה אקסל",
+      "deleteSelected": "מחק נבחרים ({count})",
+      "exportMasav": "ייצא למס\"ב ({count})"
+    },
+    "stats": {
+      "total": "סה\"כ העברות",
+      "totalAmount": "סכום כולל",
+      "selected": "נבחרו",
+      "selectedAmount": "סכום נבחר"
+    },
+    "table": {
+      "title": "רשימת העברות",
+      "activeDescription": "ייבא קובץ אקסל או הוסף העברה ידנית",
+      "historyDescription": "העברות שכבר יוצאו"
+    },
+    "messages": {
+      "deleteConfirm": "האם אתה בטוח שברצונך למחוק {count} העברות?",
+      "deleteSuccess": "{count} העברות נמחקו בהצלחה",
+      "exportSuccess": "קובץ מס\"ב עבור {count} העברות הורד בהצלחה",
+      "selectAtLeastOne": "יש לבחור לפחות העברה אחת",
+      "exportError": "שגיאה ביצירת קובץ מס\"ב"
+    }
+  },
   "sickChildren": {
     "title": "ילדים חולים",
     "description": "ניהול תמיכה חודשית למשפחות עם ילד חולה",
