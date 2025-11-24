@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ExcelParser } from '@/lib/utils/excel-parser';
 import { manualTransfersService } from '@/lib/services/manual-transfers.service';
+import { ValidationErrorsTable } from './ValidationErrorsTable';
 import type { ExcelImportResult } from '@/types/manual-transfers.types';
 
 interface ExcelImportDialogProps {
@@ -92,6 +93,29 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
     onOpenChange(false);
   };
 
+  const handleExportErrors = async () => {
+    if (!importResult || importResult.errors.length === 0) return;
+
+    try {
+      const blob = await ExcelParser.exportErrorsToExcel(
+        importResult.errors,
+        file?.name || 'import'
+      );
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const baseName = file?.name?.replace(/\.[^/.]+$/, '') || 'import';
+      a.download = `${baseName}_errors.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('Error exporting errors:', err);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
@@ -148,12 +172,10 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
               </Alert>
 
               {importResult.invalid_rows > 0 && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    {importResult.invalid_rows} שורות לא עברו את הווליד‎ציה ולא ייובאו.
-                  </AlertDescription>
-                </Alert>
+                <ValidationErrorsTable
+                  errors={importResult.errors}
+                  onExportErrors={handleExportErrors}
+                />
               )}
 
               {/* Preview table */}

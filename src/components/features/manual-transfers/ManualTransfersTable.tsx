@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ActionButton } from '@/components/shared/ActionButton';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Pencil } from 'lucide-react';
 import type { ManualTransfer } from '@/types/manual-transfers.types';
 import { DataTable } from '@/components/shared/DataTable/DataTable';
 
@@ -13,6 +13,7 @@ interface ManualTransfersTableProps {
   selectedIds: string[];
   onSelectionChange: (ids: string[]) => void;
   onDelete: (id: string) => void;
+  onEdit?: (transfer: ManualTransfer) => void;
   onRefresh: () => void;
   showExportedDate?: boolean;
   enablePagination?: boolean;
@@ -24,6 +25,7 @@ export function ManualTransfersTable({
   selectedIds,
   onSelectionChange,
   onDelete,
+  onEdit,
   showExportedDate = false,
   enablePagination = false,
   pageSize = 50,
@@ -166,6 +168,15 @@ export function ManualTransfersTable({
       header: () => <div className="text-center">פעולות</div>,
       cell: ({ row }) => (
         <div className="flex gap-2 justify-center">
+          {onEdit && (
+            <ActionButton
+              variant="view"
+              size="sm"
+              onClick={() => onEdit(row.original)}
+            >
+              <Pencil className="h-3 w-3" />
+            </ActionButton>
+          )}
           <ActionButton
             variant="reject"
             size="sm"
@@ -178,7 +189,7 @@ export function ManualTransfersTable({
       size: 100,
     },
   ];
-  }, [selectedIds, transfers, showExportedDate, onDelete, onSelectionChange]);
+  }, [selectedIds, transfers, showExportedDate, onDelete, onEdit, onSelectionChange]);
 
   return (
     <div className="space-y-0">

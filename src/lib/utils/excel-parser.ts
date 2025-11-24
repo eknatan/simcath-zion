@@ -12,6 +12,17 @@ import {
 } from '@/types/manual-transfers.types';
 import { excelRowSchema } from '@/lib/validation/manual-transfer.schema';
 
+const FIELD_NAMES_HE: Record<string, string> = {
+  recipient_name: 'שם מקבל',
+  id_number: 'תעודת זהות',
+  amount: 'סכום',
+  bank_code: 'קוד בנק',
+  branch_code: 'קוד סניף',
+  account_number: 'מספר חשבון',
+  all: 'כל השדות',
+  unknown: 'לא ידוע',
+};
+
 /**
  * Parse Excel file and extract manual transfers data
  */
@@ -361,5 +372,60 @@ export class ExcelParser {
         filename: file.name,
       };
     }
+  }
+
+  /**
+   * Export validation errors to Excel file
+   */
+  static async exportErrorsToExcel(errors: ExcelImportError[], filename: string): Promise<Blob> {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('שגיאות ייבוא');
+
+    // Set RTL for Hebrew
+    worksheet.views = [{ rightToLeft: true }];
+
+    // Define columns
+    worksheet.columns = [
+      { header: 'מספר שורה', key: 'rowNumber', width: 12 },
+      { header: 'שדה', key: 'field', width: 15 },
+      { header: 'שגיאה', key: 'errorMessage', width: 40 },
+      { header: 'קוד שגיאה', key: 'errorCode', width: 20 },
+    ];
+
+    // Style header row
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = { bold: true };
+    headerRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFE2E8F0' },
+    };
+    headerRow.alignment = { horizontal: 'right' };
+
+    // Add data rows
+    errors.forEach((error) => {
+      worksheet.addRow({
+        rowNumber: error.rowNumber,
+        field: FIELD_NAMES_HE[error.field || 'unknown'] || error.field,
+        errorMessage: error.errorMessage,
+        errorCode: error.errorCode,
+      });
+    });
+
+    // Style all data cells
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber > 1) {
+        row.alignment = { horizontal: 'right' };
+        // Highlight error message in red
+        const errorCell = row.getCell('errorMessage');
+        errorCell.font = { color: { argb: 'FFDC2626' } };
+      }
+    });
+
+    // Generate buffer and return as Blob
+    const buffer = await workbook.xlsx.writeBuffer();
+    return new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
   }
 }

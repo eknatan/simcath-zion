@@ -9,6 +9,7 @@ import { ExcelImportDialog } from '@/components/features/manual-transfers/ExcelI
 import { ManualTransfersTable } from '@/components/features/manual-transfers/ManualTransfersTable';
 import { ManualTransferFilters, ManualTransferFiltersType } from '@/components/features/manual-transfers/ManualTransferFilters';
 import { SimpleManualTransferDialog } from '@/components/features/manual-transfers/SimpleManualTransferDialog';
+import { EditManualTransferDialog } from '@/components/features/manual-transfers/EditManualTransferDialog';
 import { manualTransfersService } from '@/lib/services/manual-transfers.service';
 import type { ManualTransfer } from '@/types/manual-transfers.types';
 import { toast } from 'sonner';
@@ -22,6 +23,8 @@ export default function ManualTransfersPage() {
   const [loading, setLoading] = useState(true);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [manualTransferDialogOpen, setManualTransferDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingTransfer, setEditingTransfer] = useState<ManualTransfer | null>(null);
   const [filters, setFilters] = useState<ManualTransferFiltersType>({});
 
   useEffect(() => {
@@ -79,6 +82,11 @@ export default function ManualTransfersPage() {
 
     loadTransfers();
     setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+  };
+
+  const handleEdit = (transfer: ManualTransfer) => {
+    setEditingTransfer(transfer);
+    setEditDialogOpen(true);
   };
 
   const handleBulkDelete = async () => {
@@ -345,6 +353,7 @@ export default function ManualTransfersPage() {
               selectedIds={selectedIds}
               onSelectionChange={setSelectedIds}
               onDelete={handleDelete}
+              onEdit={activeTab === 'active' ? handleEdit : undefined}
               onRefresh={loadTransfers}
               showExportedDate={activeTab === 'history'}
               enablePagination={activeTab === 'history'}
@@ -419,6 +428,18 @@ export default function ManualTransfersPage() {
         onSuccess={() => {
           loadTransfers();
           setManualTransferDialogOpen(false);
+        }}
+      />
+
+      {/* Edit Transfer Dialog */}
+      <EditManualTransferDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        transfer={editingTransfer}
+        onSuccess={() => {
+          loadTransfers();
+          setEditDialogOpen(false);
+          setEditingTransfer(null);
         }}
       />
     </div>

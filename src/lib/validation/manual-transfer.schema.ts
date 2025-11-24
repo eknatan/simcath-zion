@@ -150,7 +150,7 @@ export const excelRowSchema = z.object({
     })
     .refine(
       (val) => val === undefined || /^\d{9}$/.test(val),
-      { message: 'מספר תעודת זהות חייב להכיל עד 9 ספרות' }
+      { message: 'מספר תעודת זהות חייב להכיל עד 9 ספרות', path: ['id_number'] }
     ),
   bank_code: z
     .union([z.string(), z.number()])
