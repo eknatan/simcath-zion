@@ -128,12 +128,51 @@ export function CasePDFDocument({ caseData, locale, title }: CasePDFDocumentProp
   const isRTL = locale === 'he';
   const isWedding = caseData.case_type === 'wedding';
 
+  // For English export, use translated data if available
+  const englishTranslation = !isRTL && caseData.translations?.find(
+    (tr: any) => tr.lang_to === 'en'
+  )?.content_json;
+
+  // Helper to get value - use translation for English if available, otherwise original
+  const getValue = (originalValue: any, translatedSection?: string, translatedField?: string) => {
+    if (isRTL || !englishTranslation || !translatedSection || !translatedField) {
+      return originalValue;
+    }
+    const section = englishTranslation[translatedSection];
+    return section?.[translatedField] ?? originalValue;
+  };
+
   // Calculate totals for cleaning cases
   const totalTransferred = caseData.payments?.reduce(
     (sum: number, payment: any) => sum + (payment.amount_ils || 0),
     0
   ) || 0;
   const activeMonths = caseData.payments?.length || 0;
+
+  // Get wedding info values
+  const weddingDateHebrew = getValue(caseData.wedding_date_hebrew, 'wedding_info', 'wedding_date_hebrew');
+  const city = getValue(caseData.city, 'wedding_info', 'city');
+  const venue = getValue(caseData.venue, 'wedding_info', 'venue');
+  const requestBackground = getValue(caseData.request_background, 'wedding_info', 'request_background');
+
+  // Get groom info values
+  const groomFirstName = getValue(caseData.groom_first_name, 'groom_info', 'first_name');
+  const groomLastName = getValue(caseData.groom_last_name, 'groom_info', 'last_name');
+  const groomSchool = getValue(caseData.groom_school, 'groom_info', 'school');
+  const groomFatherName = getValue(caseData.groom_father_name, 'groom_info', 'father_name');
+  const groomMotherName = getValue(caseData.groom_mother_name, 'groom_info', 'mother_name');
+  const groomMemorialDay = getValue(caseData.groom_memorial_day, 'groom_info', 'memorial_day');
+
+  // Get bride info values
+  const brideFirstName = getValue(caseData.bride_first_name, 'bride_info', 'first_name');
+  const brideLastName = getValue(caseData.bride_last_name, 'bride_info', 'last_name');
+  const brideSchool = getValue(caseData.bride_school, 'bride_info', 'school');
+  const brideFatherName = getValue(caseData.bride_father_name, 'bride_info', 'father_name');
+  const brideMotherName = getValue(caseData.bride_mother_name, 'bride_info', 'mother_name');
+  const brideMemorialDay = getValue(caseData.bride_memorial_day, 'bride_info', 'memorial_day');
+
+  // Get contact info values
+  const address = getValue(caseData.address, 'contact_info', 'address');
 
   return (
     <Document>
@@ -149,19 +188,19 @@ export function CasePDFDocument({ caseData, locale, title }: CasePDFDocumentProp
           <>
             {/* Couple Names */}
             <Text style={styles.subHeader}>
-              {`${caseData.groom_first_name} ${caseData.groom_last_name} ♥ ${caseData.bride_first_name} ${caseData.bride_last_name}`}
+              {`${groomFirstName} ${groomLastName} ♥ ${brideFirstName} ${brideLastName}`}
             </Text>
 
             {/* Wedding Details */}
             <SectionTitle title={t.weddingDetails} isRTL={isRTL} />
-            <FieldRow label={t.hebrewDate} value={caseData.wedding_date_hebrew} isRTL={isRTL} />
+            <FieldRow label={t.hebrewDate} value={weddingDateHebrew} isRTL={isRTL} />
             <FieldRow
               label={t.gregorianDate}
               value={caseData.wedding_date_gregorian ? new Date(caseData.wedding_date_gregorian).toLocaleDateString(isRTL ? 'he-IL' : 'en-US') : null}
               isRTL={isRTL}
             />
-            <FieldRow label={t.city} value={caseData.city} isRTL={isRTL} />
-            <FieldRow label={t.venue} value={caseData.venue} isRTL={isRTL} />
+            <FieldRow label={t.city} value={city} isRTL={isRTL} />
+            <FieldRow label={t.venue} value={venue} isRTL={isRTL} />
             <FieldRow label={t.guestsCount} value={caseData.guests_count} isRTL={isRTL} />
             <FieldRow
               label={t.approvedAmount}
@@ -174,38 +213,38 @@ export function CasePDFDocument({ caseData, locale, title }: CasePDFDocumentProp
               {/* Groom Details */}
               <View style={styles.column}>
                 <SectionTitle title={t.groomDetails} isRTL={isRTL} />
-                <FieldRow label={t.fullName} value={`${caseData.groom_first_name} ${caseData.groom_last_name}`} isRTL={isRTL} />
+                <FieldRow label={t.fullName} value={`${groomFirstName} ${groomLastName}`} isRTL={isRTL} />
                 <FieldRow label={t.idNumber} value={caseData.groom_id} isRTL={isRTL} />
-                <FieldRow label={t.school} value={caseData.groom_school} isRTL={isRTL} />
-                <FieldRow label={t.fatherName} value={caseData.groom_father_name} isRTL={isRTL} />
-                <FieldRow label={t.motherName} value={caseData.groom_mother_name} isRTL={isRTL} />
-                <FieldRow label={t.memorialDay} value={caseData.groom_memorial_day} isRTL={isRTL} />
+                <FieldRow label={t.school} value={groomSchool} isRTL={isRTL} />
+                <FieldRow label={t.fatherName} value={groomFatherName} isRTL={isRTL} />
+                <FieldRow label={t.motherName} value={groomMotherName} isRTL={isRTL} />
+                <FieldRow label={t.memorialDay} value={groomMemorialDay} isRTL={isRTL} />
               </View>
 
               {/* Bride Details */}
               <View style={styles.column}>
                 <SectionTitle title={t.brideDetails} isRTL={isRTL} />
-                <FieldRow label={t.fullName} value={`${caseData.bride_first_name} ${caseData.bride_last_name}`} isRTL={isRTL} />
+                <FieldRow label={t.fullName} value={`${brideFirstName} ${brideLastName}`} isRTL={isRTL} />
                 <FieldRow label={t.idNumber} value={caseData.bride_id} isRTL={isRTL} />
-                <FieldRow label={t.school} value={caseData.bride_school} isRTL={isRTL} />
-                <FieldRow label={t.fatherName} value={caseData.bride_father_name} isRTL={isRTL} />
-                <FieldRow label={t.motherName} value={caseData.bride_mother_name} isRTL={isRTL} />
-                <FieldRow label={t.memorialDay} value={caseData.bride_memorial_day} isRTL={isRTL} />
+                <FieldRow label={t.school} value={brideSchool} isRTL={isRTL} />
+                <FieldRow label={t.fatherName} value={brideFatherName} isRTL={isRTL} />
+                <FieldRow label={t.motherName} value={brideMotherName} isRTL={isRTL} />
+                <FieldRow label={t.memorialDay} value={brideMemorialDay} isRTL={isRTL} />
               </View>
             </View>
 
             {/* Contact Info */}
             <SectionTitle title={t.contactInfo} isRTL={isRTL} />
-            <FieldRow label={t.address} value={caseData.address} isRTL={isRTL} />
+            <FieldRow label={t.address} value={address} isRTL={isRTL} />
             <FieldRow label={t.phone} value={caseData.contact_phone} isRTL={isRTL} />
             <FieldRow label={t.email} value={caseData.contact_email} isRTL={isRTL} />
 
             {/* Background Story */}
-            {caseData.request_background && (
+            {(requestBackground || caseData.request_background) && (
               <>
                 <SectionTitle title={t.background} isRTL={isRTL} />
                 <Text style={[styles.textBlock, { textAlign: isRTL ? 'right' : 'left' }]}>
-                  {caseData.request_background}
+                  {requestBackground || caseData.request_background}
                 </Text>
               </>
             )}
