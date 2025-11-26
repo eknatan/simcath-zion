@@ -30,8 +30,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { formatCurrency } from '@/lib/utils/format';
 import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
-import { ExportDocument } from '@/components/shared/ExportDocument';
-import { CaseSummary } from '@/components/shared/CaseSummary';
+import { ExportPDFButton } from '@/components/shared/ExportDocument';
 import { AuditLogTimeline } from '@/components/shared/AuditLogTimeline';
 import { CloseDialog, ReopenDialog } from '@/components/features/sick-children/CloseDialog';
 
@@ -336,22 +335,13 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
         )}
 
         {/* Export PDF Button */}
-        <ExportDocument
+        <ExportPDFButton
+          documentType="case"
+          data={caseData}
           filename={getExportFilename()}
-          title={`תיק מספר ${caseData.case_number}`}
           variant="outline"
           size="sm"
-          direction="rtl"
-          showIcon={true}
-          onExportComplete={() => {
-            // Optional: Add success notification
-          }}
-          onExportError={() => {
-            // Optional: Add error handling
-          }}
-        >
-          <CaseSummary caseData={caseData} />
-        </ExportDocument>
+        />
 
         {/* Audit History Button */}
         <AuditLogTimeline

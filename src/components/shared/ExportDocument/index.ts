@@ -1,1 +1,2 @@
-export { ExportDocument, ExportField, ExportSection } from './ExportDocument';
+export { ExportDocument, ExportField, ExportSection, ExportPDFButton } from './ExportDocument';
+export type { PDFExportLocale } from './ExportDocument';

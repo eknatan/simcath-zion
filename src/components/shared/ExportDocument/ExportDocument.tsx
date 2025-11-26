@@ -4,28 +4,46 @@
  * ExportDocument - קומפוננטה משותפת לייצוא מסמכים
  *
  * תומך ב:
- * - ייצוא PDF עם תמיכה מלאה ב-RTL ועברית
- * - עיצוב מותאם אישית
- * - דינאמי ומותאם לכל סוג מסמך
+ * - ייצוא PDF עם תמיכה מלאה ב-RTL ועברית באמצעות @react-pdf/renderer
+ * - בחירת שפה (עברית/אנגלית)
+ * - עיצוב מותאם אישית עם 2 טורים
  *
  * עקרונות SOLID:
  * - Single Responsibility: רק ייצוא מסמכים
  * - Open/Closed: ניתן להרחבה לפורמטים נוספים
- * - Dependency Inversion: מקבל את התוכן כ-ReactNode
+ * - Dependency Inversion: מקבל את התוכן כ-data
  *
  * לפי: DESIGN_SYSTEM.md, AI_DEVELOPMENT_GUIDE.md
  */
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { pdf } from '@react-pdf/renderer';
 import { ActionButton } from '@/components/shared/ActionButton';
-import { FileDown, Loader2 } from 'lucide-react';
-import { useExportPDF } from '@/lib/hooks/useExportPDF';
+import { FileDown, Loader2, ChevronDown } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
+import { CasePDFDocument, ApplicationPDFDocument, PDFLocale } from '@/lib/pdf';
 
-interface ExportDocumentProps {
+export type PDFExportLocale = PDFLocale;
+
+type DocumentType = 'case' | 'application';
+
+interface ExportPDFButtonProps {
   /**
-   * התוכן לייצוא - יכול להיות כל רכיב React
+   * סוג המסמך - תיק או טופס מבקש
    */
-  children: React.ReactNode;
+  documentType: DocumentType;
+
+  /**
+   * נתוני המסמך
+   */
+  data: any;
 
   /**
    * שם הקובץ (ללא סיומת)
@@ -33,7 +51,7 @@ interface ExportDocumentProps {
   filename: string;
 
   /**
-   * כותרת המסמך (מופיעה ב-PDF)
+   * כותרת המסמך (אופציונלי)
    */
   title?: string;
 
@@ -58,11 +76,6 @@ interface ExportDocumentProps {
   showIcon?: boolean;
 
   /**
-   * כיוון המסמך - RTL או LTR
-   */
-  direction?: 'rtl' | 'ltr';
-
-  /**
    * Callback אחרי ייצוא מוצלח
    */
   onExportComplete?: () => void;
@@ -73,96 +86,95 @@ interface ExportDocumentProps {
   onExportError?: (error: Error) => void;
 }
 
-export function ExportDocument({
-  children,
+/**
+ * כפתור ייצוא PDF עם בחירת שפה - משתמש ב-@react-pdf/renderer
+ */
+export function ExportPDFButton({
+  documentType,
+  data,
   filename,
   title,
   variant = 'outline',
   size = 'default',
   buttonText,
   showIcon = true,
-  direction = 'rtl',
   onExportComplete,
   onExportError,
-}: ExportDocumentProps) {
+}: ExportPDFButtonProps) {
   const t = useTranslations('common.export');
+  const [exporting, setExporting] = useState(false);
 
-  // שימוש ב-hook המשותף
-  const { isExporting, exportToPDF, contentRef } = useExportPDF({
-    filename,
-    onSuccess: onExportComplete,
-    onError: onExportError,
-  });
+  const handleExport = async (locale: PDFLocale) => {
+    try {
+      setExporting(true);
 
-  const handleExportPDF = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    e.preventDefault();
-    await exportToPDF();
+      // Generate PDF blob based on document type
+      let blob: Blob;
+      if (documentType === 'case') {
+        blob = await pdf(
+          <CasePDFDocument caseData={data} locale={locale} title={title} />
+        ).toBlob();
+      } else {
+        blob = await pdf(
+          <ApplicationPDFDocument formData={data} locale={locale} title={title} />
+        ).toBlob();
+      }
+
+      // Download the file
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${filename}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success(locale === 'he' ? 'PDF יוצא בהצלחה' : 'PDF exported successfully');
+      onExportComplete?.();
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      toast.error(locale === 'he' ? 'שגיאה ביצוא PDF' : 'Error exporting PDF');
+      onExportError?.(error as Error);
+    } finally {
+      setExporting(false);
+    }
   };
 
-  // טקסט הכפתור
   const displayText = buttonText || t('exportPDF');
 
   return (
-    <div className="export-document-wrapper">
-      {/* כפתור ייצוא */}
-      <ActionButton
-        variant={variant === 'outline' ? 'view' : (variant as any)}
-        size={size}
-        onClick={handleExportPDF}
-        disabled={isExporting}
-        className="gap-2"
-      >
-        {isExporting ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          showIcon && <FileDown className="h-4 w-4" />
-        )}
-        {isExporting ? t('exporting') : displayText}
-      </ActionButton>
-
-      {/* התוכן לייצוא - מוסתר מהמסך */}
-      <div className="hidden">
-        <div
-          ref={contentRef}
-          dir={direction}
-          className="export-document-content"
-          style={{
-            width: '210mm', // A4 width
-            padding: '10mm 12mm',
-            backgroundColor: 'white',
-            fontFamily: 'Arial, sans-serif',
-            fontSize: '11pt',
-            lineHeight: '1.4',
-            color: '#000',
-          }}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <ActionButton
+          variant={variant === 'outline' ? 'view' : (variant as any)}
+          size={size}
+          disabled={exporting}
+          className="gap-2"
         >
-          {/* כותרת אם קיימת */}
-          {title && (
-            <div
-              style={{
-                textAlign: 'center',
-                fontSize: '14pt',
-                fontWeight: 'bold',
-                marginBottom: '4mm',
-                borderBottom: '1.5px solid #000',
-                paddingBottom: '2mm',
-              }}
-            >
-              {title}
-            </div>
+          {exporting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            showIcon && <FileDown className="h-4 w-4" />
           )}
-
-          {/* התוכן */}
-          {children}
-        </div>
-      </div>
-    </div>
+          {exporting ? t('exporting') : displayText}
+          {!exporting && <ChevronDown className="h-3 w-3" />}
+        </ActionButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => handleExport('he')}>
+          עברית
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleExport('en')}>
+          English
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
 /**
- * רכיב עזר לעיצוב שדות במסמך PDF
+ * רכיב עזר לעיצוב שדות במסמך PDF (לתאימות לאחור)
  */
 export function ExportField({
   label,
@@ -208,7 +220,7 @@ export function ExportField({
 }
 
 /**
- * רכיב עזר לקטגוריה/סקשן במסמך PDF
+ * רכיב עזר לקטגוריה/סקשן במסמך PDF (לתאימות לאחור)
  */
 export function ExportSection({
   title,
@@ -239,9 +251,53 @@ export function ExportSection({
         {icon && <span style={{ marginRight: '5mm' }}>{icon}</span>}
         {title}
       </div>
-      <div style={{ paddingTop: '2mm' }}>
-        {children}
-      </div>
+      <div style={{ paddingTop: '2mm' }}>{children}</div>
+    </div>
+  );
+}
+
+/**
+ * @deprecated Use ExportPDFButton instead
+ * Legacy wrapper for backwards compatibility
+ */
+export function ExportDocument({
+  children,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  filename: _filename,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  title: _title,
+  variant = 'outline',
+  size = 'default',
+  buttonText,
+  showIcon = true,
+}: {
+  children: React.ReactNode;
+  filename: string;
+  title?: string;
+  variant?: 'default' | 'primary' | 'outline';
+  size?: 'default' | 'sm' | 'lg';
+  buttonText?: string;
+  showIcon?: boolean;
+  direction?: 'rtl' | 'ltr';
+  onExportComplete?: () => void;
+  onExportError?: (error: Error) => void;
+}) {
+  const t = useTranslations('common.export');
+
+  console.warn('ExportDocument is deprecated. Please use ExportPDFButton with documentType instead.');
+
+  return (
+    <div className="export-document-wrapper">
+      <ActionButton
+        variant={variant === 'outline' ? 'view' : (variant as any)}
+        size={size}
+        disabled
+        className="gap-2"
+      >
+        {showIcon && <FileDown className="h-4 w-4" />}
+        {buttonText || t('exportPDF')}
+      </ActionButton>
+      <div className="hidden">{children}</div>
     </div>
   );
 }

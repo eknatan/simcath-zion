@@ -24,7 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import { Applicant } from '@/lib/hooks/useApplicants';
 import { FormRenderer, WeddingFormData } from '@/components/shared/FormRenderer';
-import { ExportDocument } from '@/components/shared/ExportDocument';
+import { ExportPDFButton } from '@/components/shared/ExportDocument';
 import { ExportWord } from '@/components/shared/ExportWord';
 
 interface ApplicantViewDialogProps {
@@ -99,22 +99,13 @@ export function ApplicantViewDialog({
             />
 
             {/* ייצוא PDF */}
-            <ExportDocument
+            <ExportPDFButton
+              documentType="application"
+              data={formData}
               filename={filename}
               variant="outline"
               size="default"
-              direction={locale === 'he' ? 'rtl' : 'ltr'}
-              onExportComplete={() => {
-                // אופציונלי: ניתן להוסיף tracking או הודעה
-              }}
-            >
-              {/* תוכן המסמך לייצוא */}
-              <FormRenderer
-                formData={formData}
-                caseType={applicant.case_type as 'wedding'}
-                exportMode={true}
-              />
-            </ExportDocument>
+            />
           </div>
 
           {/* כפתור סגירה */}
