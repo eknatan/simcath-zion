@@ -97,7 +97,7 @@ export enum CleaningEndReason {
 // ========================================
 
 /**
- * Case with all related data loaded
+ * Case with all related data loaded (full relations)
  */
 export interface CaseWithRelations extends Case {
   bank_details?: BankDetails | null;
@@ -105,6 +105,16 @@ export interface CaseWithRelations extends Case {
   payments?: Payment[];
   history?: CaseHistory[];
   translations?: Translation[];
+}
+
+/**
+ * Case with computed fields for table display
+ */
+export interface CaseForTable extends Case {
+  has_bank_details: boolean;
+  approved_amount: number | null;
+  files_count: number;
+  required_files_count: number;
 }
 
 /**

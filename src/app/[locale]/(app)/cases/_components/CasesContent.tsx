@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from 'next-intl';
-import { CasesList } from './CasesList';
+import { WeddingCasesList } from './WeddingCasesList';
 import { CleaningCasesDashboard } from '@/components/features/sick-children/CleaningCasesDashboard';
-import { Case } from '@/types/case.types';
+import { CaseForTable } from '@/types/case.types';
 
 interface CasesContentProps {
-  cases: Case[];
+  cases: CaseForTable[];
 }
 
 /**
@@ -17,7 +17,7 @@ interface CasesContentProps {
  */
 export function CasesContent({ cases }: CasesContentProps) {
   const t = useTranslations('cases');
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState('wedding');
 
   return (
     <Card className="border border-slate-200 shadow-md">
@@ -30,10 +30,7 @@ export function CasesContent({ cases }: CasesContentProps) {
 
       <CardContent className="pt-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-muted p-1 mb-6">
-            <TabsTrigger value="all" className="data-[state=active]:bg-card">
-              {t('tabs.all')}
-            </TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-muted p-1 mb-6">
             <TabsTrigger value="wedding" className="data-[state=active]:bg-card">
               {t('tabs.wedding')}
             </TabsTrigger>
@@ -42,12 +39,8 @@ export function CasesContent({ cases }: CasesContentProps) {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="all">
-            <CasesList cases={cases} />
-          </TabsContent>
-
           <TabsContent value="wedding">
-            <CasesList cases={cases.filter((c) => c.case_type === 'wedding')} />
+            <WeddingCasesList cases={cases.filter((c) => c.case_type === 'wedding')} />
           </TabsContent>
 
           <TabsContent value="cleaning">

@@ -1,35 +1,32 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useRouter } from '@/i18n/routing';
-import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/components/shared/DataTable';
-import { StatusBadge } from '@/components/shared/StatusBadge';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Search, Users, Calendar, DollarSign, Plus, Archive, Mail, CalendarX } from 'lucide-react';
+import { CasesFilterBar, FilterConfig, ActionButton } from '@/components/shared/CasesFilterBar';
+import { Plus, Archive, Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { Case, Payment } from '@/types/case.types';
-import { formatCurrency, formatDate } from '@/lib/utils/format';
-import { formatMonthYear, isAfter15thOfMonth } from '@/lib/utils/date';
-import { Button } from '@/components/ui/button';
 import { BulkPaymentEntry } from './BulkPaymentEntry';
 import { SendEmailsFlow } from './SendEmailsFlow';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  createActiveCleaningColumns,
+  createInactiveCleaningColumns,
+  CleaningCaseWithPayment,
+  CleaningColumnsTranslations,
+  shouldHighlightRow,
+} from '@/components/features/cases/columns';
 
-interface CleaningCaseWithPayment extends Case {
-  current_month_payment?: Payment | null;
-}
+// ========================================
+// Types
+// ========================================
 
 interface CleaningCasesDashboardProps {
   cases: CleaningCaseWithPayment[];
 }
+
+// ========================================
+// Component
+// ========================================
 
 /**
  * CleaningCasesDashboard - Specialized dashboard for sick children cases
@@ -38,12 +35,14 @@ interface CleaningCasesDashboardProps {
  * - Current month payment display
  * - Visual indicator for missing payments after 15th of month
  * - Search by family name, child name, city
- * - Status filtering
+ * - End reason filtering (for inactive)
  */
 export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDashboardProps) {
   const t = useTranslations('cases');
   const tCleaning = useTranslations('sickChildren');
   const router = useRouter();
+
+  // State
   const [searchTerm, setSearchTerm] = useState('');
   const [cases, setCases] = useState<CleaningCaseWithPayment[]>(initialCases);
   const [isLoading, setIsLoading] = useState(false);
@@ -100,273 +99,125 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
     return filtered;
   }, [cases, searchTerm, showInactive, endReasonFilter]);
 
-  // Check if should highlight row (after 15th and no payment)
-  const shouldHighlightRow = (caseItem: CleaningCaseWithPayment): boolean => {
-    const isAfter15 = isAfter15thOfMonth();
-    const hasPayment = !!caseItem.current_month_payment;
-    return isAfter15 && !hasPayment;
-  };
+  // Navigation handler
+  const handleRowClick = useCallback(
+    (caseItem: CleaningCaseWithPayment) => {
+      router.push(`/cases/${caseItem.id}`);
+    },
+    [router]
+  );
 
-  // Define table columns for active families
-  const activeColumns: ColumnDef<CleaningCaseWithPayment>[] = useMemo(
-    () => [
-      {
-        accessorKey: 'case_number',
-        header: t('table.caseNumber'),
-        cell: ({ row }) => (
-          <div className="font-semibold text-slate-900">#{row.original.case_number}</div>
-        ),
-      },
-      {
-        accessorKey: 'family_name',
-        header: tCleaning('dashboard.familyName'),
-        cell: ({ row }) => (
-          <div>
-            <div className="font-medium text-slate-900">{row.original.family_name}</div>
-            {row.original.child_name && (
-              <div className="text-sm text-slate-600 flex items-center gap-1 mt-0.5">
-                <Users className="h-3 w-3" />
-                {row.original.child_name}
-              </div>
-            )}
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'city',
-        header: t('table.city'),
-        cell: ({ row }) => <div className="text-slate-700">{row.original.city || '-'}</div>,
-      },
-      {
-        accessorKey: 'start_date',
-        header: tCleaning('dashboard.startDate'),
-        cell: ({ row }) => {
-          if (row.original.start_date) {
-            return (
-              <div className="text-sm text-slate-700 flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                {formatMonthYear(row.original.start_date)}
-              </div>
-            );
-          }
-          return <div className="text-slate-500">-</div>;
-        },
-      },
-      {
-        accessorKey: 'current_month_payment',
-        header: tCleaning('dashboard.currentMonthPayment'),
-        cell: ({ row }) => {
-          const payment = row.original.current_month_payment;
-          if (payment) {
-            return (
-              <div className="flex items-center gap-2">
-                <div className="font-semibold text-emerald-700 flex items-center gap-1">
-                  <DollarSign className="h-3 w-3" />
-                  {formatCurrency(payment.amount_ils)}
-                </div>
-              </div>
-            );
-          }
-          return <div className="text-slate-500">-</div>;
-        },
-      },
-      {
-        accessorKey: 'payment_status',
-        header: tCleaning('dashboard.paymentStatus'),
-        cell: ({ row }) => {
-          const payment = row.original.current_month_payment;
-          if (payment) {
-            return <StatusBadge status={payment.status as any} />;
-          }
+  // Refresh cases handler
+  const refreshCases = useCallback(() => {
+    setIsLoading(true);
+    fetch('/api/cleaning-cases?status=active')
+      .then((res) => res.json())
+      .then((data) => setCases(data))
+      .finally(() => setIsLoading(false));
+  }, []);
 
-          // No payment - show warning if after 15th
-          if (shouldHighlightRow(row.original)) {
-            return (
-              <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-                {tCleaning('dashboard.missingPayment')}
-              </Badge>
-            );
-          }
+  // Toggle inactive handler
+  const handleToggleInactive = useCallback(() => {
+    setShowInactive((prev) => !prev);
+    setEndReasonFilter('all');
+    setSearchTerm('');
+  }, []);
 
-          return (
-            <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200">
-              {tCleaning('dashboard.noPayment')}
-            </Badge>
-          );
-        },
+  // Column translations
+  const columnTranslations: CleaningColumnsTranslations = useMemo(
+    () => ({
+      caseNumber: t('table.caseNumber'),
+      familyName: tCleaning('dashboard.familyName'),
+      city: t('table.city'),
+      startDate: tCleaning('dashboard.startDate'),
+      currentMonthPayment: tCleaning('dashboard.currentMonthPayment'),
+      paymentStatus: tCleaning('dashboard.paymentStatus'),
+      status: t('table.status'),
+      missingPayment: tCleaning('dashboard.missingPayment'),
+      noPayment: tCleaning('dashboard.noPayment'),
+      // Inactive-specific
+      endDate: tCleaning('dashboard.endDate'),
+      endReason: tCleaning('dashboard.endReason'),
+      reasons: {
+        healed: tCleaning('inactiveFamilies.reasons.healed'),
+        deceased: tCleaning('inactiveFamilies.reasons.deceased'),
+        other: tCleaning('inactiveFamilies.reasons.other'),
       },
-      {
-        accessorKey: 'status',
-        header: t('table.status'),
-        cell: ({ row }) => <StatusBadge status={row.original.status as any} />,
-      },
-    ],
+    }),
     [t, tCleaning]
   );
 
-  // Define table columns for inactive families
-  const inactiveColumns: ColumnDef<CleaningCaseWithPayment>[] = useMemo(
-    () => [
-      {
-        accessorKey: 'case_number',
-        header: t('table.caseNumber'),
-        cell: ({ row }) => (
-          <div className="font-semibold text-slate-900">#{row.original.case_number}</div>
-        ),
-      },
-      {
-        accessorKey: 'family_name',
-        header: tCleaning('dashboard.familyName'),
-        cell: ({ row }) => (
-          <div>
-            <div className="font-medium text-slate-900">{row.original.family_name}</div>
-            {row.original.child_name && (
-              <div className="text-sm text-slate-600 flex items-center gap-1 mt-0.5">
-                <Users className="h-3 w-3" />
-                {row.original.child_name}
-              </div>
-            )}
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'city',
-        header: t('table.city'),
-        cell: ({ row }) => <div className="text-slate-700">{row.original.city || '-'}</div>,
-      },
-      {
-        accessorKey: 'start_date',
-        header: tCleaning('dashboard.startDate'),
-        cell: ({ row }) => {
-          if (row.original.start_date) {
-            return (
-              <div className="text-sm text-slate-700 flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                {formatMonthYear(row.original.start_date)}
-              </div>
-            );
-          }
-          return <div className="text-slate-500">-</div>;
-        },
-      },
-      {
-        accessorKey: 'end_date',
-        header: tCleaning('dashboard.endDate'),
-        cell: ({ row }) => {
-          if (row.original.end_date) {
-            return (
-              <div className="text-sm text-slate-700 flex items-center gap-1">
-                <CalendarX className="h-3 w-3" />
-                {formatDate(row.original.end_date)}
-              </div>
-            );
-          }
-          return <div className="text-slate-500">-</div>;
-        },
-      },
-      {
-        accessorKey: 'end_reason',
-        header: tCleaning('dashboard.endReason'),
-        cell: ({ row }) => {
-          const reason = row.original.end_reason;
-          if (!reason) return <div className="text-slate-500">-</div>;
-
-          const variants: Record<string, string> = {
-            healed: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-            deceased: 'bg-slate-100 text-slate-700 border-slate-300',
-            other: 'bg-amber-50 text-amber-700 border-amber-200',
-          };
-
-          return (
-            <Badge variant="outline" className={variants[reason] || ''}>
-              {tCleaning(`inactiveFamilies.reasons.${reason}`)}
-            </Badge>
-          );
-        },
-      },
-      {
-        accessorKey: 'status',
-        header: t('table.status'),
-        cell: ({ row }) => <StatusBadge status={row.original.status as any} />,
-      },
-    ],
-    [t, tCleaning]
+  // Create columns based on active/inactive mode
+  const columns = useMemo(
+    () =>
+      showInactive
+        ? createInactiveCleaningColumns(columnTranslations)
+        : createActiveCleaningColumns(columnTranslations),
+    [showInactive, columnTranslations]
   );
 
-  // Select columns based on view mode
-  const columns = showInactive ? inactiveColumns : activeColumns;
+  // Filter configurations (only for inactive mode)
+  const filterConfigs: FilterConfig[] = useMemo(
+    () => [
+      {
+        id: 'end_reason',
+        placeholder: tCleaning('dashboard.filterByReason'),
+        value: endReasonFilter,
+        onChange: setEndReasonFilter,
+        showWhen: showInactive,
+        options: [
+          { value: 'all', label: tCleaning('dashboard.allReasons') },
+          { value: 'healed', label: tCleaning('inactiveFamilies.reasons.healed') },
+          { value: 'deceased', label: tCleaning('inactiveFamilies.reasons.deceased') },
+          { value: 'other', label: tCleaning('inactiveFamilies.reasons.other') },
+        ],
+      },
+    ],
+    [tCleaning, endReasonFilter, showInactive]
+  );
 
-  const handleRowClick = (caseItem: CleaningCaseWithPayment) => {
-    router.push(`/cases/${caseItem.id}`);
-  };
+  // Action buttons (only for active mode)
+  const actionButtons: ActionButton[] = useMemo(
+    () => [
+      {
+        id: 'bulk-entry',
+        label: tCleaning('dashboard.bulkEntry'),
+        icon: <Plus className="h-4 w-4 me-2" />,
+        onClick: () => setShowBulkEntry(true),
+        variant: 'default',
+        className: 'bg-emerald-600 hover:bg-emerald-700',
+        showWhen: !showInactive,
+      },
+      {
+        id: 'send-emails',
+        label: tCleaning('dashboard.sendEmails'),
+        icon: <Mail className="h-4 w-4 me-2" />,
+        onClick: () => setShowSendEmails(true),
+        variant: 'outline',
+        showWhen: !showInactive,
+      },
+      {
+        id: 'inactive-toggle',
+        label: tCleaning('dashboard.inactiveFamilies'),
+        icon: <Archive className="h-4 w-4 me-2" />,
+        onClick: handleToggleInactive,
+        variant: showInactive ? 'default' : 'outline',
+        className: showInactive ? 'bg-slate-700 hover:bg-slate-800' : '',
+      },
+    ],
+    [tCleaning, showInactive, handleToggleInactive]
+  );
 
   return (
     <div className="space-y-4">
-      {/* Action Buttons */}
-      <div className="flex flex-wrap items-center gap-3">
-        {!showInactive && (
-          <>
-            <Button
-              variant="default"
-              className="bg-emerald-600 hover:bg-emerald-700"
-              onClick={() => setShowBulkEntry(true)}
-            >
-              <Plus className="h-4 w-4 me-2" />
-              {tCleaning('dashboard.bulkEntry')}
-            </Button>
-
-            <Button
-              variant="outline"
-              onClick={() => setShowSendEmails(true)}
-            >
-              <Mail className="h-4 w-4 me-2" />
-              {tCleaning('dashboard.sendEmails')}
-            </Button>
-          </>
-        )}
-
-        <Button
-          variant={showInactive ? 'default' : 'outline'}
-          className={showInactive ? 'bg-slate-700 hover:bg-slate-800' : ''}
-          onClick={() => {
-            setShowInactive(!showInactive);
-            setEndReasonFilter('all');
-            setSearchTerm('');
-          }}
-        >
-          <Archive className="h-4 w-4 me-2" />
-          {tCleaning('dashboard.inactiveFamilies')}
-        </Button>
-      </div>
-
-      {/* Search and Filters */}
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            type="text"
-            placeholder={tCleaning('dashboard.searchPlaceholder')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pe-10"
-          />
-        </div>
-
-        {/* End reason filter - only for inactive */}
-        {showInactive && (
-          <Select value={endReasonFilter} onValueChange={setEndReasonFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={tCleaning('dashboard.filterByReason')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{tCleaning('dashboard.allReasons')}</SelectItem>
-              <SelectItem value="healed">{tCleaning('inactiveFamilies.reasons.healed')}</SelectItem>
-              <SelectItem value="deceased">{tCleaning('inactiveFamilies.reasons.deceased')}</SelectItem>
-              <SelectItem value="other">{tCleaning('inactiveFamilies.reasons.other')}</SelectItem>
-            </SelectContent>
-          </Select>
-        )}
-      </div>
+      {/* Filter Bar */}
+      <CasesFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder={tCleaning('dashboard.searchPlaceholder')}
+        filters={filterConfigs}
+        actions={actionButtons}
+      />
 
       {/* Table */}
       <DataTable
@@ -392,24 +243,11 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
       <BulkPaymentEntry
         open={showBulkEntry}
         onOpenChange={setShowBulkEntry}
-        onSuccess={() => {
-          // Refresh the cases list after successful bulk entry
-          setIsLoading(true);
-          fetch('/api/cleaning-cases?status=active')
-            .then(res => res.json())
-            .then(data => setCases(data))
-            .finally(() => setIsLoading(false));
-        }}
+        onSuccess={refreshCases}
       />
 
       {/* Send Emails Flow Modal */}
-      <SendEmailsFlow
-        open={showSendEmails}
-        onOpenChange={setShowSendEmails}
-        onSuccess={() => {
-          // Optional: refresh data after sending emails
-        }}
-      />
+      <SendEmailsFlow open={showSendEmails} onOpenChange={setShowSendEmails} onSuccess={() => {}} />
     </div>
   );
 }

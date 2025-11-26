@@ -1504,6 +1504,25 @@
       "exportError": "Error creating MASAV file"
     }
   },
+  "weddingCases": {
+    "table": {
+      "weddingDate": "Wedding Date",
+      "requestedAmount": "Requested Amount",
+      "approvedAmount": "Approved Amount",
+      "bankDetails": "Bank Details",
+      "files": "Files",
+      "notApproved": "Not Approved"
+    },
+    "filters": {
+      "status": "Status",
+      "allStatuses": "All Statuses",
+      "new": "New",
+      "pendingTransfer": "Pending Transfer",
+      "sortByWeddingDate": "Wedding Date",
+      "sortByCreatedAt": "Created Date",
+      "history": "History"
+    }
+  },
   "sickChildren": {
     "title": "Sick Children",
     "description": "Monthly support management for families with sick children",

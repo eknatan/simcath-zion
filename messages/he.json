@@ -1563,6 +1563,25 @@
       "exportError": "שגיאה ביצירת קובץ מס\"ב"
     }
   },
+  "weddingCases": {
+    "table": {
+      "weddingDate": "תאריך חתונה",
+      "requestedAmount": "סכום מבוקש",
+      "approvedAmount": "סכום מאושר",
+      "bankDetails": "פרטי בנק",
+      "files": "קבצים",
+      "notApproved": "טרם אושר"
+    },
+    "filters": {
+      "status": "סטטוס",
+      "allStatuses": "כל הסטטוסים",
+      "new": "חדש",
+      "pendingTransfer": "ממתין להעברה",
+      "sortByWeddingDate": "תאריך חתונה",
+      "sortByCreatedAt": "תאריך יצירה",
+      "history": "היסטוריה"
+    }
+  },
   "sickChildren": {
     "title": "ילדים חולים",
     "description": "ניהול תמיכה חודשית למשפחות עם ילד חולה",
