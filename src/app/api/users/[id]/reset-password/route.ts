@@ -52,7 +52,7 @@ export async function POST(request: NextRequest, context: RouteParams) {
     const { error: resetError } = await supabaseAdmin.auth.resetPasswordForEmail(
       profile.email,
       {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password`,
+        redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset-password`,
       }
     );
 
