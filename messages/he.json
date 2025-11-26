@@ -1739,5 +1739,31 @@
       "emailTemplates": "תבניות מיילים",
       "warningCapChange": "שים לב: שינוי התקרה ישפיע רק על תשלומים חדשים"
     }
+  },
+  "formLinks": {
+    "openLink": "פתח טופס",
+    "copyLink": "העתק קישור",
+    "copied": "הועתק!",
+    "copySuccess": "הקישור הועתק ללוח",
+    "copyError": "שגיאה בהעתקת הקישור",
+    "sendEmail": "שלח במייל",
+    "sendFormLink": "שליחת קישור לטופס",
+    "sendFormDescription": "שלח את הקישור ל{formType} למייל",
+    "recipientEmail": "כתובת מייל",
+    "recipientName": "שם הנמען",
+    "recipientNamePlaceholder": "לדוגמה: ישראל ישראלי",
+    "customMessage": "הודעה אישית",
+    "customMessagePlaceholder": "הוסף הערה או הסבר נוסף (אופציונלי)",
+    "linkToSend": "הקישור שיישלח:",
+    "optional": "אופציונלי",
+    "cancel": "בטל",
+    "send": "שלח",
+    "sending": "שולח...",
+    "emailSentSuccess": "המייל נשלח בהצלחה!",
+    "emailSentError": "שגיאה בשליחת המייל",
+    "formTypes": {
+      "wedding": "טופס חתונה",
+      "sickChildren": "טופס ילדים חולים"
+    }
   }
 }

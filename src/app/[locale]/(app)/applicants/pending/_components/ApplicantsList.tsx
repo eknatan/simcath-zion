@@ -20,13 +20,11 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/components/shared/DataTable/DataTable';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import {
   Eye,
   CheckCircle2,
   XCircle,
   RotateCcw,
-  Search,
 } from 'lucide-react';
 import { Applicant } from '@/lib/hooks/useApplicants';
 import { ApplicantViewDialog } from './ApplicantViewDialog';
@@ -41,6 +39,7 @@ interface ApplicantsListProps {
   status: 'pending' | 'rejected';
   onRefresh: () => void;
   locale: string;
+  searchQuery: string;
 }
 
 export function ApplicantsList({
@@ -48,12 +47,12 @@ export function ApplicantsList({
   status,
   onRefresh,
   locale,
+  searchQuery,
 }: ApplicantsListProps) {
   const t = useTranslations('applicants');
   const router = useRouter();
 
   // State
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
@@ -308,19 +307,6 @@ export function ApplicantsList({
 
   return (
     <div className="space-y-4">
-      {/* Search Bar */}
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t('search_placeholder')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="ps-10 border-2"
-          />
-        </div>
-      </div>
-
       {/* Table */}
       <DataTable columns={columns} data={filteredApplicants} />
 

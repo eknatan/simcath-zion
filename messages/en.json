@@ -1660,5 +1660,31 @@
       "emailTemplates": "Email Templates",
       "warningCapChange": "Note: Changing the cap will only affect new payments"
     }
+  },
+  "formLinks": {
+    "openLink": "Open Form",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "copySuccess": "Link copied to clipboard",
+    "copyError": "Failed to copy link",
+    "sendEmail": "Send via Email",
+    "sendFormLink": "Send Form Link",
+    "sendFormDescription": "Send the {formType} link via email",
+    "recipientEmail": "Email Address",
+    "recipientName": "Recipient Name",
+    "recipientNamePlaceholder": "e.g., John Doe",
+    "customMessage": "Personal Message",
+    "customMessagePlaceholder": "Add a note or explanation (optional)",
+    "linkToSend": "Link to send:",
+    "optional": "optional",
+    "cancel": "Cancel",
+    "send": "Send",
+    "sending": "Sending...",
+    "emailSentSuccess": "Email sent successfully!",
+    "emailSentError": "Failed to send email",
+    "formTypes": {
+      "wedding": "Wedding Form",
+      "sickChildren": "Sick Children Form"
+    }
   }
 }

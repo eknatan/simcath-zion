@@ -15,15 +15,15 @@
 import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, XCircle, Clock, ExternalLink, Heart } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { XCircle, Clock, Search } from 'lucide-react';
 import { ApplicantsList } from './ApplicantsList';
 import { ApplicantStats } from './ApplicantStats';
+import { FormLinkCard } from './FormLinkCard';
 import { useApplicants } from '@/lib/hooks/useApplicants';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { ErrorDisplay } from '@/components/shared/ErrorDisplay';
-import { ActionButton } from '@/components/shared/ActionButton';
 import { ApplicantStatus } from '@/types/case.types';
-import Link from 'next/link';
 
 interface ApplicantsContentProps {
   locale: string;
@@ -32,6 +32,7 @@ interface ApplicantsContentProps {
 export function ApplicantsContent({ locale }: ApplicantsContentProps) {
   const t = useTranslations('applicants');
   const [activeTab, setActiveTab] = useState<'pending' | 'rejected'>('pending');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Map tab value to ApplicantStatus
   const statusFilter = activeTab === 'pending'
@@ -76,23 +77,12 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
             {t('page_description')}
           </p>
         </div>
-        {/* כפתורים לטפסים ציבוריים */}
-        <div className="flex gap-2">
-          <Link href={`/${locale}/public-forms/wedding`} target="_blank">
-            <ActionButton variant="primary" size="default">
-              <FileText className="h-4 w-4 me-2" />
-              טופס חתונה
-              <ExternalLink className="h-3 w-3 ms-2" />
-            </ActionButton>
-          </Link>
-          <Link href={`/${locale}/public-forms/sick-children`} target="_blank">
-            <ActionButton size="default" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">
-              <Heart className="h-4 w-4 me-2" />
-              טופס ילדים חולים
-              <ExternalLink className="h-3 w-3 ms-2" />
-            </ActionButton>
-          </Link>
-        </div>
+      </div>
+
+      {/* Form Link Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <FormLinkCard formType="wedding" locale={locale} />
+        <FormLinkCard formType="sick-children" locale={locale} />
       </div>
 
       {/* Stats */}
@@ -100,22 +90,36 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="mt-8">
-        <TabsList className="grid w-full md:w-[400px] grid-cols-2 mb-6">
-          <TabsTrigger
-            value="pending"
-            className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-          >
-            <Clock className="h-4 w-4 me-2" />
-            {t('tabs.pending')}
-          </TabsTrigger>
-          <TabsTrigger
-            value="rejected"
-            className="data-[state=active]:bg-red-600 data-[state=active]:text-white"
-          >
-            <XCircle className="h-4 w-4 me-2" />
-            {t('tabs.rejected')}
-          </TabsTrigger>
-        </TabsList>
+        {/* Search + Tabs in same row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          {/* Search Bar */}
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t('search_placeholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="ps-10 border-2"
+            />
+          </div>
+
+          <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
+            <TabsTrigger
+              value="pending"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+            >
+              <Clock className="h-4 w-4 me-2" />
+              {t('tabs.pending')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="rejected"
+              className="data-[state=active]:bg-red-600 data-[state=active]:text-white"
+            >
+              <XCircle className="h-4 w-4 me-2" />
+              {t('tabs.rejected')}
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Pending Tab */}
         <TabsContent value="pending">
@@ -124,6 +128,7 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
             status="pending"
             onRefresh={refetch}
             locale={locale}
+            searchQuery={searchQuery}
           />
         </TabsContent>
 
@@ -134,6 +139,7 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
             status="rejected"
             onRefresh={refetch}
             locale={locale}
+            searchQuery={searchQuery}
           />
         </TabsContent>
       </Tabs>
