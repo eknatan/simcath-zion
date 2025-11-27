@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -39,9 +39,9 @@ export function TransfersTable({
   const router = useRouter();
   const showTransferred = activeTab === TransferTab.TRANSFERRED;
 
-  const handleRowClick = (transfer: TransferWithDetails) => {
+  const handleRowClick = useCallback((transfer: TransferWithDetails) => {
     router.push(`/cases/${transfer.case_id}`);
-  };
+  }, [router]);
 
   // Define columns based on type filter
   const columns = useMemo<ColumnDef<TransferWithDetails>[]>(() => {

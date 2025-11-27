@@ -12,7 +12,6 @@ export async function GET() {
     // Parallel queries for different alert types
     const [
       weddingsNeedingTransferResult,
-      cleaningMissingPaymentsResult,
       pendingApplicantsResult,
     ] = await Promise.all([
       // Weddings within 7 days that are not yet transferred
@@ -32,19 +31,6 @@ export async function GET() {
         .lte('wedding_date_gregorian', sevenDaysFromNow.toISOString().split('T')[0])
         .order('wedding_date_gregorian', { ascending: true })
         .limit(5),
-
-      // Active cleaning cases without payment this month
-      supabase
-        .from('cases')
-        .select(`
-          id,
-          case_number,
-          family_name,
-          child_name
-        `)
-        .eq('case_type', 'cleaning')
-        .eq('status', 'active')
-        .limit(10),
 
       // Pending applicants waiting for approval
       supabase

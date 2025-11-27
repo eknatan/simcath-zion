@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -109,12 +108,7 @@ export function CleaningPaymentsTab({ caseData }: CleaningPaymentsTabProps) {
     (_, i) => (2020 + i).toString()
   );
 
-  // Fetch payments on mount
-  useEffect(() => {
-    fetchPayments();
-  }, [caseData.id]);
-
-  const fetchPayments = async () => {
+  const fetchPayments = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/cleaning-cases/${caseData.id}/payments`);
@@ -129,7 +123,12 @@ export function CleaningPaymentsTab({ caseData }: CleaningPaymentsTabProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [caseData.id, t]);
+
+  // Fetch payments on mount
+  useEffect(() => {
+    fetchPayments();
+  }, [fetchPayments]);
 
   // Handle amount change with cap warning
   const handleAmountChange = (value: string) => {

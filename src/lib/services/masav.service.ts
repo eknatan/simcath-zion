@@ -51,12 +51,26 @@ export class MasavError extends Error {
 
 /**
  * Export transfers to MASAV format
+ *
+ * Note: This function throws an error because MASAV export must be done
+ * via API route (server-side) where the masav package can use Node.js fs module.
+ *
+ * @param transfers - The transfers to export (not used here, but validated before API call)
+ * @param paymentType - The payment type (not used here, but passed to API)
  */
 export async function exportToMasav(
-  _transfers: TransferWithDetails[],
-  _paymentType: PaymentType
+  transfers: TransferWithDetails[],
+  paymentType: PaymentType
 ): Promise<ExportResult> {
-  // Note: This function should be called from a server-side API route
+  // Validate inputs before throwing
+  if (!transfers || transfers.length === 0) {
+    throw new MasavError('No transfers provided', 'NO_TRANSFERS');
+  }
+  if (!paymentType) {
+    throw new MasavError('Payment type is required', 'MISSING_PAYMENT_TYPE');
+  }
+
+  // This function should be called from a server-side API route
   // because the masav package uses Node.js fs module
   throw new MasavError(
     'MASAV export must be done via API route',

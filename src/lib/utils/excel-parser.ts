@@ -377,7 +377,7 @@ export class ExcelParser {
   /**
    * Export validation errors to Excel file
    */
-  static async exportErrorsToExcel(errors: ExcelImportError[], filename: string): Promise<Blob> {
+  static async exportErrorsToExcel(errors: ExcelImportError[]): Promise<Blob> {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('שגיאות ייבוא');
 

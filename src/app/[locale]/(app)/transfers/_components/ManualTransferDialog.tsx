@@ -111,8 +111,6 @@ export function ManualTransferDialog({
       const caseId = caseData.id;
 
       // 2. Check if bank_details exist for this case, if not create
-      let bankDetailsId: string;
-
       const { data: existingBankDetails } = await supabase
         .from('bank_details')
         .select('id')
@@ -133,10 +131,9 @@ export function ManualTransferDialog({
           .eq('id', existingBankDetails.id);
 
         if (updateError) throw updateError;
-        bankDetailsId = existingBankDetails.id;
       } else {
         // Create new
-        const { data: newBankDetails, error: insertError } = await supabase
+        const { error: insertError } = await supabase
           .from('bank_details')
           .insert({
             case_id: caseId,
@@ -144,12 +141,9 @@ export function ManualTransferDialog({
             branch: data.branch,
             account_number: data.account_number,
             account_holder_name: data.account_holder_name,
-          })
-          .select('id')
-          .single();
+          });
 
-        if (insertError || !newBankDetails) throw insertError;
-        bankDetailsId = newBankDetails.id;
+        if (insertError) throw insertError;
       }
 
       // 3. Create the payment (transfer)

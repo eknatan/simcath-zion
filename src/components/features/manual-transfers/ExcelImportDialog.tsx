@@ -97,10 +97,7 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
     if (!importResult || importResult.errors.length === 0) return;
 
     try {
-      const blob = await ExcelParser.exportErrorsToExcel(
-        importResult.errors,
-        file?.name || 'import'
-      );
+      const blob = await ExcelParser.exportErrorsToExcel(importResult.errors);
 
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');

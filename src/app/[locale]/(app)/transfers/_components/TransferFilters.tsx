@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
-import { TransferFilters as TransferFiltersType, TransferTab } from '@/types/transfers.types';
+import { TransferFilters as TransferFiltersType } from '@/types/transfers.types';
 import { Search, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -13,14 +13,12 @@ interface TransferFiltersProps {
   filters: TransferFiltersType;
   onChange: (filters: TransferFiltersType) => void;
   onReset: () => void;
-  activeTab: TransferTab;
 }
 
 export function TransferFilters({
   filters,
   onChange,
   onReset,
-  activeTab,
 }: TransferFiltersProps) {
   const t = useTranslations('transfers.filters');
   const [localFilters, setLocalFilters] = useState(filters);

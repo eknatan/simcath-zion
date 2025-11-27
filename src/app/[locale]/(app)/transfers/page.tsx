@@ -10,7 +10,6 @@ import { useTransfers } from '@/lib/hooks/useTransfers';
 import { useTransferSelection } from '@/lib/hooks/useTransferSelection';
 import { useExportTransfers } from '@/lib/hooks/useExportTransfers';
 import { TransfersTabs } from './_components/TransfersTabs';
-import { TransferSummary } from './_components/TransferSummary';
 import { TransferFilters } from './_components/TransferFilters';
 import { TransferTypeFilter } from './_components/TransferTypeFilter';
 import { BulkActions } from './_components/BulkActions';
@@ -45,7 +44,6 @@ export default function TransfersPage() {
   // Hooks
   const {
     transfers,
-    summary,
     isLoading,
     filters,
     setFilters,
@@ -78,12 +76,6 @@ export default function TransfersPage() {
       setExportDialogOpen(false);
     },
   });
-
-  // Calculate selected amount
-  const selectedAmount = selectedTransfers.reduce(
-    (sum, t) => sum + t.amount_ils,
-    0
-  );
 
   // Export handlers
   const handleExportExcel = () => {
@@ -160,7 +152,6 @@ export default function TransfersPage() {
         filters={filters}
         onChange={setFilters}
         onReset={resetFilters}
-        activeTab={activeTab}
       />
 
       {/* Bulk Actions */}

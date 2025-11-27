@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Upload, FileDown, Trash2, Plus, Clock, CheckCircle2, HandCoins } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -29,11 +29,7 @@ export default function ManualTransfersPage() {
   const [editingTransfer, setEditingTransfer] = useState<ManualTransfer | null>(null);
   const [filters, setFilters] = useState<ManualTransferFiltersType>({});
 
-  useEffect(() => {
-    loadTransfers();
-  }, [activeTab]);
-
-  const loadTransfers = async () => {
+  const loadTransfers = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await manualTransfersService.getAll();
@@ -64,7 +60,11 @@ export default function ManualTransfersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab]);
+
+  useEffect(() => {
+    loadTransfers();
+  }, [loadTransfers]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('האם אתה בטוח שברצונך למחוק העברה זו?')) return;
