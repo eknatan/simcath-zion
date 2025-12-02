@@ -1764,6 +1764,9 @@
     "formTypes": {
       "wedding": "טופס חתונה",
       "sickChildren": "טופס ילדים חולים"
-    }
+    },
+    "emailLanguage": "שפת המייל",
+    "hebrew": "עברית",
+    "english": "English"
   }
 }

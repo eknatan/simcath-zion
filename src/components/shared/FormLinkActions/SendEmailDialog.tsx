@@ -15,7 +15,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Send, Loader2 } from 'lucide-react';
+import { Mail, Send, Loader2, Globe } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -47,6 +54,7 @@ const emailFormSchema = z.object({
   recipientEmail: z.string().email(),
   recipientName: z.string().min(2).optional(),
   customMessage: z.string().optional(),
+  emailLanguage: z.enum(['he', 'en']),
 });
 
 type EmailFormData = z.infer<typeof emailFormSchema>;
@@ -66,10 +74,17 @@ export function SendEmailDialog({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<EmailFormData>({
     resolver: zodResolver(emailFormSchema),
+    defaultValues: {
+      emailLanguage: 'he',
+    },
   });
+
+  const selectedLanguage = watch('emailLanguage');
 
   const onSubmit = async (data: EmailFormData) => {
     setIsSubmitting(true);
@@ -84,6 +99,7 @@ export function SendEmailDialog({
           customMessage: data.customMessage,
           formType,
           formUrl,
+          language: data.emailLanguage,
         }),
       });
 
@@ -194,6 +210,26 @@ export function SendEmailDialog({
               rows={3}
               className="resize-none"
             />
+          </div>
+
+          {/* Email Language Selector */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium flex items-center gap-2">
+              <Globe className="h-4 w-4" />
+              {t('emailLanguage')}
+            </Label>
+            <Select
+              value={selectedLanguage}
+              onValueChange={(value: 'he' | 'en') => setValue('emailLanguage', value)}
+            >
+              <SelectTrigger className="h-11">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="he">{t('hebrew')}</SelectItem>
+                <SelectItem value="en">{t('english')}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Form URL Preview */}

@@ -1685,6 +1685,9 @@
     "formTypes": {
       "wedding": "Wedding Form",
       "sickChildren": "Sick Children Form"
-    }
+    },
+    "emailLanguage": "Email Language",
+    "hebrew": "עברית",
+    "english": "English"
   }
 }
