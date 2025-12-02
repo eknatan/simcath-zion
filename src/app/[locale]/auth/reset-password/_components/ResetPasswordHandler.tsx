@@ -9,7 +9,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { supabase } from '@/lib/supabase/client';
@@ -20,8 +19,6 @@ import { ResetPasswordForm } from './ResetPasswordForm';
 import type { Session } from '@supabase/supabase-js';
 
 export function ResetPasswordHandler() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
   const t = useTranslations();
 
   const [session, setSession] = useState<Session | null>(null);
@@ -29,17 +26,11 @@ export function ResetPasswordHandler() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const type = searchParams.get('type');
-
-    // וידוא שזה recovery type
-    if (type !== 'recovery') {
-      router.push('/login');
-      return;
-    }
-
+    // בודקים אם יש session - Supabase כבר יצר session מהטוקן
+    // לא צריך לבדוק type כי ה-redirect מ-Supabase לא תמיד כולל אותו
     handlePasswordReset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, router]);
+  }, []);
 
   const handlePasswordReset = async () => {
     try {
