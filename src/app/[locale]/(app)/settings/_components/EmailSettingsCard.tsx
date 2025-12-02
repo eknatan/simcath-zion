@@ -297,10 +297,13 @@ export function EmailSettingsCard() {
           </div>
 
           {/* Info message */}
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
-            <p className="text-xs text-blue-700">
-              <Check className="h-3 w-3 inline me-1" />
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 space-y-2">
+            <p className="text-sm font-medium text-blue-900">
+              <Check className="h-4 w-4 inline me-1" />
               {t('email.settings.infoMessage')}
+            </p>
+            <p className="text-xs text-blue-700">
+              כשמגישים בקשה חדשה דרך הטפסים (חתונה או ילד חולה), כל המיילים ברשימה יקבלו התראה עם פרטי הבקשה.
             </p>
           </div>
         </CardContent>

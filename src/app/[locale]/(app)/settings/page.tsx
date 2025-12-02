@@ -12,7 +12,7 @@
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings as SettingsIcon, Users, Bell, Server } from 'lucide-react';
+import { Settings as SettingsIcon, Users } from 'lucide-react';
 import { UsersTab } from './_components/UsersTab';
 import { EmailSettingsCard } from './_components/EmailSettingsCard';
 import { MasavSettingsCard } from './_components/MasavSettingsCard';
@@ -58,8 +58,8 @@ export default async function SettingsPage({
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="users" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid border-2 shadow-sm">
+      <Tabs defaultValue="general" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:inline-grid border-2 shadow-sm">
           <TabsTrigger value="general" className="gap-2">
             <SettingsIcon className="h-4 w-4" />
             <span className="hidden sm:inline">{t('settings.tabs.general')}</span>
@@ -68,24 +68,15 @@ export default async function SettingsPage({
             <Users className="h-4 w-4" />
             <span className="hidden sm:inline">{t('settings.tabs.users')}</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-2">
-            <Bell className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('settings.tabs.notifications')}</span>
-          </TabsTrigger>
-          <TabsTrigger value="system" className="gap-2">
-            <Server className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('settings.tabs.system')}</span>
-          </TabsTrigger>
         </TabsList>
 
         {/* General Tab */}
         <TabsContent value="general" className="space-y-6">
-          <div className="rounded-lg border-2 bg-card p-6 shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">{t('settings.tabs.general')}</h2>
-            <p className="text-muted-foreground">
-              הגדרות כלליות יתווספו בהמשך...
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <MonthlyCapSettingsCard />
+            <EmailSettingsCard />
           </div>
+          <MasavSettingsCard />
         </TabsContent>
 
         {/* Users Tab */}
@@ -97,23 +88,6 @@ export default async function SettingsPage({
             </div>
             <UsersTab />
           </div>
-        </TabsContent>
-
-        {/* Notifications Tab */}
-        <TabsContent value="notifications" className="space-y-6">
-          <div className="rounded-lg border-2 bg-card p-6 shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">{t('settings.tabs.notifications')}</h2>
-            <p className="text-muted-foreground">
-              הגדרות התראות יתווספו בהמשך...
-            </p>
-          </div>
-        </TabsContent>
-
-        {/* System Tab */}
-        <TabsContent value="system" className="space-y-6">
-          <MonthlyCapSettingsCard />
-          <EmailSettingsCard />
-          <MasavSettingsCard />
         </TabsContent>
       </Tabs>
     </div>
