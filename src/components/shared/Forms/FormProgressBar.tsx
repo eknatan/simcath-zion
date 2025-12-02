@@ -80,7 +80,7 @@ export function FormProgressBar({ currentStep, steps, className }: FormProgressB
 
             return (
               <React.Fragment key={step.id}>
-                <div className="relative z-10">
+                <div className="relative">
                   {/* Step circle - animated */}
                   <div className="relative">
                     <motion.div

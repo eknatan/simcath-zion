@@ -62,16 +62,10 @@ const hebrewDateStructuredSchema = z.object({
  * Single Responsibility - אחראי רק על נתוני החתונה הבסיסיים
  */
 export const weddingInfoSchema = z.object({
-  hebrew_date: hebrewDateStructuredSchema,
-  date_gregorian: z
-    .string()
-    .min(1, 'validation.required')
-    .refine((date) => {
-      const selectedDate = new Date(date);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return selectedDate >= today;
-    }, 'validation.pastDate'),
+  hebrew_date: hebrewDateStructuredSchema.refine(
+    (data) => data.day !== null && data.month !== null && data.year !== null,
+    { message: 'validation.required' }
+  ),
   city: z
     .string()
     .min(2, 'validation.minLength|min=2')
