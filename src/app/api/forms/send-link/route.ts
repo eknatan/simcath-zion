@@ -114,6 +114,7 @@ export async function POST(request: NextRequest) {
             margin: 0;
             padding: 20px;
             direction: ${isHebrew ? 'rtl' : 'ltr'};
+            unicode-bidi: embed;
           }
           .container {
             max-width: 600px;
@@ -141,11 +142,13 @@ export async function POST(request: NextRequest) {
             font-size: 18px;
             margin-bottom: 16px;
             text-align: ${isHebrew ? 'right' : 'left'};
+            unicode-bidi: embed;
           }
           .message {
             margin-bottom: 24px;
             color: #4a4a4a;
             text-align: ${isHebrew ? 'right' : 'left'};
+            unicode-bidi: embed;
           }
           .custom-message {
             background: #f8fafc;
@@ -154,6 +157,7 @@ export async function POST(request: NextRequest) {
             margin: 20px 0;
             border-radius: ${isHebrew ? '0 8px 8px 0' : '8px 0 0 8px'};
             text-align: ${isHebrew ? 'right' : 'left'};
+            unicode-bidi: embed;
           }
           .button-container {
             text-align: center;
