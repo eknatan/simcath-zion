@@ -303,8 +303,8 @@ export function ApplicantsList({
               </ActionButton>
             )}
 
-            {/* Restore Button (only for rejected) */}
-            {status === 'rejected' && (
+            {/* Restore Button (only for rejected and within 30 days) */}
+            {status === 'rejected' && getDaysLeft(row.original) !== null && getDaysLeft(row.original)! > 0 && (
               <ActionButton
                 variant="restore"
                 size="sm"
