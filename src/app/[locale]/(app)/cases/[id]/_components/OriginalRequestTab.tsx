@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Heart, Users, Calendar, Edit3, Check, X, Loader2, FileText, Building2, DollarSign } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { HDate } from '@hebcal/core';
 import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { useCase } from '@/components/features/cases/hooks/useCase';
@@ -175,9 +176,12 @@ const Field = ({ name, label, type = 'text', required = false, value, onSave, no
  * - Immediate save on field basis
  * - No global edit mode
  */
-export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
+export function OriginalRequestTab({ caseData: initialCaseData }: OriginalRequestTabProps) {
   const t = useTranslations('case.originalRequest');
-  const { updateCase } = useCase(caseData.id, caseData);
+  const { caseData: liveCaseData, updateCase } = useCase(initialCaseData.id, initialCaseData);
+
+  // Use live data from SWR, fallback to initial data
+  const caseData = liveCaseData || initialCaseData;
 
   const isWedding = caseData.case_type === CaseType.WEDDING;
   const [isGlobalEditMode, setIsGlobalEditMode] = useState(false);
@@ -260,12 +264,31 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
       return false;
     }
 
+    // Build update payload
+    let updatePayload: Record<string, any> = { [fieldName]: value };
+
+    // If updating Gregorian date, also update Hebrew date fields
+    if (fieldName === 'wedding_date_gregorian' && value) {
+      try {
+        const date = new Date(value);
+        const hdate = new HDate(date);
+        updatePayload = {
+          ...updatePayload,
+          hebrew_day: hdate.getDate(),
+          hebrew_month: hdate.getMonth(),
+          hebrew_year: hdate.getFullYear(),
+        };
+      } catch {
+        // If conversion fails, just save the Gregorian date
+      }
+    }
+
     // Save to API
-    const result = await updateCase({ [fieldName]: value });
+    const result = await updateCase(updatePayload);
 
     if (result) {
       // Update form default values
-      form.reset({ ...form.getValues(), [fieldName]: value });
+      form.reset({ ...form.getValues(), ...updatePayload });
       return true;
     }
 
