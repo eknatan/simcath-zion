@@ -13,6 +13,35 @@ import {
 } from '@/components/ui/tooltip';
 import type { DayCellProps } from './types';
 
+// Convert number to Hebrew letters (Gematria) for days 1-30
+function formatHebrewDayGematria(day: number): string {
+  const ones: Record<number, string> = {
+    1: 'א', 2: 'ב', 3: 'ג', 4: 'ד', 5: 'ה', 6: 'ו', 7: 'ז', 8: 'ח', 9: 'ט',
+  };
+  const tens: Record<number, string> = {
+    1: 'י', 2: 'כ', 3: 'ל',
+  };
+
+  if (day === 15) return 'ט״ו';
+  if (day === 16) return 'ט״ז';
+
+  const tensDigit = Math.floor(day / 10);
+  const onesDigit = day % 10;
+
+  let result = '';
+  if (tensDigit > 0) result += tens[tensDigit];
+  if (onesDigit > 0) result += ones[onesDigit];
+
+  // Add gershayim before last letter for multi-letter results
+  if (result.length > 1) {
+    result = result.slice(0, -1) + '״' + result.slice(-1);
+  } else if (result.length === 1) {
+    result += '׳';
+  }
+
+  return result;
+}
+
 // Event color schemes
 const EVENT_COLORS = {
   wedding: {
@@ -33,7 +62,7 @@ const EVENT_COLORS = {
   },
 };
 
-export default function HebrewDayCell({ dayData, language, showBothLanguages }: DayCellProps) {
+export default function HebrewDayCell({ dayData, language, showBothLanguages, currentMonth, currentYear }: DayCellProps) {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('calendar');
@@ -63,9 +92,12 @@ export default function HebrewDayCell({ dayData, language, showBothLanguages }: 
     ? 'bg-amber-50 dark:bg-amber-900/20'
     : 'bg-card';
 
-  // Handle wedding click - navigate to case
-  const handleWeddingClick = (caseId: string) => {
-    router.push(`/${locale}/cases/${caseId}`);
+  // Handle wedding click - navigate to case with calendar return state
+  const handleWeddingClick = (caseId: string, hebrewMonth: number, hebrewYear: number) => {
+    const params = new URLSearchParams();
+    params.set('returnMonth', hebrewMonth.toString());
+    params.set('returnYear', hebrewYear.toString());
+    router.push(`/${locale}/cases/${caseId}?${params.toString()}`);
   };
 
   // Check if today
@@ -81,13 +113,13 @@ export default function HebrewDayCell({ dayData, language, showBothLanguages }: 
       )}
       dir={language === 'he' ? 'rtl' : 'ltr'}
     >
-      {/* Date numbers */}
+      {/* Date display - Hebrew in gematria, Gregorian in numbers */}
       <div className="flex justify-between items-start mb-1">
         <div className={cn(
           'text-lg font-semibold',
           isToday ? 'text-primary' : 'text-foreground'
         )}>
-          {hebrewDay}
+          {formatHebrewDayGematria(hebrewDay)}
         </div>
         <div className="text-xs text-muted-foreground">
           {gregDay}
@@ -102,7 +134,7 @@ export default function HebrewDayCell({ dayData, language, showBothLanguages }: 
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
-                    onClick={() => handleWeddingClick(event.id)}
+                    onClick={() => handleWeddingClick(event.id, currentMonth, currentYear)}
                     className={cn(
                       'w-full text-start text-xs px-1.5 py-0.5 rounded border cursor-pointer truncate',
                       EVENT_COLORS.wedding.bg,

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations, useLocale } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import MonthNavigation from './MonthNavigation';
@@ -18,14 +19,31 @@ import { useCalendarEvents } from '@/lib/hooks/useCalendarEvents';
 import { Loader2 } from 'lucide-react';
 
 export default function HebrewCalendar({
-  language = 'he',
   showBothLanguages = true,
 }: CalendarProps) {
   const t = useTranslations('calendar');
+  const locale = useLocale();
+  const searchParams = useSearchParams();
+
+  // Use the app's locale as the language
+  const currentLanguage: Language = locale === 'he' ? 'he' : 'en';
+
+  // Get initial date from URL params or use current date
+  const getInitialDate = () => {
+    const monthParam = searchParams.get('month');
+    const yearParam = searchParams.get('year');
+    if (monthParam && yearParam) {
+      const month = parseInt(monthParam, 10);
+      const year = parseInt(yearParam, 10);
+      if (!isNaN(month) && !isNaN(year)) {
+        return { month, year };
+      }
+    }
+    return getCurrentHebrewDate();
+  };
 
   // State for current month/year
-  const [currentDate, setCurrentDate] = useState(getCurrentHebrewDate());
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(language);
+  const [currentDate, setCurrentDate] = useState(getInitialDate);
   const [monthData, setMonthData] = useState<HebrewMonthData | null>(null);
 
   // Fetch calendar events (weddings) for the current month
@@ -84,10 +102,6 @@ export default function HebrewCalendar({
     setCurrentDate(getNextHebrewMonth(currentDate.month, currentDate.year));
   };
 
-  const handleLanguageToggle = () => {
-    setCurrentLanguage(prev => (prev === 'he' ? 'en' : 'he'));
-  };
-
   const handleToday = () => {
     setCurrentDate(getCurrentHebrewDate());
   };
@@ -112,22 +126,13 @@ export default function HebrewCalendar({
           <CardTitle className="text-xl font-bold">
             {t('title')}
           </CardTitle>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleToday}
-            >
-              {t('today')}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleLanguageToggle}
-            >
-              {currentLanguage === 'he' ? 'English' : 'עברית'}
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleToday}
+          >
+            {t('today')}
+          </Button>
         </div>
       </CardHeader>
 

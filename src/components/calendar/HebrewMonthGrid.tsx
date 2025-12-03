@@ -59,6 +59,8 @@ export default function HebrewMonthGrid({ monthData, language, showBothLanguages
                 dayData={dayData}
                 language={language}
                 showBothLanguages={showBothLanguages}
+                currentMonth={month}
+                currentYear={year}
               />
             ) : (
               <div className="min-h-28 bg-muted/30 border border-transparent rounded-md" />

@@ -50,23 +50,19 @@ export default function MonthNavigation({
   };
 
   return (
-    <div className="flex items-center justify-between">
-      {/* Previous Month Button */}
+    <div className="flex items-center justify-between" dir={language === 'he' ? 'rtl' : 'ltr'}>
+      {/* Previous Month Button - on the start side (right in RTL, left in LTR) */}
       <Button
         variant="ghost"
         size="icon"
         onClick={onPrevMonth}
         aria-label={t('previousMonth')}
       >
-        {language === 'he' ? (
-          <ChevronRight className="h-5 w-5" />
-        ) : (
-          <ChevronLeft className="h-5 w-5" />
-        )}
+        <ChevronRight className="h-5 w-5" />
       </Button>
 
       {/* Month and Year Display */}
-      <div className="text-center" dir={language === 'he' ? 'rtl' : 'ltr'}>
+      <div className="text-center">
         <h2 className="text-xl font-bold text-foreground">
           {language === 'he' ? monthNameHe : monthNameEn}
         </h2>
@@ -78,18 +74,14 @@ export default function MonthNavigation({
         </p>
       </div>
 
-      {/* Next Month Button */}
+      {/* Next Month Button - on the end side (left in RTL, right in LTR) */}
       <Button
         variant="ghost"
         size="icon"
         onClick={onNextMonth}
         aria-label={t('nextMonth')}
       >
-        {language === 'he' ? (
-          <ChevronLeft className="h-5 w-5" />
-        ) : (
-          <ChevronRight className="h-5 w-5" />
-        )}
+        <ChevronLeft className="h-5 w-5" />
       </Button>
     </div>
   );

@@ -364,7 +364,8 @@
     "navigation": {
       "previousMonth": "חודש קודם",
       "nextMonth": "חודש הבא"
-    }
+    },
+    "backToCalendar": "חזרה ללוח שנה"
   },
   "hebrew_date_picker": {
     "gregorian_date": "תאריך לועזי",

@@ -328,7 +328,8 @@
     "navigation": {
       "previousMonth": "Previous month",
       "nextMonth": "Next month"
-    }
+    },
+    "backToCalendar": "Back to Calendar"
   },
   "hebrew_date_picker": {
     "gregorian_date": "Gregorian Date",

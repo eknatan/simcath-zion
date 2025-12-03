@@ -44,7 +44,6 @@ export interface HebrewMonthData {
 }
 
 export interface CalendarProps {
-  language?: Language;
   showBothLanguages?: boolean;
 }
 
@@ -52,6 +51,8 @@ export interface DayCellProps {
   dayData: HebrewDayData;
   language: Language;
   showBothLanguages: boolean;
+  currentMonth: number;
+  currentYear: number;
 }
 
 export interface MonthNavigationProps {
