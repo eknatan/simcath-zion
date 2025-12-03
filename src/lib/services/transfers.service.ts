@@ -102,18 +102,6 @@ export async function fetchPendingTransfers(
       if (filters.payment_month && paymentType === PaymentType.MONTHLY_CLEANING) {
         query = query.eq('payment_month', filters.payment_month);
       }
-      if (filters.search) {
-        // Free text search in case number or names
-        const searchTerm = `%${filters.search}%`;
-        query = query.or(
-          `cases.case_number.ilike.${searchTerm},` +
-            `cases.groom_first_name.ilike.${searchTerm},` +
-            `cases.bride_first_name.ilike.${searchTerm},` +
-            `cases.family_name.ilike.${searchTerm},` +
-            `cases.child_name.ilike.${searchTerm},` +
-            `bank_details.account_holder_name.ilike.${searchTerm}`
-        );
-      }
     }
 
     // Default sorting
@@ -130,7 +118,7 @@ export async function fetchPendingTransfers(
     }
 
     // Map the data to rename 'cases' to 'case' and extract bank_details
-    return (data || []).map((item: {
+    let results = (data || []).map((item: {
       cases?: {
         bank_details?: unknown;
         [key: string]: unknown;
@@ -148,6 +136,36 @@ export async function fetchPendingTransfers(
         bank_details: normalizedBankDetails,
       };
     }) as TransferWithDetails[];
+
+    // Client-side search filter (Supabase doesn't support .or() on nested relations)
+    if (filters?.search) {
+      const searchTerm = filters.search.toLowerCase();
+      results = results.filter((item) => {
+        const caseData = item.case;
+        const bankDetails = item.bank_details;
+
+        // Search in case fields
+        const caseNumber = String(caseData?.case_number || '').toLowerCase();
+        const groomName = (caseData?.groom_first_name || '').toLowerCase();
+        const brideName = (caseData?.bride_first_name || '').toLowerCase();
+        const familyName = (caseData?.family_name || '').toLowerCase();
+        const childName = (caseData?.child_name || '').toLowerCase();
+
+        // Search in bank details
+        const accountHolder = (bankDetails?.account_holder_name || '').toLowerCase();
+
+        return (
+          caseNumber.includes(searchTerm) ||
+          groomName.includes(searchTerm) ||
+          brideName.includes(searchTerm) ||
+          familyName.includes(searchTerm) ||
+          childName.includes(searchTerm) ||
+          accountHolder.includes(searchTerm)
+        );
+      });
+    }
+
+    return results;
   } catch (error) {
     if (error instanceof TransferError) throw error;
     throw new TransferError(
