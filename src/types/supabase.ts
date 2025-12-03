@@ -175,7 +175,9 @@ export type Database = {
           parent1_name: string | null
           parent2_id: string | null
           parent2_name: string | null
+          previous_status: string | null
           raw_form_json: Json | null
+          request_background: string | null
           start_date: string | null
           status: string
           total_cost: number | null
@@ -229,7 +231,9 @@ export type Database = {
           parent1_name?: string | null
           parent2_id?: string | null
           parent2_name?: string | null
+          previous_status?: string | null
           raw_form_json?: Json | null
+          request_background?: string | null
           start_date?: string | null
           status: string
           total_cost?: number | null
@@ -283,7 +287,9 @@ export type Database = {
           parent1_name?: string | null
           parent2_id?: string | null
           parent2_name?: string | null
+          previous_status?: string | null
           raw_form_json?: Json | null
+          request_background?: string | null
           start_date?: string | null
           status?: string
           total_cost?: number | null

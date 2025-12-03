@@ -17,16 +17,29 @@
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, User } from 'lucide-react';
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
+
+// Type for structured Hebrew date (new format)
+interface HebrewDateValue {
+  day: number | null;
+  month: number | null;
+  year: number | null;
+  gregorianDate: string | null;
+}
 
 // Types
 export interface WeddingFormData {
   wedding_info?: {
+    // New structured format
+    hebrew_date?: HebrewDateValue;
+    // Legacy format (for backward compatibility)
     date_hebrew?: string;
     date_gregorian?: string;
     city?: string;
     venue?: string;
     guests_count?: number;
     total_cost?: number;
+    request_background?: string;
   };
   groom_info?: {
     first_name?: string;
@@ -121,6 +134,35 @@ function WeddingFormView({
   const brideInfo = formData.bride_info || {};
   const additionalInfo = formData.additional_info || {};
 
+  // Extract dates - support both new structured format and legacy format
+  const hebrewDateDisplay = (() => {
+    // New structured format
+    if (weddingInfo.hebrew_date?.day && weddingInfo.hebrew_date?.month && weddingInfo.hebrew_date?.year) {
+      return formatHebrewDateForDisplay(
+        weddingInfo.hebrew_date.day,
+        weddingInfo.hebrew_date.month,
+        weddingInfo.hebrew_date.year,
+        'he'
+      );
+    }
+    // Legacy format
+    return weddingInfo.date_hebrew || null;
+  })();
+
+  const gregorianDateDisplay = (() => {
+    // New structured format
+    if (weddingInfo.hebrew_date?.gregorianDate) {
+      // Format as DD/MM/YYYY
+      const date = new Date(weddingInfo.hebrew_date.gregorianDate);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString('he-IL');
+      }
+      return weddingInfo.hebrew_date.gregorianDate;
+    }
+    // Legacy format
+    return weddingInfo.date_gregorian || null;
+  })();
+
   // גרסה לייצוא - עיצוב פשוט ונקי (רק HEX/RGB - לא oklch!)
   if (exportMode) {
     return (
@@ -153,11 +195,11 @@ function WeddingFormView({
           <div style={{ paddingTop: '1.5mm' }}>
             <ExportFieldInline
               label={t('wedding_info.date_hebrew')}
-              value={weddingInfo.date_hebrew}
+              value={hebrewDateDisplay}
             />
             <ExportFieldInline
               label={t('wedding_info.date_gregorian')}
-              value={weddingInfo.date_gregorian}
+              value={gregorianDateDisplay}
             />
             <ExportFieldInline label={t('wedding_info.city')} value={weddingInfo.city} />
             <ExportFieldInline label={t('wedding_info.venue')} value={weddingInfo.venue} />
@@ -169,6 +211,14 @@ function WeddingFormView({
               label={t('wedding_info.total_cost')}
               value={weddingInfo.total_cost ? `₪${weddingInfo.total_cost.toLocaleString()}` : '-'}
             />
+            {weddingInfo.request_background && (
+              <ExportFieldInline
+                label="רקע על הבקשה"
+                value={weddingInfo.request_background}
+                fullWidth
+                multiline
+              />
+            )}
           </div>
         </div>
 
@@ -329,10 +379,10 @@ function WeddingFormView({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <FormField label={t('wedding_info.date_hebrew')} value={weddingInfo.date_hebrew} />
+            <FormField label={t('wedding_info.date_hebrew')} value={hebrewDateDisplay} />
             <FormField
               label={t('wedding_info.date_gregorian')}
-              value={weddingInfo.date_gregorian}
+              value={gregorianDateDisplay}
             />
             <FormField label={t('wedding_info.city')} value={weddingInfo.city} />
             <FormField label={t('wedding_info.venue')} value={weddingInfo.venue} />
@@ -344,6 +394,14 @@ function WeddingFormView({
               }
               highlight
             />
+            {weddingInfo.request_background && (
+              <FormField
+                label="רקע על הבקשה"
+                value={weddingInfo.request_background}
+                fullWidth
+                multiline
+              />
+            )}
           </div>
         </CardContent>
       </Card>

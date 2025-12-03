@@ -54,7 +54,7 @@ export function ApplicantViewDialog({
         {/* Header */}
         <DialogHeader className="border-b-2 border-slate-200 pb-4">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
+            <div className="flex-1 text-start">
               <DialogTitle className="text-2xl font-bold text-blue-600">
                 📋 {t('title')} #{applicant.id.substring(0, 8).toUpperCase()}
               </DialogTitle>
@@ -67,7 +67,7 @@ export function ApplicantViewDialog({
                 applicant.status === 'rejected'
                   ? 'bg-red-100 text-red-700 border border-red-200'
                   : 'bg-amber-100 text-amber-700 border border-amber-200'
-              } px-3 py-1 font-medium whitespace-nowrap`}
+              } px-3 py-1 font-medium whitespace-nowrap ms-auto`}
             >
               {applicant.status === 'rejected' ? t('status.rejected') : t('status.pending')}
             </Badge>

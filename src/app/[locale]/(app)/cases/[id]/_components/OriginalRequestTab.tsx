@@ -201,6 +201,7 @@ export function OriginalRequestTab({ caseData }: OriginalRequestTabProps) {
           venue: caseData.venue || '',
           guests_count: caseData.guests_count || undefined,
           total_cost: caseData.total_cost || undefined,
+          request_background: caseData.request_background || '',
           // Groom
           groom_first_name: caseData.groom_first_name || '',
           groom_last_name: caseData.groom_last_name || '',
