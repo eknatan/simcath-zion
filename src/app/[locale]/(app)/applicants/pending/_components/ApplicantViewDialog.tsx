@@ -74,6 +74,16 @@ export function ApplicantViewDialog({
           </div>
         </DialogHeader>
 
+        {/* Rejection reason (if rejected) */}
+        {applicant.status === 'rejected' && formData.rejection_reason && (
+          <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4 my-4">
+            <div className="flex items-start gap-2">
+              <span className="text-red-600 font-medium">{t('rejection_reason')}:</span>
+              <span className="text-red-800">{formData.rejection_reason}</span>
+            </div>
+          </div>
+        )}
+
         {/* Content - תצוגה קריאה במקום JSON */}
         <div className="py-4">
           <FormRenderer

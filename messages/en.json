@@ -824,6 +824,7 @@
       "guests_count": "Guests",
       "status": "Status",
       "days_left": "Days Left",
+      "rejection_reason": "Rejection Reason",
       "actions": "Actions"
     },
     "status": {
@@ -841,6 +842,7 @@
     "search_placeholder": "Search by groom/bride name or city...",
     "view_dialog": {
       "title": "Application",
+      "rejection_reason": "Rejection Reason",
       "status": {
         "pending": "Pending Approval",
         "rejected": "Rejected"

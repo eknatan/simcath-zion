@@ -1157,6 +1157,7 @@
       "guests_count": "מוזמנים",
       "status": "סטטוס",
       "days_left": "ימים נותרים",
+      "rejection_reason": "סיבת דחייה",
       "actions": "פעולות"
     },
     "status": {
@@ -1174,6 +1175,7 @@
     "search_placeholder": "חיפוש לפי שם חתן/כלה או עיר...",
     "view_dialog": {
       "title": "בקשה",
+      "rejection_reason": "סיבת דחייה",
       "status": {
         "pending": "ממתין לאישור",
         "rejected": "נדחה"

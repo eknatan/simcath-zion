@@ -66,6 +66,10 @@ export interface WeddingFormData {
     background?: string;
     notes?: string;
   };
+  // Rejection metadata (added when applicant is rejected)
+  rejected_at?: string;
+  rejected_by?: string;
+  rejection_reason?: string;
 }
 
 interface FormRendererProps {

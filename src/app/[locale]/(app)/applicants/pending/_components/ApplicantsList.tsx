@@ -210,6 +210,25 @@ export function ApplicantsList({
         header: t('table.status'),
         cell: ({ row }) => getStatusBadge(row.original),
       },
+      // Rejection reason (only for rejected)
+      ...(status === 'rejected'
+        ? [
+            {
+              id: 'rejection_reason',
+              header: t('table.rejection_reason'),
+              cell: ({ row }: any) => {
+                const formData = row.original.form_data as any;
+                const reason = formData?.rejection_reason;
+                if (!reason) return <span className="text-muted-foreground">-</span>;
+                return (
+                  <span className="text-sm text-slate-700 max-w-[200px] truncate block" title={reason}>
+                    {reason}
+                  </span>
+                );
+              },
+            },
+          ]
+        : []),
       // Days left (only for rejected) - Version B
       ...(status === 'rejected'
         ? [
