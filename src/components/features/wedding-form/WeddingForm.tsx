@@ -48,6 +48,8 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  // Track which steps have been validated (attempted to move forward from)
+  const [validatedSteps, setValidatedSteps] = useState<Set<number>>(new Set());
 
   // Get current locale to determine RTL/LTR
   const isRTL = locale === 'he';
@@ -124,6 +126,7 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
     } catch {
       // Ignore errors when reading from sessionStorage
     }
+
     setIsInitialized(true);
   }, [form]);
 
@@ -206,6 +209,9 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
 
   // Navigation handlers
   const handleNext = async () => {
+    // Mark current step as validated (user attempted to proceed)
+    setValidatedSteps((prev) => new Set(prev).add(currentStep));
+
     const isValid = await validateCurrentStep();
     if (isValid && currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
@@ -275,14 +281,15 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   };
 
   // Render current step
+  // Using key prop to force React to remount PersonInfoSection when switching between groom/bride
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <WeddingInfoSection form={form} stepNumber={1} />;
+        return <WeddingInfoSection form={form} stepNumber={1} showErrors={validatedSteps.has(0)} />;
       case 1:
-        return <PersonInfoSection form={form} personType="groom" stepNumber={2} />;
+        return <PersonInfoSection key="groom" form={form} personType="groom" stepNumber={2} showErrors={validatedSteps.has(1)} />;
       case 2:
-        return <PersonInfoSection form={form} personType="bride" stepNumber={3} />;
+        return <PersonInfoSection key="bride" form={form} personType="bride" stepNumber={3} showErrors={validatedSteps.has(2)} />;
       default:
         return null;
     }
@@ -344,8 +351,14 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
               </Button>
             ) : (
               <Button
-                type="submit"
+                type="button"
                 disabled={isSubmitting}
+                onClick={() => {
+                  // Mark step 2 (bride_info) as validated to show errors
+                  setValidatedSteps((prev) => new Set(prev).add(2));
+                  // Trigger form submission
+                  form.handleSubmit(onSubmit)();
+                }}
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-md hover:shadow-lg transition-all font-semibold"
               >
                 {isSubmitting ? (

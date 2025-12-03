@@ -26,9 +26,11 @@ interface PersonInfoSectionProps {
   form: UseFormReturn<WeddingFormData>;
   personType: 'groom' | 'bride';
   stepNumber?: number;
+  /** Whether to show validation errors (only after user attempts to proceed) */
+  showErrors?: boolean;
 }
 
-export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSectionProps) {
+export function PersonInfoSection({ form, personType, stepNumber, showErrors = false }: PersonInfoSectionProps) {
   const t = useTranslations('wedding_form');
   const tValidation = useTranslations('validation');
 
@@ -39,7 +41,8 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
 
   // Dynamic field prefix based on person type
   const fieldPrefix = `${personType}_info` as const;
-  const personErrors = errors[fieldPrefix];
+  // Only show errors if showErrors is true (user attempted to proceed)
+  const personErrors = showErrors ? errors[fieldPrefix] : undefined;
 
   // Translation key prefix
   const tKey = `section_${personType}_info`;
@@ -94,37 +97,38 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
           </div>
         </div>
 
-        {/* ת.ז. */}
-        <div className="space-y-2">
-          <Label htmlFor={`${fieldPrefix}.id`}>
-            {t(`${tKey}.id`)}
-            <span className="text-destructive ms-1">*</span>
-          </Label>
-          <Input
-            id={`${fieldPrefix}.id`}
-            {...register(`${fieldPrefix}.id`)}
-            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            aria-invalid={!!personErrors?.id}
-            maxLength={9}
-          />
-          {personErrors?.id && (
-            <p className="text-sm text-destructive">
-              {translateValidationMessage(tValidation, personErrors.id.message)}
-            </p>
-          )}
-        </div>
+        {/* ת.ז. וישיבה */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor={`${fieldPrefix}.id`}>
+              {t(`${tKey}.id`)}
+              <span className="text-destructive ms-1">*</span>
+            </Label>
+            <Input
+              id={`${fieldPrefix}.id`}
+              {...register(`${fieldPrefix}.id`)}
+              className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              aria-invalid={!!personErrors?.id}
+              maxLength={9}
+            />
+            {personErrors?.id && (
+              <p className="text-sm text-destructive">
+                {translateValidationMessage(tValidation, personErrors.id.message)}
+              </p>
+            )}
+          </div>
 
-        {/* ישיבה */}
-        <div className="space-y-2">
-          <Label htmlFor={`${fieldPrefix}.school`}>
-            {t(`${tKey}.school`)}
-          </Label>
-          <Input
-            id={`${fieldPrefix}.school`}
-            {...register(`${fieldPrefix}.school`)}
-            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            aria-invalid={!!personErrors?.school}
-          />
+          <div className="space-y-2">
+            <Label htmlFor={`${fieldPrefix}.school`}>
+              {t(`${tKey}.school`)}
+            </Label>
+            <Input
+              id={`${fieldPrefix}.school`}
+              {...register(`${fieldPrefix}.school`)}
+              className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              aria-invalid={!!personErrors?.school}
+            />
+          </div>
         </div>
 
         {/* פרטי הורים */}
@@ -248,6 +252,7 @@ export function PersonInfoSection({ form, personType, stepNumber }: PersonInfoSe
           <div className="space-y-2">
             <Label htmlFor={`${fieldPrefix}.email`}>
               {t(`${tKey}.email`)}
+              <span className="text-destructive ms-1">*</span>
             </Label>
             <div className="relative">
               <Input

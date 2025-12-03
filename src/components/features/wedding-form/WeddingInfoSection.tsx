@@ -25,9 +25,11 @@ import { translateValidationMessage } from '@/lib/validations/translate';
 interface WeddingInfoSectionProps {
   form: UseFormReturn<WeddingFormData>;
   stepNumber?: number;
+  /** Whether to show validation errors (only after user attempts to proceed) */
+  showErrors?: boolean;
 }
 
-export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionProps) {
+export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }: WeddingInfoSectionProps) {
   const t = useTranslations('wedding_form');
   const tValidation = useTranslations('validation');
 
@@ -37,7 +39,8 @@ export function WeddingInfoSection({ form, stepNumber = 1 }: WeddingInfoSectionP
     formState: { errors },
   } = form;
 
-  const weddingErrors = errors.wedding_info;
+  // Only show errors if showErrors is true (user attempted to proceed)
+  const weddingErrors = showErrors ? errors.wedding_info : undefined;
 
   return (
     <FormSection
