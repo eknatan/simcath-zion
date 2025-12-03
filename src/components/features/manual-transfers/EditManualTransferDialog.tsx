@@ -121,7 +121,7 @@ export function EditManualTransferDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Pencil className="h-5 w-5 text-blue-600" />
@@ -180,11 +180,17 @@ export function EditManualTransferDialog({
                   <FormLabel>סכום (₪) *</FormLabel>
                   <FormControl>
                     <Input
-                      {...field}
-                      type="number"
-                      step="0.01"
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                      placeholder="0.00"
+                      type="text"
+                      inputMode="decimal"
+                      value={field.value || ''}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Allow empty, digits, and single decimal point
+                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                          field.onChange(value === '' ? 0 : parseFloat(value) || 0);
+                        }
+                      }}
+                      placeholder="הזן סכום"
                     />
                   </FormControl>
                   <FormMessage />

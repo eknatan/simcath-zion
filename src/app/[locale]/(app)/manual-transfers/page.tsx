@@ -4,6 +4,16 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Upload, FileDown, Trash2, Plus, Clock, CheckCircle2, HandCoins } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { ExcelImportDialog } from '@/components/features/manual-transfers/ExcelImportDialog';
@@ -28,6 +38,9 @@ export default function ManualTransfersPage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingTransfer, setEditingTransfer] = useState<ManualTransfer | null>(null);
   const [filters, setFilters] = useState<ManualTransferFiltersType>({});
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingTransferId, setDeletingTransferId] = useState<string | null>(null);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
 
   const loadTransfers = useCallback(async () => {
     setLoading(true);
@@ -66,24 +79,30 @@ export default function ManualTransfersPage() {
     loadTransfers();
   }, [loadTransfers]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('האם אתה בטוח שברצונך למחוק העברה זו?')) return;
+  const handleDeleteClick = (id: string) => {
+    setDeletingTransferId(id);
+    setDeleteDialogOpen(true);
+  };
 
-    const { error } = await manualTransfersService.delete(id);
+  const handleDeleteConfirm = async () => {
+    if (!deletingTransferId) return;
+
+    const { error } = await manualTransfersService.delete(deletingTransferId);
 
     if (error) {
       toast.error('שגיאה', {
         description: error.message,
       });
-      return;
+    } else {
+      toast.success('הצלחה', {
+        description: 'ההעברה נמחקה בהצלחה',
+      });
+      loadTransfers();
+      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== deletingTransferId));
     }
 
-    toast.success('הצלחה', {
-      description: 'ההעברה נמחקה בהצלחה',
-    });
-
-    loadTransfers();
-    setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+    setDeleteDialogOpen(false);
+    setDeletingTransferId(null);
   };
 
   const handleEdit = (transfer: ManualTransfer) => {
@@ -91,26 +110,27 @@ export default function ManualTransfersPage() {
     setEditDialogOpen(true);
   };
 
-  const handleBulkDelete = async () => {
+  const handleBulkDeleteClick = () => {
     if (selectedIds.length === 0) return;
+    setBulkDeleteDialogOpen(true);
+  };
 
-    if (!confirm(t('messages.deleteConfirm', { count: selectedIds.length }))) return;
-
+  const handleBulkDeleteConfirm = async () => {
     const { error } = await manualTransfersService.bulkDelete(selectedIds);
 
     if (error) {
       toast.error('שגיאה', {
         description: error.message,
       });
-      return;
+    } else {
+      toast.success('הצלחה', {
+        description: t('messages.deleteSuccess', { count: selectedIds.length }),
+      });
+      loadTransfers();
+      setSelectedIds([]);
     }
 
-    toast.success('הצלחה', {
-      description: t('messages.deleteSuccess', { count: selectedIds.length }),
-    });
-
-    loadTransfers();
-    setSelectedIds([]);
+    setBulkDeleteDialogOpen(false);
   };
 
   const handleExport = async () => {
@@ -327,7 +347,7 @@ export default function ManualTransfersPage() {
                 <>
                   <ActionButton
                     variant="reject"
-                    onClick={handleBulkDelete}
+                    onClick={handleBulkDeleteClick}
                   >
                     <Trash2 className="h-4 w-4 me-2" />
                     {t('actions.deleteSelected', { count: selectedIds.length })}
@@ -356,7 +376,7 @@ export default function ManualTransfersPage() {
               transfers={filteredTransfers}
               selectedIds={selectedIds}
               onSelectionChange={setSelectedIds}
-              onDelete={handleDelete}
+              onDelete={handleDeleteClick}
               onEdit={activeTab === 'active' ? handleEdit : undefined}
               onRefresh={loadTransfers}
               showExportedDate={activeTab === 'history'}
@@ -446,6 +466,52 @@ export default function ManualTransfersPage() {
           setEditingTransfer(null);
         }}
       />
+
+      {/* Delete Single Transfer Confirmation */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>מחיקת העברה</AlertDialogTitle>
+            <AlertDialogDescription>
+              האם אתה בטוח שברצונך למחוק העברה זו? פעולה זו לא ניתנת לביטול.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel asChild>
+              <ActionButton variant="cancel">ביטול</ActionButton>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <ActionButton variant="reject-primary" onClick={handleDeleteConfirm}>
+                <Trash2 className="h-4 w-4 me-2" />
+                מחק
+              </ActionButton>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Multiple Transfers Confirmation */}
+      <AlertDialog open={bulkDeleteDialogOpen} onOpenChange={setBulkDeleteDialogOpen}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>מחיקת העברות</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('messages.deleteConfirm', { count: selectedIds.length })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel asChild>
+              <ActionButton variant="cancel">ביטול</ActionButton>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <ActionButton variant="reject-primary" onClick={handleBulkDeleteConfirm}>
+                <Trash2 className="h-4 w-4 me-2" />
+                מחק {selectedIds.length} העברות
+              </ActionButton>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -87,11 +87,14 @@ export function ManualTransfersTable({
     {
       id: 'select',
       header: () => (
-        <Checkbox
-          checked={selectedIds.length === transfers.length && transfers.length > 0}
-          onCheckedChange={handleSelectAllMemo}
-          aria-label="בחר הכל"
-        />
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={selectedIds.length === transfers.length && transfers.length > 0}
+            onCheckedChange={handleSelectAllMemo}
+            aria-label="בחר הכל"
+          />
+          <span className="text-xs text-muted-foreground">הכל</span>
+        </div>
       ),
       cell: ({ row }) => (
         <Checkbox
@@ -100,18 +103,18 @@ export function ManualTransfersTable({
           aria-label={`בחר ${row.original.recipient_name}`}
         />
       ),
-      size: 50,
+      size: 70,
     },
     {
       accessorKey: 'recipient_name',
-      header: 'שם מקבל',
+      header: () => <span className="font-semibold">שם מקבל</span>,
       cell: ({ row }) => (
         <span className="font-medium">{row.original.recipient_name}</span>
       ),
     },
     {
       accessorKey: 'id_number',
-      header: 'תעודת זהות',
+      header: () => <span className="font-semibold">תעודת זהות</span>,
       cell: ({ row }) => (
         <span className="text-muted-foreground font-mono text-xs">
           {row.original.id_number || '-'}
@@ -120,40 +123,40 @@ export function ManualTransfersTable({
     },
     {
       accessorKey: 'amount',
-      header: 'סכום',
+      header: () => <span className="font-semibold">סכום</span>,
       cell: ({ row }) => (
         <span className="font-semibold">{formatCurrency(row.original.amount)}</span>
       ),
     },
     {
       accessorKey: 'bank_code',
-      header: 'בנק',
+      header: () => <span className="font-semibold">בנק</span>,
       cell: ({ row }) => (
         <span className="font-mono text-xs">{row.original.bank_code}</span>
       ),
     },
     {
       accessorKey: 'branch_code',
-      header: 'סניף',
+      header: () => <span className="font-semibold">סניף</span>,
       cell: ({ row }) => (
         <span className="font-mono text-xs">{row.original.branch_code}</span>
       ),
     },
     {
       accessorKey: 'account_number',
-      header: 'חשבון',
+      header: () => <span className="font-semibold">חשבון</span>,
       cell: ({ row }) => (
         <span className="font-mono text-xs">{row.original.account_number}</span>
       ),
     },
     {
       accessorKey: 'status',
-      header: 'סטטוס',
+      header: () => <span className="font-semibold">סטטוס</span>,
       cell: ({ row }) => getStatusBadge(row.original.status),
     },
     {
       accessorKey: showExportedDate ? 'exported_at' : 'created_at',
-      header: showExportedDate ? 'תאריך ייצוא' : 'תאריך יצירה',
+      header: () => <span className="font-semibold">{showExportedDate ? 'תאריך ייצוא' : 'תאריך יצירה'}</span>,
       cell: ({ row }) => (
         <span className="text-muted-foreground text-xs">
           {showExportedDate
@@ -165,7 +168,7 @@ export function ManualTransfersTable({
     },
     {
       id: 'actions',
-      header: () => <div className="text-center">פעולות</div>,
+      header: () => <div className="text-center font-semibold">פעולות</div>,
       cell: ({ row }) => (
         <div className="flex gap-2 justify-center">
           {onEdit && (
