@@ -1,9 +1,7 @@
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { CheckCircle2, Heart, Home } from 'lucide-react';
-import Link from 'next/link';
+import { CheckCircle2, Heart } from 'lucide-react';
 
 /**
  * Success Page: /public-forms/sick-children/success
@@ -70,19 +68,6 @@ export default async function SickChildrenSuccessPage({ params }: { params: Prom
             </CardContent>
           </Card>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-4">
-            <Button
-              asChild
-              variant="outline"
-              className="flex-1 border-2"
-            >
-              <Link href="/">
-                <Home className="h-4 w-4 me-2" />
-                {t('public_page.header.system_name')}
-              </Link>
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
