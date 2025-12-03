@@ -225,7 +225,7 @@ export function HebrewDatePicker({
               value={value.gregorianDate || ''}
               onChange={handleGregorianChange}
               disabled={disabled}
-              className="h-9"
+              className={`h-9 ${error ? 'border-destructive focus-visible:ring-destructive' : ''}`}
               aria-invalid={!!error}
             />
           </div>
@@ -270,7 +270,7 @@ export function HebrewDatePicker({
                 onValueChange={(v) => handleHebrewChange('day', parseInt(v, 10))}
                 disabled={disabled}
               >
-                <SelectTrigger className="h-9 w-16">
+                <SelectTrigger className={`h-9 w-16 ${error ? 'border-destructive focus-visible:ring-destructive' : ''}`}>
                   <SelectValue placeholder={t('day')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -288,7 +288,7 @@ export function HebrewDatePicker({
                 onValueChange={(v) => handleHebrewChange('month', parseInt(v, 10))}
                 disabled={disabled}
               >
-                <SelectTrigger className="h-9 flex-1">
+                <SelectTrigger className={`h-9 flex-1 ${error ? 'border-destructive focus-visible:ring-destructive' : ''}`}>
                   <SelectValue placeholder={t('month')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -306,7 +306,7 @@ export function HebrewDatePicker({
                 onValueChange={(v) => handleHebrewChange('year', parseInt(v, 10))}
                 disabled={disabled}
               >
-                <SelectTrigger className="h-9 w-20">
+                <SelectTrigger className={`h-9 w-20 ${error ? 'border-destructive focus-visible:ring-destructive' : ''}`}>
                   <SelectValue placeholder={t('year')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -332,7 +332,7 @@ export function HebrewDatePicker({
             </div>
           ) : (
             /* Display Mode */
-            <div className="p-2 bg-muted/50 rounded-md border h-9 flex items-center">
+            <div className={`p-2 bg-muted/50 rounded-md border h-9 flex items-center ${error ? 'border-destructive' : ''}`}>
               {formattedHebrewDate ? (
                 <span className="text-sm font-medium">{formattedHebrewDate}</span>
               ) : (

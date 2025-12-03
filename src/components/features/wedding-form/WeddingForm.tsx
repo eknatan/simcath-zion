@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations, useLocale } from 'next-intl';
@@ -13,6 +13,9 @@ import { PersonInfoSection } from './PersonInfoSection';
 import { weddingFormSchema, type WeddingFormData } from '@/lib/validations/wedding-form.schema';
 import { ArrowLeft, ArrowRight, Send, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+const FORM_STORAGE_KEY = 'wedding_form_data';
+const FORM_STEP_STORAGE_KEY = 'wedding_form_step';
 
 /**
  * קומפוננטת WeddingForm - טופס רב-שלבי לבקשת תמיכה בחתונה
@@ -44,61 +47,123 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Get current locale to determine RTL/LTR
   const isRTL = locale === 'he';
+
+  // Default form values
+  const defaultValues: WeddingFormData = {
+    wedding_info: {
+      hebrew_date: {
+        day: null,
+        month: null,
+        year: null,
+        gregorianDate: null,
+      },
+      city: '',
+      venue: '',
+      guests_count: undefined as unknown as number,
+      total_cost: undefined as unknown as number,
+    },
+    groom_info: {
+      first_name: '',
+      last_name: '',
+      id: '',
+      school: '',
+      father_name: '',
+      father_occupation: '',
+      mother_name: '',
+      mother_occupation: '',
+      address: '',
+      city: '',
+      phone: '',
+      email: '',
+      memorial_day: '',
+      background: '',
+    },
+    bride_info: {
+      first_name: '',
+      last_name: '',
+      id: '',
+      school: '',
+      father_name: '',
+      father_occupation: '',
+      mother_name: '',
+      mother_occupation: '',
+      address: '',
+      city: '',
+      phone: '',
+      email: '',
+      memorial_day: '',
+      background: '',
+    },
+  };
 
   // Form setup עם react-hook-form + zod
   const form = useForm<WeddingFormData>({
     resolver: zodResolver(weddingFormSchema),
     mode: 'onBlur',
-    defaultValues: {
-      wedding_info: {
-        hebrew_date: {
-          day: null,
-          month: null,
-          year: null,
-          gregorianDate: null,
-        },
-        city: '',
-        venue: '',
-        guests_count: undefined,
-        total_cost: undefined,
-      },
-      groom_info: {
-        first_name: '',
-        last_name: '',
-        id: '',
-        school: '',
-        father_name: '',
-        father_occupation: '',
-        mother_name: '',
-        mother_occupation: '',
-        address: '',
-        city: '',
-        phone: '',
-        email: '',
-        memorial_day: '',
-        background: '',
-      },
-      bride_info: {
-        first_name: '',
-        last_name: '',
-        id: '',
-        school: '',
-        father_name: '',
-        father_occupation: '',
-        mother_name: '',
-        mother_occupation: '',
-        address: '',
-        city: '',
-        phone: '',
-        email: '',
-        memorial_day: '',
-        background: '',
-      },
-    },
+    defaultValues,
   });
+
+  // Load saved form data from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const savedData = sessionStorage.getItem(FORM_STORAGE_KEY);
+      const savedStep = sessionStorage.getItem(FORM_STEP_STORAGE_KEY);
+
+      if (savedData) {
+        const parsedData = JSON.parse(savedData) as WeddingFormData;
+        form.reset(parsedData);
+      }
+
+      if (savedStep) {
+        setCurrentStep(parseInt(savedStep, 10));
+      }
+    } catch {
+      // Ignore errors when reading from sessionStorage
+    }
+    setIsInitialized(true);
+  }, [form]);
+
+  // Save form data to sessionStorage whenever it changes
+  const saveFormData = useCallback(() => {
+    try {
+      const formData = form.getValues();
+      sessionStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
+      sessionStorage.setItem(FORM_STEP_STORAGE_KEY, currentStep.toString());
+    } catch {
+      // Ignore errors when writing to sessionStorage
+    }
+  }, [form, currentStep]);
+
+  // Watch for form changes and save
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const subscription = form.watch(() => {
+      saveFormData();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form, saveFormData, isInitialized]);
+
+  // Save step changes
+  useEffect(() => {
+    if (!isInitialized) return;
+    saveFormData();
+  }, [currentStep, saveFormData, isInitialized]);
+
+  // Clear sessionStorage after successful submission
+  const clearFormStorage = () => {
+    try {
+      sessionStorage.removeItem(FORM_STORAGE_KEY);
+      sessionStorage.removeItem(FORM_STEP_STORAGE_KEY);
+    } catch {
+      // Ignore errors
+    }
+  };
 
   // Steps configuration
   const steps: FormStep[] = [
@@ -181,6 +246,9 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
       if (!response.ok) {
         throw new Error('Submission failed');
       }
+
+      // Clear saved form data after successful submission
+      clearFormStorage();
 
       // Success toast
       toast.success(t('success.title'), {
