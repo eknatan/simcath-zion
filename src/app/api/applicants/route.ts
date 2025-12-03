@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { weddingFormSchema } from '@/lib/validations/wedding-form.schema';
 import { z } from 'zod';
 
@@ -147,8 +148,9 @@ export async function POST(request: NextRequest) {
 
     const { case_type, form_data } = validationResult.data;
 
-    // Create Supabase client
-    const supabase = await createClient();
+    // Use admin client for public form submissions (bypasses RLS)
+    // This is safe because the endpoint only allows creating new applicants/cases
+    const supabase = supabaseAdmin;
 
     // For cleaning cases - create case directly without approval
     if (case_type === 'cleaning') {
