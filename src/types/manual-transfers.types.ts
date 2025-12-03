@@ -130,6 +130,7 @@ export interface ExcelImportError {
  */
 export enum ValidationErrorCode {
   MISSING_REQUIRED_FIELD = 'missing_required_field',
+  INVALID_FORMAT = 'invalid_format',
   INVALID_BANK_CODE = 'invalid_bank_code',
   INVALID_BRANCH_CODE = 'invalid_branch_code',
   INVALID_ACCOUNT_NUMBER = 'invalid_account_number',

@@ -214,7 +214,36 @@ export class ExcelParser {
       };
     }
 
-    // Validate using Zod schema
+    // First check for missing required fields before running Zod validation
+    const requiredFields: Array<{ key: keyof typeof row.data; name: string }> = [
+      { key: 'recipient_name', name: 'שם מקבל' },
+      { key: 'amount', name: 'סכום' },
+      { key: 'bank_code', name: 'קוד בנק' },
+      { key: 'branch_code', name: 'קוד סניף' },
+      { key: 'account_number', name: 'מספר חשבון' },
+    ];
+
+    for (const field of requiredFields) {
+      const value = row.data[field.key];
+      if (value === undefined || value === null || value === '') {
+        errors.push({
+          field: field.key,
+          code: ValidationErrorCode.MISSING_REQUIRED_FIELD,
+          message: `חסר שדה חובה: ${field.name}`,
+        });
+      }
+    }
+
+    // If there are missing fields, return early with specific errors
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        rowNumber: row.rowNumber,
+        errors,
+      };
+    }
+
+    // Validate using Zod schema for format/value validation
     try {
       const validated = excelRowSchema.parse(row.data);
 
@@ -235,17 +264,18 @@ export class ExcelParser {
       if (error && typeof error === 'object' && 'errors' in error) {
         const zodErrors = error.errors as Array<{ path: string[]; message: string }>;
         zodErrors.forEach((err) => {
+          const fieldName = err.path[0] || 'unknown';
           errors.push({
-            field: err.path[0] || 'unknown',
-            code: ValidationErrorCode.MISSING_REQUIRED_FIELD,
+            field: fieldName,
+            code: ValidationErrorCode.INVALID_FORMAT,
             message: err.message,
           });
         });
       } else {
         errors.push({
-          field: 'all',
-          code: ValidationErrorCode.MISSING_REQUIRED_FIELD,
-          message: 'שגיאת ווליד‎ציה',
+          field: 'unknown',
+          code: ValidationErrorCode.INVALID_FORMAT,
+          message: 'שגיאת ולידציה לא צפויה',
         });
       }
 
@@ -294,6 +324,9 @@ export class ExcelParser {
         const validation = this.validateMapping(detected);
 
         if (!validation.valid) {
+          const missingInHebrew = validation.missing.map(
+            (field) => FIELD_NAMES_HE[field] || field
+          );
           return {
             success: false,
             total_rows: 0,
@@ -304,7 +337,7 @@ export class ExcelParser {
               {
                 rowNumber: 0,
                 errorCode: 'MISSING_COLUMNS',
-                errorMessage: `חסרות עמודות: ${validation.missing.join(', ')}`,
+                errorMessage: `חסרות עמודות: ${missingInHebrew.join(', ')}`,
               },
             ],
             warnings: [],
@@ -324,12 +357,19 @@ export class ExcelParser {
       const validRows = validationResults.filter((r) => r.valid);
       const invalidRows = validationResults.filter((r) => !r.valid);
 
+      // Get raw data for each invalid row
+      const rowDataMap = new Map<number, ParsedExcelRow['data']>();
+      parsedRows.forEach((row) => {
+        rowDataMap.set(row.rowNumber, row.data);
+      });
+
       const errors: ExcelImportError[] = invalidRows.flatMap((result) =>
         result.errors.map((err) => ({
           rowNumber: result.rowNumber,
           field: err.field,
           errorCode: err.code,
           errorMessage: err.message,
+          rawData: rowDataMap.get(result.rowNumber) as Record<string, unknown>,
         }))
       );
 
@@ -384,12 +424,17 @@ export class ExcelParser {
     // Set RTL for Hebrew
     worksheet.views = [{ rightToLeft: true }];
 
-    // Define columns
+    // Define columns - include original data columns
     worksheet.columns = [
       { header: 'מספר שורה', key: 'rowNumber', width: 12 },
-      { header: 'שדה', key: 'field', width: 15 },
-      { header: 'שגיאה', key: 'errorMessage', width: 40 },
-      { header: 'קוד שגיאה', key: 'errorCode', width: 20 },
+      { header: 'שדה עם שגיאה', key: 'field', width: 15 },
+      { header: 'תיאור השגיאה', key: 'errorMessage', width: 35 },
+      { header: 'שם מקבל', key: 'recipient_name', width: 20 },
+      { header: 'תעודת זהות', key: 'id_number', width: 12 },
+      { header: 'סכום', key: 'amount', width: 12 },
+      { header: 'בנק', key: 'bank_code', width: 8 },
+      { header: 'סניף', key: 'branch_code', width: 8 },
+      { header: 'חשבון', key: 'account_number', width: 15 },
     ];
 
     // Style header row
@@ -402,13 +447,30 @@ export class ExcelParser {
     };
     headerRow.alignment = { horizontal: 'right' };
 
-    // Add data rows
+    // Group errors by row number to avoid duplicating raw data
+    const errorsByRow = new Map<number, { errors: ExcelImportError[]; rawData?: Record<string, unknown> }>();
     errors.forEach((error) => {
+      const existing = errorsByRow.get(error.rowNumber);
+      if (existing) {
+        existing.errors.push(error);
+      } else {
+        errorsByRow.set(error.rowNumber, { errors: [error], rawData: error.rawData });
+      }
+    });
+
+    // Add data rows - one row per error
+    errors.forEach((error) => {
+      const rawData = error.rawData || {};
       worksheet.addRow({
         rowNumber: error.rowNumber,
         field: FIELD_NAMES_HE[error.field || 'unknown'] || error.field,
         errorMessage: error.errorMessage,
-        errorCode: error.errorCode,
+        recipient_name: rawData.recipient_name ?? '',
+        id_number: rawData.id_number ?? '',
+        amount: rawData.amount ?? '',
+        bank_code: rawData.bank_code ?? '',
+        branch_code: rawData.branch_code ?? '',
+        account_number: rawData.account_number ?? '',
       });
     });
 
@@ -416,7 +478,9 @@ export class ExcelParser {
     worksheet.eachRow((row, rowNumber) => {
       if (rowNumber > 1) {
         row.alignment = { horizontal: 'right' };
-        // Highlight error message in red
+        // Highlight error field and message in red
+        const fieldCell = row.getCell('field');
+        fieldCell.font = { color: { argb: 'FFDC2626' }, bold: true };
         const errorCell = row.getCell('errorMessage');
         errorCell.font = { color: { argb: 'FFDC2626' } };
       }
