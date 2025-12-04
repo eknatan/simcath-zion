@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/sheet';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { cn } from '@/lib/utils';
+import { numberToHebrewLetters, HEBREW_MONTHS_HE } from '@/lib/hebcal-utils';
 import {
   History,
   Edit3,
@@ -125,12 +126,12 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
       return <DollarSign className="h-4 w-4" />;
     }
 
-    // Files and documents
+    // Files and documents - check deleted first to avoid matching 'file' in 'file_deleted'
+    if (fieldLower.includes('file_deleted') || fieldLower.includes('deleted')) {
+      return <Trash2 className="h-4 w-4" />;
+    }
     if (fieldLower.includes('file') || fieldLower.includes('upload')) {
       return <Upload className="h-4 w-4" />;
-    }
-    if (fieldLower.includes('deleted')) {
-      return <Trash2 className="h-4 w-4" />;
     }
 
     // Default
@@ -169,6 +170,41 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
   };
 
   /**
+   * Format Hebrew date value (day or month) for display
+   */
+  const formatHebrewValue = (field: string, value: string | null): string => {
+    if (!value) return '';
+    const numValue = parseInt(value, 10);
+    if (isNaN(numValue)) return value;
+
+    if (field === 'hebrew_day') {
+      return numberToHebrewLetters(numValue);
+    }
+    if (field === 'hebrew_month') {
+      // HEBREW_MONTHS_HE is 0-indexed starting from Nisan (month 1)
+      // Month 1-6 = Nisan-Elul (indices 0-5)
+      // Month 7-12 = Tishrei-Adar (indices 6-11)
+      const monthIndex = numValue - 1;
+      return HEBREW_MONTHS_HE[monthIndex] || value;
+    }
+    return value;
+  };
+
+  /**
+   * Format Gregorian date for display (DD/MM/YY)
+   */
+  const formatGregorianDate = (value: string | null): string => {
+    if (!value) return '';
+    // Parse YYYY-MM-DD format
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (match) {
+      const [, year, month, day] = match;
+      return `${day}/${month}/${year.slice(2)}`;
+    }
+    return value;
+  };
+
+  /**
    * Get human-readable description for the change
    */
   const getChangeDescription = (entry: CaseHistoryWithUser) => {
@@ -197,6 +233,36 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
       return 'עדכן פרטי חשבון בנק';
     }
 
+    // Hebrew date fields - format with Hebrew letters/month names
+    if (field === 'hebrew_day' || field === 'hebrew_month') {
+      const oldFormatted = formatHebrewValue(field, oldValue);
+      const newFormatted = formatHebrewValue(field, newValue);
+      if (oldValue && newValue) {
+        return `ערך את ${t(`field.${field}`)} מ"${oldFormatted}" ל"${newFormatted}"`;
+      }
+      if (newValue && !oldValue) {
+        return `הוסיף ${t(`field.${field}`)}: ${newFormatted}`;
+      }
+      if (oldValue && !newValue) {
+        return `הסיר ${t(`field.${field}`)}: ${oldFormatted}`;
+      }
+    }
+
+    // Gregorian date fields - format as DD/MM/YY
+    if (field === 'wedding_date') {
+      const oldFormatted = formatGregorianDate(oldValue);
+      const newFormatted = formatGregorianDate(newValue);
+      if (oldValue && newValue) {
+        return `ערך את ${t(`field.${field}`)} מ"${oldFormatted}" ל"${newFormatted}"`;
+      }
+      if (newValue && !oldValue) {
+        return `הוסיף ${t(`field.${field}`)}: ${newFormatted}`;
+      }
+      if (oldValue && !newValue) {
+        return `הסיר ${t(`field.${field}`)}: ${oldFormatted}`;
+      }
+    }
+
     // General field changes
     if (oldValue && newValue) {
       return `ערך את ${t(`field.${field}`)} מ"${oldValue}" ל"${newValue}"`;
@@ -214,11 +280,36 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
   };
 
   /**
+   * Format note for date changes
+   * Converts raw values to readable format
+   */
+  const formatDateNote = (note: string, entry: CaseHistoryWithUser): string => {
+    const field = entry.field_changed;
+    if (field === 'hebrew_day' || field === 'hebrew_month') {
+      const oldFormatted = formatHebrewValue(field, entry.old_value);
+      const newFormatted = formatHebrewValue(field, entry.new_value);
+      const fieldName = field === 'hebrew_day' ? 'יום עברי' : 'חודש עברי';
+      return `עדכון ${fieldName} מ"${oldFormatted}" ל"${newFormatted}"`;
+    }
+    if (field === 'wedding_date') {
+      const oldFormatted = formatGregorianDate(entry.old_value);
+      const newFormatted = formatGregorianDate(entry.new_value);
+      return `עדכון תאריך חתונה לועזי מ"${oldFormatted}" ל"${newFormatted}"`;
+    }
+    return note;
+  };
+
+  /**
    * Translate note using i18n keys
    * Supports format: "key|param1:value1|param2:value2"
    */
-  const translateNote = (note: string): string | null => {
+  const translateNote = (note: string, entry?: CaseHistoryWithUser): string | null => {
     if (!note) return null;
+
+    // Handle date field notes specially
+    if (entry && (entry.field_changed === 'hebrew_day' || entry.field_changed === 'hebrew_month' || entry.field_changed === 'wedding_date')) {
+      return formatDateNote(note, entry);
+    }
 
     // Check if it's a translatable key (contains | or matches known keys)
     const isTranslatableKey = note.includes('|') ||
@@ -280,7 +371,7 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
           </SheetTitle>
         </SheetHeader>
 
-        <div className="mt-6 space-y-4 overflow-y-auto max-h-[calc(100vh-120px)] pe-2">
+        <div className="mt-6 space-y-4 overflow-y-auto max-h-[calc(100vh-120px)] px-4">
           {history.length === 0 ? (
             <div className="text-center py-8">
               <FileText className="h-12 w-12 text-slate-300 mx-auto mb-3" />
@@ -304,32 +395,28 @@ export function AuditLogTimeline({ history, className }: AuditLogTimelineProps) 
 
                 {/* Content */}
                 <div className="flex-1 pb-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="font-semibold">
-                          {entry.changed_by_name || 'משתמש לא ידוע'}
-                        </span>
-                        <span className="text-muted-foreground">
-                          {getChangeDescription(entry)}
-                        </span>
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {formatDistanceToNow(
-                          new Date(entry.changed_at || Date.now()),
-                          {
-                            addSuffix: true,
-                            locale: he
-                          }
-                        )}
-                      </div>
-                      {entry.note && (
-                        <div className="text-sm text-muted-foreground mt-2 bg-slate-50 p-2 rounded border">
-                          {translateNote(entry.note)}
-                        </div>
-                      )}
-                    </div>
+                  <div className="text-sm">
+                    <span className="font-semibold">
+                      {entry.changed_by_name || 'משתמש לא ידוע'}
+                    </span>
+                    <span className="text-muted-foreground me-1">
+                      {' '}{getChangeDescription(entry)}
+                    </span>
                   </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {formatDistanceToNow(
+                      new Date(entry.changed_at || Date.now()),
+                      {
+                        addSuffix: true,
+                        locale: he
+                      }
+                    )}
+                  </div>
+                  {entry.note && (
+                    <div className="text-sm text-muted-foreground mt-2 bg-slate-50 p-2 rounded border">
+                      {translateNote(entry.note, entry)}
+                    </div>
+                  )}
                 </div>
               </div>
             ))

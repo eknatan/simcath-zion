@@ -106,6 +106,13 @@ export async function PATCH(
       );
     }
 
+    // Get old data for comparison BEFORE updating
+    const { data: oldCaseData } = await supabase
+      .from('cases')
+      .select('*')
+      .eq('id', id)
+      .single();
+
     // Update the case
     const { data: updatedCase, error: updateError } = await supabase
       .from('cases')
@@ -126,13 +133,6 @@ export async function PATCH(
 
     // Log the changes in case_history using middleware
     const auditLogger = createAuditLogger(supabase);
-
-    // Get old data for comparison
-    const { data: oldCaseData } = await supabase
-      .from('cases')
-      .select('*')
-      .eq('id', id)
-      .single();
 
     if (oldCaseData) {
       const changes = getChangedFields(oldCaseData, updates);
