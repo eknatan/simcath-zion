@@ -262,7 +262,7 @@ export function ApplicantsList({
           <div className="flex gap-2">
             {/* View Button */}
             <ActionButton
-              variant="view"
+              variant="view-primary"
               size="sm"
               onClick={() => {
                 setSelectedApplicant(row.original);
@@ -276,7 +276,7 @@ export function ApplicantsList({
             {/* Approve Button (only for pending) */}
             {status === 'pending' && (
               <ActionButton
-                variant="approve"
+                variant="approve-primary"
                 size="sm"
                 onClick={() => {
                   setSelectedApplicant(row.original);
@@ -291,7 +291,7 @@ export function ApplicantsList({
             {/* Reject Button (only for pending) */}
             {status === 'pending' && (
               <ActionButton
-                variant="reject"
+                variant="reject-primary"
                 size="sm"
                 onClick={() => {
                   setSelectedApplicant(row.original);
@@ -306,7 +306,7 @@ export function ApplicantsList({
             {/* Restore Button (only for rejected and within 30 days) */}
             {status === 'rejected' && getDaysLeft(row.original) !== null && getDaysLeft(row.original)! > 0 && (
               <ActionButton
-                variant="restore"
+                variant="restore-primary"
                 size="sm"
                 onClick={() => {
                   setSelectedApplicant(row.original);

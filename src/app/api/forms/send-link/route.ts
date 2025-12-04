@@ -142,13 +142,13 @@ export async function POST(request: NextRequest) {
             font-size: 18px;
             margin-bottom: 16px;
             text-align: ${isHebrew ? 'right' : 'left'};
-            unicode-bidi: embed;
+            direction: ${isHebrew ? 'rtl' : 'ltr'};
           }
           .message {
             margin-bottom: 24px;
             color: #4a4a4a;
             text-align: ${isHebrew ? 'right' : 'left'};
-            unicode-bidi: embed;
+            direction: ${isHebrew ? 'rtl' : 'ltr'};
           }
           .custom-message {
             background: #f8fafc;
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
             margin: 20px 0;
             border-radius: ${isHebrew ? '0 8px 8px 0' : '8px 0 0 8px'};
             text-align: ${isHebrew ? 'right' : 'left'};
-            unicode-bidi: embed;
+            direction: ${isHebrew ? 'rtl' : 'ltr'};
           }
           .button-container {
             text-align: center;
@@ -210,7 +210,7 @@ export async function POST(request: NextRequest) {
             <div class="button-container">
               <a href="${formUrl}" class="button">${emailTexts.buttonText}</a>
             </div>
-            <p style="font-size: 14px; color: #6b7280; text-align: ${isHebrew ? 'right' : 'left'};">
+            <p style="font-size: 14px; color: #6b7280; text-align: ${isHebrew ? 'right' : 'left'}; direction: ${isHebrew ? 'rtl' : 'ltr'};">
               ${emailTexts.fallbackText}
               <br>
               <a href="${formUrl}" style="color: #2563eb; word-break: break-all;" dir="ltr">${formUrl}</a>

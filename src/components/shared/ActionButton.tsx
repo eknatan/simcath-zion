@@ -33,7 +33,8 @@ export type ActionButtonVariant =
   | 'reject'
   | 'restore'
   | 'cancel'
-  // Filled variants for dialogs
+  // Filled variants
+  | 'view-primary'
   | 'approve-primary'
   | 'reject-primary'
   | 'restore-primary';
@@ -90,7 +91,11 @@ function getVariantClasses(variant: ActionButtonVariant): string {
         'border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
       );
 
-    // === Filled variants (for dialogs) - Version B: Soft & Matte ===
+    // === Filled variants - Version B: Soft & Matte ===
+    case 'view-primary':
+      // כפתור צפייה מלא - אפור-כחול רך
+      return 'bg-slate-600 hover:bg-slate-700 text-white shadow-sm transition-all';
+
     case 'approve-primary':
       // כפתור אישור מלא - ירוק רך
       return 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all';
