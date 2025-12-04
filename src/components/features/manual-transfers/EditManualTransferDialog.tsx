@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useTranslations } from 'next-intl';
 import {
   Dialog,
   DialogContent,
@@ -31,16 +32,23 @@ import type { ManualTransfer } from '@/types/manual-transfers.types';
 // Validation Schema
 // ========================================
 
-const editManualTransferSchema = z.object({
-  recipient_name: z.string().min(2, 'שם חייב להיות לפחות 2 תווים'),
+const createSchema = (t: (key: string) => string) => z.object({
+  recipient_name: z.string().min(2, t('form.validation.nameMinLength')),
   id_number: z.string().optional(),
-  bank_code: z.string().min(1, 'קוד בנק הוא שדה חובה').max(3, 'קוד בנק עד 3 ספרות'),
-  branch_code: z.string().min(1, 'קוד סניף הוא שדה חובה').max(3, 'סניף עד 3 ספרות'),
-  account_number: z.string().min(1, 'מספר חשבון חובה'),
-  amount: z.number().min(1, 'סכום חייב להיות גדול מ-0'),
+  bank_code: z.string().min(1, t('form.validation.bankRequired')).max(3, t('form.validation.bankMaxLength')),
+  branch_code: z.string().min(1, t('form.validation.branchRequired')).max(3, t('form.validation.branchMaxLength')),
+  account_number: z.string().min(1, t('form.validation.accountRequired')),
+  amount: z.number().min(1, t('form.validation.amountMin')),
 });
 
-type EditManualTransferFormData = z.infer<typeof editManualTransferSchema>;
+type EditManualTransferFormData = {
+  recipient_name: string;
+  id_number?: string;
+  bank_code: string;
+  branch_code: string;
+  account_number: string;
+  amount: number;
+};
 
 // ========================================
 // Component
@@ -59,10 +67,11 @@ export function EditManualTransferDialog({
   transfer,
   onSuccess,
 }: EditManualTransferDialogProps) {
+  const t = useTranslations('manualTransfers');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<EditManualTransferFormData>({
-    resolver: zodResolver(editManualTransferSchema),
+    resolver: zodResolver(createSchema(t)),
     defaultValues: {
       recipient_name: '',
       id_number: '',
@@ -103,16 +112,16 @@ export function EditManualTransferDialog({
 
       if (error) throw error;
 
-      toast.success('הצלחה', {
-        description: 'ההעברה עודכנה בהצלחה',
+      toast.success(t('common.success'), {
+        description: t('messages.updateSuccess'),
       });
 
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
       console.error('Failed to update manual transfer:', error);
-      toast.error('שגיאה', {
-        description: 'שגיאה בעדכון ההעברה',
+      toast.error(t('common.error'), {
+        description: t('messages.updateError'),
       });
     } finally {
       setIsSubmitting(false);
@@ -125,10 +134,10 @@ export function EditManualTransferDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Pencil className="h-5 w-5 text-blue-600" />
-            עריכת העברה
+            {t('form.editTitle')}
           </DialogTitle>
           <DialogDescription>
-            ערוך את פרטי ההעברה
+            {t('form.editDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -140,11 +149,11 @@ export function EditManualTransferDialog({
               name="recipient_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>שם מקבל התשלום *</FormLabel>
+                  <FormLabel>{t('form.fields.recipientName')} {t('form.required')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="הזן שם מלא"
+                      placeholder={t('form.fields.recipientNamePlaceholder')}
                     />
                   </FormControl>
                   <FormMessage />
@@ -158,11 +167,11 @@ export function EditManualTransferDialog({
               name="id_number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>תעודת זהות (אופציונלי)</FormLabel>
+                  <FormLabel>{t('form.fields.idNumber')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="123456789"
+                      placeholder={t('form.fields.idNumberPlaceholder')}
                       maxLength={9}
                     />
                   </FormControl>
@@ -177,7 +186,7 @@ export function EditManualTransferDialog({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>סכום (₪) *</FormLabel>
+                  <FormLabel>{t('form.fields.amount')} {t('form.required')}</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
@@ -190,7 +199,7 @@ export function EditManualTransferDialog({
                           field.onChange(value === '' ? 0 : parseFloat(value) || 0);
                         }
                       }}
-                      placeholder="הזן סכום"
+                      placeholder={t('form.fields.amountPlaceholder')}
                     />
                   </FormControl>
                   <FormMessage />
@@ -205,9 +214,9 @@ export function EditManualTransferDialog({
                 name="bank_code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>בנק *</FormLabel>
+                    <FormLabel>{t('form.fields.bank')} {t('form.required')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="12" maxLength={3} />
+                      <Input {...field} placeholder={t('form.fields.bankPlaceholder')} maxLength={3} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,9 +228,9 @@ export function EditManualTransferDialog({
                 name="branch_code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>סניף *</FormLabel>
+                    <FormLabel>{t('form.fields.branch')} {t('form.required')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="123" maxLength={3} />
+                      <Input {...field} placeholder={t('form.fields.branchPlaceholder')} maxLength={3} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -233,9 +242,9 @@ export function EditManualTransferDialog({
                 name="account_number"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>חשבון *</FormLabel>
+                    <FormLabel>{t('form.fields.account')} {t('form.required')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="123456" />
+                      <Input {...field} placeholder={t('form.fields.accountPlaceholder')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -251,7 +260,7 @@ export function EditManualTransferDialog({
                 disabled={isSubmitting}
               >
                 <X className="h-4 w-4 me-2" />
-                ביטול
+                {t('common.cancel')}
               </ActionButton>
               <ActionButton
                 type="submit"
@@ -259,7 +268,7 @@ export function EditManualTransferDialog({
                 disabled={isSubmitting}
               >
                 <Save className="h-4 w-4 me-2" />
-                {isSubmitting ? 'שומר...' : 'שמור שינויים'}
+                {isSubmitting ? t('common.saving') : t('form.saveButton')}
               </ActionButton>
             </DialogFooter>
           </form>

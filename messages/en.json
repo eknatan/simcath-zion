@@ -40,8 +40,11 @@
     "calendar": "Calendar",
     "applicants": "Applications",
     "transfers": "Transfers",
+    "manualTransfers": "Manual Transfers",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "users": "Users",
+    "navMenu": "Navigation Menu"
   },
   "header": {
     "systemName": "Family Support System",
@@ -1497,14 +1500,141 @@
     "table": {
       "title": "Transfer List",
       "activeDescription": "Import Excel file or add manual transfer",
-      "historyDescription": "Transfers already exported"
+      "historyDescription": "Transfers already exported",
+      "columns": {
+        "selectAll": "All",
+        "recipientName": "Recipient Name",
+        "idNumber": "ID Number",
+        "amount": "Amount",
+        "bank": "Bank",
+        "branch": "Branch",
+        "account": "Account",
+        "status": "Status",
+        "createdAt": "Created Date",
+        "exportedAt": "Export Date",
+        "actions": "Actions"
+      },
+      "status": {
+        "pending": "Pending",
+        "selected": "Selected",
+        "exported": "Exported"
+      },
+      "summary": {
+        "selected": "{selected} selected out of {total}",
+        "total": "Total:"
+      }
     },
     "messages": {
       "deleteConfirm": "Are you sure you want to delete {count} transfers?",
       "deleteSuccess": "{count} transfers deleted successfully",
       "exportSuccess": "MASAV file for {count} transfers downloaded successfully",
       "selectAtLeastOne": "Please select at least one transfer",
-      "exportError": "Error creating MASAV file"
+      "exportError": "Error creating MASAV file",
+      "loadError": "Error loading transfers",
+      "deleteTransferSuccess": "Transfer deleted successfully",
+      "updateSuccess": "Transfer updated successfully",
+      "updateError": "Error updating transfer",
+      "createSuccess": "Transfer added successfully",
+      "createError": "Error creating transfer"
+    },
+    "common": {
+      "error": "Error",
+      "success": "Success",
+      "loading": "Loading...",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "save": "Save",
+      "saving": "Saving...",
+      "add": "Add"
+    },
+    "deleteDialog": {
+      "title": "Delete Transfer",
+      "description": "Are you sure you want to delete this transfer? This action cannot be undone.",
+      "bulkTitle": "Delete Transfers",
+      "bulkButton": "Delete {count} transfers"
+    },
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Recipient name or ID number",
+      "dateFrom": "From Date",
+      "dateTo": "To Date",
+      "clearFilters": "Clear Filters"
+    },
+    "import": {
+      "title": "Import Transfers from Excel",
+      "uploadTitle": "Upload Excel File",
+      "uploadDescription": "File should include 6 columns: Name, ID (optional), Amount, Bank, Branch, Account",
+      "processing": "Processing...",
+      "selectFile": "Select File",
+      "processError": "Error processing file",
+      "unexpectedError": "Unexpected error",
+      "saveError": "Error saving data",
+      "successMessage": "File processed successfully! Found {valid} valid transfers out of {total} rows.",
+      "previewColumns": {
+        "name": "Name",
+        "amount": "Amount",
+        "bank": "Bank",
+        "branch": "Branch",
+        "account": "Account"
+      },
+      "importButton": "Import {count} transfers",
+      "completeTitle": "Import completed successfully!",
+      "completeMessage": "{count} transfers added to the system"
+    },
+    "form": {
+      "addTitle": "Add Manual Transfer",
+      "editTitle": "Edit Transfer",
+      "addDescription": "Enter transfer details (6 fields only)",
+      "editDescription": "Edit transfer details",
+      "fields": {
+        "recipientName": "Recipient Name",
+        "recipientNamePlaceholder": "Enter full name",
+        "idNumber": "ID Number (optional)",
+        "idNumberPlaceholder": "123456789",
+        "amount": "Amount (₪)",
+        "amountPlaceholder": "Enter amount",
+        "bank": "Bank",
+        "bankPlaceholder": "12",
+        "branch": "Branch",
+        "branchPlaceholder": "123",
+        "account": "Account",
+        "accountPlaceholder": "123456"
+      },
+      "validation": {
+        "nameMinLength": "Name must be at least 2 characters",
+        "bankRequired": "Bank code is required",
+        "bankMaxLength": "Bank code up to 3 digits",
+        "branchRequired": "Branch code is required",
+        "branchMaxLength": "Branch up to 3 digits",
+        "accountRequired": "Account number is required",
+        "amountMin": "Amount must be greater than 0"
+      },
+      "addButton": "Add Transfer",
+      "adding": "Adding...",
+      "saveButton": "Save Changes",
+      "required": "*"
+    },
+    "validation": {
+      "title": "Error Details",
+      "downloadReport": "Download Error Report",
+      "rowsFailedValidation": "{count} rows failed validation and will not be imported",
+      "columns": {
+        "row": "Row",
+        "field": "Field",
+        "error": "Error"
+      },
+      "showLess": "Show less",
+      "showMore": "Show {count} more rows",
+      "fieldNames": {
+        "recipientName": "Recipient Name",
+        "idNumber": "ID Number",
+        "amount": "Amount",
+        "bankCode": "Bank Code",
+        "branchCode": "Branch Code",
+        "accountNumber": "Account Number",
+        "all": "All fields",
+        "unknown": "Unknown"
+      }
     }
   },
   "weddingCases": {

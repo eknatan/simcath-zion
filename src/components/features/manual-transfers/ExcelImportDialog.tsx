@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Upload, FileSpreadsheet, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ interface ExcelImportDialogProps {
 }
 
 export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImportDialogProps) {
+  const t = useTranslations('manualTransfers');
   const { user } = useAuth();
   const [step, setStep] = useState<'upload' | 'preview' | 'complete'>('upload');
   const [file, setFile] = useState<File | null>(null);
@@ -40,10 +42,10 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
       if (result.success) {
         setStep('preview');
       } else {
-        setError(result.errors[0]?.errorMessage || 'שגיאה בעיבוד הקובץ');
+        setError(result.errors[0]?.errorMessage || t('import.processError'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'שגיאה לא צפויה');
+      setError(err instanceof Error ? err.message : t('import.unexpectedError'));
     } finally {
       setImporting(false);
     }
@@ -79,7 +81,7 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
       }, 2000);
     } catch (err) {
       console.error('handleConfirm error:', err);
-      setError(err instanceof Error ? err.message : 'שגיאה בשמירת הנתונים');
+      setError(err instanceof Error ? err.message : t('import.saveError'));
     } finally {
       setImporting(false);
     }
@@ -117,7 +119,7 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>ייבוא העברות מאקסל</DialogTitle>
+          <DialogTitle>{t('import.title')}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -126,15 +128,15 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
             <div className="space-y-4">
               <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center">
                 <FileSpreadsheet className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">העלה קובץ אקסל</h3>
+                <h3 className="text-lg font-semibold mb-2">{t('import.uploadTitle')}</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  הקובץ צריך לכלול 6 עמודות: שם, זהות (אופציונלי), סכום, בנק, סניף, חשבון
+                  {t('import.uploadDescription')}
                 </p>
                 <label htmlFor="file-upload">
                   <Button type="button" disabled={importing} asChild>
                     <span>
                       <Upload className="h-4 w-4 me-2" />
-                      {importing ? 'מעבד...' : 'בחר קובץ'}
+                      {importing ? t('import.processing') : t('import.selectFile')}
                     </span>
                   </Button>
                 </label>
@@ -163,8 +165,7 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
               <Alert>
                 <CheckCircle2 className="h-4 w-4" />
                 <AlertDescription>
-                  הקובץ עובד בהצלחה! נמצאו {importResult.valid_rows} העברות תקינות מתוך{' '}
-                  {importResult.total_rows} שורות.
+                  {t('import.successMessage', { valid: importResult.valid_rows, total: importResult.total_rows })}
                 </AlertDescription>
               </Alert>
 
@@ -180,11 +181,11 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 sticky top-0">
                     <tr>
-                      <th className="px-3 py-2 text-start">שם</th>
-                      <th className="px-3 py-2 text-start">סכום</th>
-                      <th className="px-3 py-2 text-start">בנק</th>
-                      <th className="px-3 py-2 text-start">סניף</th>
-                      <th className="px-3 py-2 text-start">חשבון</th>
+                      <th className="px-3 py-2 text-start">{t('import.previewColumns.name')}</th>
+                      <th className="px-3 py-2 text-start">{t('import.previewColumns.amount')}</th>
+                      <th className="px-3 py-2 text-start">{t('import.previewColumns.bank')}</th>
+                      <th className="px-3 py-2 text-start">{t('import.previewColumns.branch')}</th>
+                      <th className="px-3 py-2 text-start">{t('import.previewColumns.account')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -210,10 +211,10 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
 
               <div className="flex gap-3 justify-end">
                 <Button variant="outline" onClick={handleClose} disabled={importing}>
-                  ביטול
+                  {t('common.cancel')}
                 </Button>
                 <Button onClick={handleConfirm} disabled={importing}>
-                  {importing ? 'שומר...' : `יבא ${importResult.valid_rows} העברות`}
+                  {importing ? t('common.saving') : t('import.importButton', { count: importResult.valid_rows })}
                 </Button>
               </div>
             </div>
@@ -223,9 +224,9 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
           {step === 'complete' && (
             <div className="text-center py-8">
               <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">הייבוא הושלם בהצלחה!</h3>
+              <h3 className="text-xl font-semibold mb-2">{t('import.completeTitle')}</h3>
               <p className="text-muted-foreground">
-                {importResult?.valid_rows} העברות נוספו למערכת
+                {t('import.completeMessage', { count: importResult?.valid_rows ?? 0 })}
               </p>
             </div>
           )}

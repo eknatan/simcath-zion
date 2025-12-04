@@ -48,7 +48,7 @@ export default function ManualTransfersPage() {
       const { data, error } = await manualTransfersService.getAll();
 
       if (error) {
-        toast.error('שגיאה', {
+        toast.error(t('common.error'), {
           description: error.message,
         });
         return;
@@ -67,8 +67,8 @@ export default function ManualTransfersPage() {
 
       setTransfers(filteredData);
     } catch {
-      toast.error('שגיאה', {
-        description: 'שגיאה בטעינת ההעברות',
+      toast.error(t('common.error'), {
+        description: t('messages.loadError'),
       });
     } finally {
       setLoading(false);
@@ -90,12 +90,12 @@ export default function ManualTransfersPage() {
     const { error } = await manualTransfersService.delete(deletingTransferId);
 
     if (error) {
-      toast.error('שגיאה', {
+      toast.error(t('common.error'), {
         description: error.message,
       });
     } else {
-      toast.success('הצלחה', {
-        description: 'ההעברה נמחקה בהצלחה',
+      toast.success(t('common.success'), {
+        description: t('messages.deleteTransferSuccess'),
       });
       loadTransfers();
       setSelectedIds(selectedIds.filter((selectedId) => selectedId !== deletingTransferId));
@@ -119,11 +119,11 @@ export default function ManualTransfersPage() {
     const { error } = await manualTransfersService.bulkDelete(selectedIds);
 
     if (error) {
-      toast.error('שגיאה', {
+      toast.error(t('common.error'), {
         description: error.message,
       });
     } else {
-      toast.success('הצלחה', {
+      toast.success(t('common.success'), {
         description: t('messages.deleteSuccess', { count: selectedIds.length }),
       });
       loadTransfers();
@@ -135,7 +135,7 @@ export default function ManualTransfersPage() {
 
   const handleExport = async () => {
     if (selectedIds.length === 0) {
-      toast.error('שגיאה', {
+      toast.error(t('common.error'), {
         description: t('messages.selectAtLeastOne'),
       });
       return;
@@ -172,7 +172,7 @@ export default function ManualTransfersPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      toast.success('הצלחה', {
+      toast.success(t('common.success'), {
         description: t('messages.exportSuccess', { count: selectedIds.length }),
       });
 
@@ -180,7 +180,7 @@ export default function ManualTransfersPage() {
       loadTransfers();
       setSelectedIds([]);
     } catch (error) {
-      toast.error('שגיאה', {
+      toast.error(t('common.error'), {
         description: error instanceof Error ? error.message : t('messages.exportError'),
       });
     }
@@ -369,7 +369,7 @@ export default function ManualTransfersPage() {
         <CardContent>
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">
-              טוען...
+              {t('common.loading')}
             </div>
           ) : (
             <ManualTransfersTable
@@ -469,21 +469,21 @@ export default function ManualTransfersPage() {
 
       {/* Delete Single Transfer Confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent dir="rtl">
+        <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>מחיקת העברה</AlertDialogTitle>
+            <AlertDialogTitle>{t('deleteDialog.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              האם אתה בטוח שברצונך למחוק העברה זו? פעולה זו לא ניתנת לביטול.
+              {t('deleteDialog.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel asChild>
-              <ActionButton variant="cancel">ביטול</ActionButton>
+              <ActionButton variant="cancel">{t('common.cancel')}</ActionButton>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
               <ActionButton variant="reject-primary" onClick={handleDeleteConfirm}>
                 <Trash2 className="h-4 w-4 me-2" />
-                מחק
+                {t('common.delete')}
               </ActionButton>
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -492,21 +492,21 @@ export default function ManualTransfersPage() {
 
       {/* Delete Multiple Transfers Confirmation */}
       <AlertDialog open={bulkDeleteDialogOpen} onOpenChange={setBulkDeleteDialogOpen}>
-        <AlertDialogContent dir="rtl">
+        <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>מחיקת העברות</AlertDialogTitle>
+            <AlertDialogTitle>{t('deleteDialog.bulkTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
               {t('messages.deleteConfirm', { count: selectedIds.length })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel asChild>
-              <ActionButton variant="cancel">ביטול</ActionButton>
+              <ActionButton variant="cancel">{t('common.cancel')}</ActionButton>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
               <ActionButton variant="reject-primary" onClick={handleBulkDeleteConfirm}>
                 <Trash2 className="h-4 w-4 me-2" />
-                מחק {selectedIds.length} העברות
+                {t('deleteDialog.bulkButton', { count: selectedIds.length })}
               </ActionButton>
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -42,9 +42,11 @@
     "calendar": "לוח שנה",
     "applicants": "בקשות",
     "transfers": "העברות",
+    "manualTransfers": "העברות ידניות",
     "settings": "הגדרות",
     "logout": "התנתק",
-    "users": "משתמשים"
+    "users": "משתמשים",
+    "navMenu": "תפריט ניווט"
   },
   "header": {
     "systemName": "מערכת תמיכה למשפחות",
@@ -1590,14 +1592,141 @@
     "table": {
       "title": "רשימת העברות",
       "activeDescription": "ייבא קובץ אקסל או הוסף העברה ידנית",
-      "historyDescription": "העברות שכבר יוצאו"
+      "historyDescription": "העברות שכבר יוצאו",
+      "columns": {
+        "selectAll": "הכל",
+        "recipientName": "שם מקבל",
+        "idNumber": "תעודת זהות",
+        "amount": "סכום",
+        "bank": "בנק",
+        "branch": "סניף",
+        "account": "חשבון",
+        "status": "סטטוס",
+        "createdAt": "תאריך יצירה",
+        "exportedAt": "תאריך ייצוא",
+        "actions": "פעולות"
+      },
+      "status": {
+        "pending": "ממתין",
+        "selected": "נבחר",
+        "exported": "יוצא"
+      },
+      "summary": {
+        "selected": "{selected} נבחרו מתוך {total}",
+        "total": "סה\"כ:"
+      }
     },
     "messages": {
       "deleteConfirm": "האם אתה בטוח שברצונך למחוק {count} העברות?",
       "deleteSuccess": "{count} העברות נמחקו בהצלחה",
       "exportSuccess": "קובץ מס\"ב עבור {count} העברות הורד בהצלחה",
       "selectAtLeastOne": "יש לבחור לפחות העברה אחת",
-      "exportError": "שגיאה ביצירת קובץ מס\"ב"
+      "exportError": "שגיאה ביצירת קובץ מס\"ב",
+      "loadError": "שגיאה בטעינת ההעברות",
+      "deleteTransferSuccess": "ההעברה נמחקה בהצלחה",
+      "updateSuccess": "ההעברה עודכנה בהצלחה",
+      "updateError": "שגיאה בעדכון ההעברה",
+      "createSuccess": "ההעברה נוספה בהצלחה",
+      "createError": "שגיאה ביצירת ההעברה"
+    },
+    "common": {
+      "error": "שגיאה",
+      "success": "הצלחה",
+      "loading": "טוען...",
+      "cancel": "ביטול",
+      "delete": "מחק",
+      "save": "שמור",
+      "saving": "שומר...",
+      "add": "הוסף"
+    },
+    "deleteDialog": {
+      "title": "מחיקת העברה",
+      "description": "האם אתה בטוח שברצונך למחוק העברה זו? פעולה זו לא ניתנת לביטול.",
+      "bulkTitle": "מחיקת העברות",
+      "bulkButton": "מחק {count} העברות"
+    },
+    "filters": {
+      "search": "חיפוש",
+      "searchPlaceholder": "שם מקבל או תעודת זהות",
+      "dateFrom": "מתאריך",
+      "dateTo": "עד תאריך",
+      "clearFilters": "נקה סינונים"
+    },
+    "import": {
+      "title": "ייבוא העברות מאקסל",
+      "uploadTitle": "העלה קובץ אקסל",
+      "uploadDescription": "הקובץ צריך לכלול 6 עמודות: שם, זהות (אופציונלי), סכום, בנק, סניף, חשבון",
+      "processing": "מעבד...",
+      "selectFile": "בחר קובץ",
+      "processError": "שגיאה בעיבוד הקובץ",
+      "unexpectedError": "שגיאה לא צפויה",
+      "saveError": "שגיאה בשמירת הנתונים",
+      "successMessage": "הקובץ עובד בהצלחה! נמצאו {valid} העברות תקינות מתוך {total} שורות.",
+      "previewColumns": {
+        "name": "שם",
+        "amount": "סכום",
+        "bank": "בנק",
+        "branch": "סניף",
+        "account": "חשבון"
+      },
+      "importButton": "יבא {count} העברות",
+      "completeTitle": "הייבוא הושלם בהצלחה!",
+      "completeMessage": "{count} העברות נוספו למערכת"
+    },
+    "form": {
+      "addTitle": "הוסף העברה ידנית",
+      "editTitle": "עריכת העברה",
+      "addDescription": "הזן את פרטי ההעברה (6 שדות בלבד)",
+      "editDescription": "ערוך את פרטי ההעברה",
+      "fields": {
+        "recipientName": "שם מקבל התשלום",
+        "recipientNamePlaceholder": "הזן שם מלא",
+        "idNumber": "תעודת זהות (אופציונלי)",
+        "idNumberPlaceholder": "123456789",
+        "amount": "סכום (₪)",
+        "amountPlaceholder": "הזן סכום",
+        "bank": "בנק",
+        "bankPlaceholder": "12",
+        "branch": "סניף",
+        "branchPlaceholder": "123",
+        "account": "חשבון",
+        "accountPlaceholder": "123456"
+      },
+      "validation": {
+        "nameMinLength": "שם חייב להיות לפחות 2 תווים",
+        "bankRequired": "קוד בנק הוא שדה חובה",
+        "bankMaxLength": "קוד בנק עד 3 ספרות",
+        "branchRequired": "קוד סניף הוא שדה חובה",
+        "branchMaxLength": "סניף עד 3 ספרות",
+        "accountRequired": "מספר חשבון חובה",
+        "amountMin": "סכום חייב להיות גדול מ-0"
+      },
+      "addButton": "הוסף העברה",
+      "adding": "מוסיף...",
+      "saveButton": "שמור שינויים",
+      "required": "*"
+    },
+    "validation": {
+      "title": "פירוט שגיאות",
+      "downloadReport": "הורד דוח שגיאות",
+      "rowsFailedValidation": "{count} שורות לא עברו את הולידציה ולא ייובאו",
+      "columns": {
+        "row": "שורה",
+        "field": "שדה",
+        "error": "שגיאה"
+      },
+      "showLess": "הצג פחות",
+      "showMore": "הצג עוד {count} שורות",
+      "fieldNames": {
+        "recipientName": "שם מקבל",
+        "idNumber": "תעודת זהות",
+        "amount": "סכום",
+        "bankCode": "קוד בנק",
+        "branchCode": "קוד סניף",
+        "accountNumber": "מספר חשבון",
+        "all": "כל השדות",
+        "unknown": "לא ידוע"
+      }
     }
   },
   "weddingCases": {

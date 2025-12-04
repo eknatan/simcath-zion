@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronDown, ChevronUp, Download, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -11,19 +12,20 @@ interface ValidationErrorsTableProps {
   onExportErrors: () => void;
 }
 
-const FIELD_NAMES: Record<string, string> = {
-  recipient_name: 'שם מקבל',
-  id_number: 'תעודת זהות',
-  amount: 'סכום',
-  bank_code: 'קוד בנק',
-  branch_code: 'קוד סניף',
-  account_number: 'מספר חשבון',
-  all: 'כל השדות',
-  unknown: 'לא ידוע',
-};
-
 export function ValidationErrorsTable({ errors, onExportErrors }: ValidationErrorsTableProps) {
+  const t = useTranslations('manualTransfers');
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const FIELD_NAMES: Record<string, string> = {
+    recipient_name: t('validation.fieldNames.recipientName'),
+    id_number: t('validation.fieldNames.idNumber'),
+    amount: t('validation.fieldNames.amount'),
+    bank_code: t('validation.fieldNames.bankCode'),
+    branch_code: t('validation.fieldNames.branchCode'),
+    account_number: t('validation.fieldNames.accountNumber'),
+    all: t('validation.fieldNames.all'),
+    unknown: t('validation.fieldNames.unknown'),
+  };
 
   if (errors.length === 0) return null;
 
@@ -46,14 +48,14 @@ export function ValidationErrorsTable({ errors, onExportErrors }: ValidationErro
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          {rowNumbers.length} שורות לא עברו את הולידציה ולא ייובאו
+          {t('validation.rowsFailedValidation', { count: rowNumbers.length })}
         </AlertDescription>
       </Alert>
 
       {/* Error details table */}
       <div className="border rounded-lg overflow-hidden">
         <div className="bg-slate-50 px-3 py-2 border-b flex items-center justify-between">
-          <span className="text-sm font-medium text-slate-700">פירוט שגיאות</span>
+          <span className="text-sm font-medium text-slate-700">{t('validation.title')}</span>
           <Button
             variant="outline"
             size="sm"
@@ -61,7 +63,7 @@ export function ValidationErrorsTable({ errors, onExportErrors }: ValidationErro
             className="h-7 text-xs"
           >
             <Download className="h-3 w-3 me-1" />
-            הורד דוח שגיאות
+            {t('validation.downloadReport')}
           </Button>
         </div>
 
@@ -69,9 +71,9 @@ export function ValidationErrorsTable({ errors, onExportErrors }: ValidationErro
           <table className="w-full text-sm">
             <thead className="bg-slate-50 sticky top-0">
               <tr>
-                <th className="px-3 py-2 text-start text-slate-600 font-medium w-20">שורה</th>
-                <th className="px-3 py-2 text-start text-slate-600 font-medium w-28">שדה</th>
-                <th className="px-3 py-2 text-start text-slate-600 font-medium">שגיאה</th>
+                <th className="px-3 py-2 text-start text-slate-600 font-medium w-20">{t('validation.columns.row')}</th>
+                <th className="px-3 py-2 text-start text-slate-600 font-medium w-28">{t('validation.columns.field')}</th>
+                <th className="px-3 py-2 text-start text-slate-600 font-medium">{t('validation.columns.error')}</th>
               </tr>
             </thead>
             <tbody>
@@ -102,12 +104,12 @@ export function ValidationErrorsTable({ errors, onExportErrors }: ValidationErro
               {isExpanded ? (
                 <>
                   <ChevronUp className="h-3 w-3 me-1" />
-                  הצג פחות
+                  {t('validation.showLess')}
                 </>
               ) : (
                 <>
                   <ChevronDown className="h-3 w-3 me-1" />
-                  הצג עוד {rowNumbers.length - 5} שורות
+                  {t('validation.showMore', { count: rowNumbers.length - 5 })}
                 </>
               )}
             </Button>

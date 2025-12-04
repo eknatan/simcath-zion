@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import { useState } from 'react';
 
 export interface ManualTransferFiltersType {
   search?: string;
@@ -24,6 +25,7 @@ export function ManualTransferFilters({
   onChange,
   onReset,
 }: ManualTransferFiltersProps) {
+  const t = useTranslations('manualTransfers');
   const [localFilters, setLocalFilters] = useState(filters);
 
   const handleChange = (key: keyof ManualTransferFiltersType, value: any) => {
@@ -44,12 +46,12 @@ export function ManualTransferFilters({
           {/* Search - Takes 2 columns */}
           <div className="space-y-2 lg:col-span-2">
             <Label htmlFor="search" className="text-sm font-medium text-slate-700">
-              חיפוש
+              {t('filters.search')}
             </Label>
             <Input
               id="search"
               type="text"
-              placeholder="שם מקבל או תעודת זהות"
+              placeholder={t('filters.searchPlaceholder')}
               value={localFilters.search || ''}
               onChange={(e) => handleChange('search', e.target.value)}
               className="border-slate-200"
@@ -59,7 +61,7 @@ export function ManualTransferFilters({
           {/* Date From */}
           <div className="space-y-2">
             <Label htmlFor="dateFrom" className="text-sm font-medium text-slate-700">
-              מתאריך
+              {t('filters.dateFrom')}
             </Label>
             <Input
               id="dateFrom"
@@ -73,7 +75,7 @@ export function ManualTransferFilters({
           {/* Date To */}
           <div className="space-y-2">
             <Label htmlFor="dateTo" className="text-sm font-medium text-slate-700">
-              עד תאריך
+              {t('filters.dateTo')}
             </Label>
             <Input
               id="dateTo"
@@ -92,7 +94,7 @@ export function ManualTransferFilters({
               className="w-full border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm"
             >
               <X className="w-4 h-4 me-2" />
-              נקה סינונים
+              {t('filters.clearFilters')}
             </Button>
           </div>
         </div>

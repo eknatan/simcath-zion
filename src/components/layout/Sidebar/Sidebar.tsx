@@ -57,7 +57,7 @@ export function Sidebar() {
       icon: <DollarSign className="h-5 w-5" />,
     },
     {
-      title: 'העברות ידניות',
+      title: t('manualTransfers'),
       href: '/manual-transfers',
       icon: <HandCoins className="h-5 w-5" />,
     },
@@ -80,7 +80,7 @@ export function Sidebar() {
     <div className="flex h-full flex-col border-e border-slate-200 bg-gradient-to-b from-slate-50/50 to-white shadow-sm">
       <div className="p-6 border-b border-slate-100 bg-white/80">
         <h2 className="text-xl font-bold text-slate-900">{t('dashboard')}</h2>
-        <p className="text-sm text-slate-600 mt-1">תפריט ניווט</p>
+        <p className="text-sm text-slate-600 mt-1">{t('navMenu')}</p>
       </div>
 
       <ScrollArea className="flex-1 px-4 py-3">
