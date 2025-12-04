@@ -112,54 +112,60 @@ export function ExportWord({
    * תמיכה ב-RTL וריווח אוטומטי
    */
   const createTableRow = (label: string, value: string | number | null | undefined) => {
-    return new TableRow({
+    // בעברית (RTL): label מימין, value משמאל
+    // באנגלית (LTR): label משמאל, value מימין
+    const labelCell = new TableCell({
       children: [
-        new TableCell({
+        new Paragraph({
           children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: label,
-                  bold: true,
-                  size: 22, // 11pt
-                  font: 'Arial',
-                }),
-              ],
-              alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
-              bidirectional: isRTL,
+            new TextRun({
+              text: label,
+              bold: true,
+              size: 22, // 11pt
+              font: 'Arial',
+              rightToLeft: isRTL,
             }),
           ],
-          width: { size: 4200, type: WidthType.DXA }, // רוחב קבוע לכותרת (~3 אינץ')
-          borders: {
-            top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-            bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-            left: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-            right: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-          },
-        }),
-        new TableCell({
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: value?.toString() || '-',
-                  size: 22, // 11pt
-                  font: 'Arial',
-                }),
-              ],
-              alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
-              bidirectional: isRTL,
-            }),
-          ],
-          width: { size: 9000, type: WidthType.DXA }, // רוחב קבוע לתוכן (~6.25 אינץ')
-          borders: {
-            top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-            bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-            left: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-            right: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-          },
+          alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
+          bidirectional: isRTL,
         }),
       ],
+      width: { size: 30, type: WidthType.PERCENTAGE }, // 30% לעמודת ה-key
+      borders: {
+        top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+        bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+        left: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+        right: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+      },
+    });
+
+    const valueCell = new TableCell({
+      children: [
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: value?.toString() || '-',
+              size: 22, // 11pt
+              font: 'Arial',
+              rightToLeft: isRTL,
+            }),
+          ],
+          alignment: isRTL ? AlignmentType.RIGHT : AlignmentType.LEFT,
+          bidirectional: isRTL,
+        }),
+      ],
+      width: { size: 70, type: WidthType.PERCENTAGE }, // 70% לעמודת ה-value
+      borders: {
+        top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+        bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+        left: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+        right: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+      },
+    });
+
+    return new TableRow({
+      // בעברית: value משמאל, label מימין (סדר הפוך בטבלה)
+      children: isRTL ? [valueCell, labelCell] : [labelCell, valueCell],
     });
   };
 
@@ -175,6 +181,7 @@ export function ExportWord({
           size: 28, // 14pt
           font: 'Arial',
           color: '1E40AF',
+          rightToLeft: isRTL,
         }),
       ],
       heading: HeadingLevel.HEADING_2,
@@ -217,6 +224,7 @@ export function ExportWord({
                 bold: true,
                 size: 32, // 16pt
                 font: 'Arial',
+                rightToLeft: isRTL,
               }),
             ],
             heading: HeadingLevel.HEADING_1,
@@ -269,7 +277,7 @@ export function ExportWord({
             createTableRow('עיסוק האב', formData.groom_info?.father_occupation),
             createTableRow('שם האם', formData.groom_info?.mother_name),
             createTableRow('עיסוק האם', formData.groom_info?.mother_occupation),
-            createTableRow('יום השכרון', formData.groom_info?.memorial_day),
+            createTableRow('יום הזיכרון', formData.groom_info?.memorial_day),
             createTableRow('תיעוד רקע', formData.groom_info?.background),
           ],
         }),
@@ -294,7 +302,7 @@ export function ExportWord({
             createTableRow('עיסוק האב', formData.bride_info?.father_occupation),
             createTableRow('שם האם', formData.bride_info?.mother_name),
             createTableRow('עיסוק האם', formData.bride_info?.mother_occupation),
-            createTableRow('יום השכרון', formData.bride_info?.memorial_day),
+            createTableRow('יום הזיכרון', formData.bride_info?.memorial_day),
             createTableRow('תיעוד רקע', formData.bride_info?.background),
           ],
         }),
