@@ -177,6 +177,9 @@ export type Database = {
           parent2_name: string | null
           previous_status: string | null
           raw_form_json: Json | null
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
           request_background: string | null
           start_date: string | null
           status: string
@@ -233,6 +236,9 @@ export type Database = {
           parent2_name?: string | null
           previous_status?: string | null
           raw_form_json?: Json | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
           request_background?: string | null
           start_date?: string | null
           status: string
@@ -289,6 +295,9 @@ export type Database = {
           parent2_name?: string | null
           previous_status?: string | null
           raw_form_json?: Json | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
           request_background?: string | null
           start_date?: string | null
           status?: string

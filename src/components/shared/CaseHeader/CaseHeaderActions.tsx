@@ -12,25 +12,25 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   Edit3,
-  CheckCircle2,
   XCircle,
   MoreVertical,
   Printer,
-  Trash2,
   RotateCcw,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface CaseHeaderActionsProps {
   caseData: CaseWithRelations;
-  onUpdateStatus?: () => void;
+  onRejectCase?: () => void;
+  onRestoreCase?: () => void;
   onCloseCase?: () => void;
   onReopenCase?: () => void;
 }
 
 export function CaseHeaderActions({
   caseData,
-  onUpdateStatus,
+  onRejectCase,
+  onRestoreCase,
   onCloseCase,
   onReopenCase,
 }: CaseHeaderActionsProps) {
@@ -54,27 +54,31 @@ export function CaseHeaderActions({
       {/* Wedding Actions */}
       {isWedding && (
         <>
-          <ActionButton
-            variant="view"
-            size="sm"
-            onClick={onUpdateStatus}
-            data-testid="action-button"
-          >
-            <Edit3 className="h-4 w-4 me-1" />
-            {t('actions.updateStatus')}
-          </ActionButton>
-
-          {caseData.status === 'new' && (
-            <ActionButton variant="approve" size="sm" data-testid="action-button">
-              <CheckCircle2 className="h-4 w-4 me-1" />
-              {t('actions.approveTransfer')}
+          {/* Reject button - shown when NOT rejected */}
+          {caseData.status !== 'rejected' && (
+            <ActionButton
+              variant="reject"
+              size="sm"
+              onClick={onRejectCase}
+              data-testid="action-button"
+            >
+              <XCircle className="h-4 w-4 me-1" />
+              {t('actions.reject')}
             </ActionButton>
           )}
 
-          <ActionButton variant="reject" size="sm" data-testid="action-button">
-            <XCircle className="h-4 w-4 me-1" />
-            {t('actions.reject')}
-          </ActionButton>
+          {/* Restore button - shown when rejected */}
+          {caseData.status === 'rejected' && (
+            <ActionButton
+              variant="restore"
+              size="sm"
+              onClick={onRestoreCase}
+              data-testid="action-button"
+            >
+              <RotateCcw className="h-4 w-4 me-1" />
+              {t('actions.restoreCase')}
+            </ActionButton>
+          )}
         </>
       )}
 
@@ -133,10 +137,6 @@ export function CaseHeaderActions({
           <DropdownMenuItem>
             <Printer className="h-4 w-4 me-2" />
             {t('actions.print')}
-          </DropdownMenuItem>
-          <DropdownMenuItem className="text-red-600">
-            <Trash2 className="h-4 w-4 me-2" />
-            {t('actions.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -7,8 +7,8 @@ import { WeddingCaseHeader } from './WeddingCaseHeader';
 import { CleaningCaseHeader } from './CleaningCaseHeader';
 import { CaseHeaderActions } from './CaseHeaderActions';
 import { useCleaningFinancials } from './hooks/useCaseFinancials';
-import { UpdateStatusDialog } from '@/components/features/weddings/UpdateStatusDialog';
 import { CloseDialog, ReopenDialog } from '@/components/features/sick-children/CloseDialog';
+import { RejectCaseDialog, RestoreCaseDialog } from '@/components/features/weddings/CaseRejectRestoreDialogs';
 
 interface CaseHeaderProps {
   caseData: CaseWithRelations;
@@ -25,8 +25,10 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
   const isWedding = caseData.case_type === CaseType.WEDDING;
   const isCleaning = caseData.case_type === CaseType.CLEANING;
 
-  // Dialog states
-  const [showStatusDialog, setShowStatusDialog] = useState(false);
+  // Dialog states - Wedding
+  const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+  // Dialog states - Cleaning
   const [showCloseDialog, setShowCloseDialog] = useState(false);
   const [showReopenDialog, setShowReopenDialog] = useState(false);
 
@@ -58,23 +60,38 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
         {/* Actions */}
         <CaseHeaderActions
           caseData={caseData}
-          onUpdateStatus={() => setShowStatusDialog(true)}
+          onRejectCase={() => setShowRejectDialog(true)}
+          onRestoreCase={() => setShowRestoreDialog(true)}
           onCloseCase={() => setShowCloseDialog(true)}
           onReopenCase={() => setShowReopenDialog(true)}
         />
       </div>
 
-      {/* Dialogs */}
+      {/* Wedding Dialogs */}
       {isWedding && (
-        <UpdateStatusDialog
-          open={showStatusDialog}
-          onOpenChange={setShowStatusDialog}
-          caseId={caseData.id}
-          currentStatus={caseData.status || 'new'}
-          onSuccess={handleSuccess}
-        />
+        <>
+          <RejectCaseDialog
+            caseId={caseData.id}
+            caseNumber={String(caseData.case_number)}
+            groomName={caseData.groom_first_name ?? undefined}
+            brideName={caseData.bride_first_name ?? undefined}
+            open={showRejectDialog}
+            onOpenChange={setShowRejectDialog}
+            onSuccess={handleSuccess}
+          />
+          <RestoreCaseDialog
+            caseId={caseData.id}
+            caseNumber={String(caseData.case_number)}
+            groomName={caseData.groom_first_name ?? undefined}
+            brideName={caseData.bride_first_name ?? undefined}
+            open={showRestoreDialog}
+            onOpenChange={setShowRestoreDialog}
+            onSuccess={handleSuccess}
+          />
+        </>
       )}
 
+      {/* Cleaning Dialogs */}
       {isCleaning && (
         <>
           <CloseDialog
