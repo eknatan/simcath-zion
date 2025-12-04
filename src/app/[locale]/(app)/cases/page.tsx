@@ -81,13 +81,13 @@ export default async function CasesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+    <div className="space-y-4">
+      {/* Page Header - inline */}
+      <div className="flex items-baseline gap-3">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
           {t('pageTitle')}
         </h1>
-        <p className="text-lg text-slate-600">{t('pageDescription')}</p>
+        <p className="text-sm text-slate-500">{t('pageDescription')}</p>
       </div>
 
       {/* Statistics */}

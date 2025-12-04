@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { DataTable } from '@/components/shared/DataTable';
 import { CasesFilterBar, FilterConfig, ActionButton } from '@/components/shared/CasesFilterBar';
@@ -15,6 +15,7 @@ import {
   CleaningColumnsTranslations,
   shouldHighlightRow,
 } from '@/components/features/cases/columns';
+import { useCleaningCases, useInvalidateCleaningCases } from '@/lib/hooks/useCleaningCases';
 
 // ========================================
 // Types
@@ -44,33 +45,19 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
 
   // State
   const [searchTerm, setSearchTerm] = useState('');
-  const [cases, setCases] = useState<CleaningCaseWithPayment[]>(initialCases);
-  const [isLoading, setIsLoading] = useState(false);
   const [showBulkEntry, setShowBulkEntry] = useState(false);
   const [showSendEmails, setShowSendEmails] = useState(false);
   const [showInactive, setShowInactive] = useState(false);
   const [endReasonFilter, setEndReasonFilter] = useState<string>('all');
 
-  // Fetch cases with current month payment
-  useEffect(() => {
-    async function fetchCasesWithPayments() {
-      setIsLoading(true);
-      try {
-        const status = showInactive ? 'inactive' : 'active';
-        const response = await fetch(`/api/cleaning-cases?status=${status}`);
-        if (response.ok) {
-          const data = await response.json();
-          setCases(data);
-        }
-      } catch (error) {
-        console.error('Error fetching cleaning cases:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  // Fetch cases with React Query (caching enabled)
+  const { data: cases = [], isLoading } = useCleaningCases({
+    status: showInactive ? 'inactive' : 'active',
+    initialData: initialCases,
+  });
 
-    fetchCasesWithPayments();
-  }, [showInactive]);
+  // For invalidating cache after mutations
+  const { invalidateAll } = useInvalidateCleaningCases();
 
   // Filter cases by search term and end reason
   const filteredCases = useMemo(() => {
@@ -107,14 +94,10 @@ export function CleaningCasesDashboard({ cases: initialCases }: CleaningCasesDas
     [router]
   );
 
-  // Refresh cases handler
+  // Refresh cases handler - invalidates React Query cache
   const refreshCases = useCallback(() => {
-    setIsLoading(true);
-    fetch('/api/cleaning-cases?status=active')
-      .then((res) => res.json())
-      .then((data) => setCases(data))
-      .finally(() => setIsLoading(false));
-  }, []);
+    invalidateAll();
+  }, [invalidateAll]);
 
   // Toggle inactive handler
   const handleToggleInactive = useCallback(() => {
