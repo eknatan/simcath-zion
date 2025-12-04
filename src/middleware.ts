@@ -47,10 +47,12 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Check if user is authenticated (using getUser for security)
+  // Check if user is authenticated
+  // Using getSession() for faster response (reads from cookie, no DB round-trip)
+  // getUser() makes a DB call (~50-100ms) - only needed for sensitive operations
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
   // Check if current route is public
   const isPublicRoute = publicRoutes.some(route =>
@@ -58,13 +60,13 @@ export async function middleware(request: NextRequest) {
   );
 
   // Redirect to login if not authenticated and not on public route
-  if (!user && !isPublicRoute) {
+  if (!session && !isPublicRoute) {
     const loginUrl = new URL(`/${locale}/login`, request.url);
     return NextResponse.redirect(loginUrl);
   }
 
   // Redirect to dashboard if authenticated and on login page
-  if (user && pathnameWithoutLocale === '/login') {
+  if (session && pathnameWithoutLocale === '/login') {
     const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
     return NextResponse.redirect(dashboardUrl);
   }

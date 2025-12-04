@@ -71,7 +71,7 @@ const transfersKeys = {
 };
 
 // ========================================
-// Fetch Function
+// Fetch Function (using PostgreSQL RPC for server-side search)
 // ========================================
 
 async function fetchTransfers(
@@ -81,127 +81,43 @@ async function fetchTransfers(
 ): Promise<TransferWithDetails[]> {
   const supabase = createClient();
 
-  let query = supabase.from('payments').select(
-    `
-      *,
-      cases!inner (
-        id,
-        case_number,
-        case_type,
-        status,
-        groom_first_name,
-        groom_last_name,
-        bride_first_name,
-        bride_last_name,
-        wedding_date_gregorian,
-        family_name,
-        child_name,
-        city,
-        bank_details (
-          id,
-          bank_number,
-          branch,
-          account_number,
-          account_holder_name
-        )
-      )
-    `
-  );
-
-  // Filter by transferred status
-  if (showTransferred) {
-    query = query
-      .eq('status', PaymentStatus.TRANSFERRED)
-      .not('transferred_at', 'is', null);
-  } else {
-    query = query.eq('status', PaymentStatus.APPROVED).is('transferred_at', null);
-  }
-
-  // Filter by payment type only if specified (null means "ALL")
-  if (paymentType) {
-    query = query.eq('payment_type', paymentType);
-  }
-
-  // Apply date filters
-  if (filters.date_from) {
-    query = query.gte('created_at', filters.date_from);
-  }
-  if (filters.date_to) {
-    query = query.lte('created_at', filters.date_to);
-  }
-
-  // Apply amount filters
-  if (filters.amount_min !== undefined) {
-    query = query.gte('amount_ils', filters.amount_min);
-  }
-  if (filters.amount_max !== undefined) {
-    query = query.lte('amount_ils', filters.amount_max);
-  }
-
-  // Apply city filter for wedding transfers
-  if (filters.city && paymentType === PaymentType.WEDDING_TRANSFER) {
-    query = query.eq('cases.city', filters.city);
-  }
-
-  // Apply payment month filter for cleaning
-  if (filters.payment_month && paymentType === PaymentType.MONTHLY_CLEANING) {
-    query = query.eq('payment_month', filters.payment_month);
-  }
-
-  query = query.order('created_at', { ascending: false });
-
-  const { data, error } = await query;
+  // Use server-side search function for better performance
+  const { data, error } = await supabase.rpc('search_transfers', {
+    p_search_term: filters.search?.trim() || null,
+    p_payment_type: paymentType || null,
+    p_show_transferred: showTransferred,
+    p_date_from: filters.date_from || null,
+    p_date_to: filters.date_to || null,
+    p_amount_min: filters.amount_min ?? null,
+    p_amount_max: filters.amount_max ?? null,
+    p_city: (paymentType === PaymentType.WEDDING_TRANSFER && filters.city) ? filters.city : null,
+    p_payment_month: (paymentType === PaymentType.MONTHLY_CLEANING && filters.payment_month) ? filters.payment_month : null,
+  });
 
   if (error) {
     throw error;
   }
 
-  // Map the data to rename 'cases' to 'case' and extract bank_details
-  let results = (data || []).map((item: any) => {
-    const bankDetails = item.cases?.bank_details;
-    // bank_details might be an array (one-to-one) or object, handle both
-    const normalizedBankDetails = Array.isArray(bankDetails)
-      ? bankDetails[0]
-      : bankDetails;
-
-    return {
-      ...item,
-      case: item.cases,
-      bank_details: normalizedBankDetails,
-    };
-  }) as TransferWithDetails[];
-
-  // Client-side search filter (Supabase doesn't support .or() on nested relations)
-  if (filters.search && filters.search.trim()) {
-    const searchTerm = filters.search.trim().toLowerCase();
-    results = results.filter((item) => {
-      const caseData = item.case;
-      const bankDetails = item.bank_details;
-
-      // Search in case fields
-      const caseNumber = String(caseData?.case_number || '').toLowerCase();
-      const groomName = (caseData?.groom_first_name || '').toLowerCase();
-      const groomLastName = (caseData?.groom_last_name || '').toLowerCase();
-      const brideName = (caseData?.bride_first_name || '').toLowerCase();
-      const brideLastName = (caseData?.bride_last_name || '').toLowerCase();
-      const familyName = (caseData?.family_name || '').toLowerCase();
-      const childName = (caseData?.child_name || '').toLowerCase();
-
-      // Search in bank details
-      const accountHolder = (bankDetails?.account_holder_name || '').toLowerCase();
-
-      return (
-        caseNumber.includes(searchTerm) ||
-        groomName.includes(searchTerm) ||
-        groomLastName.includes(searchTerm) ||
-        brideName.includes(searchTerm) ||
-        brideLastName.includes(searchTerm) ||
-        familyName.includes(searchTerm) ||
-        childName.includes(searchTerm) ||
-        accountHolder.includes(searchTerm)
-      );
-    });
-  }
+  // Map the RPC response to match TransferWithDetails structure
+  const results = (data || []).map((item: any) => ({
+    id: item.id,
+    case_id: item.case_id,
+    payment_type: item.payment_type,
+    payment_month: item.payment_month,
+    amount_usd: item.amount_usd,
+    amount_ils: item.amount_ils,
+    exchange_rate: item.exchange_rate,
+    approved_amount: item.approved_amount,
+    approved_by: item.approved_by,
+    transferred_at: item.transferred_at,
+    receipt_reference: item.receipt_reference,
+    notes: item.notes,
+    status: item.status,
+    created_at: item.created_at,
+    updated_at: item.updated_at,
+    case: item.case_data,
+    bank_details: item.bank_details,
+  })) as TransferWithDetails[];
 
   return results;
 }

@@ -302,7 +302,9 @@ export function TransfersTable({
     });
 
     return baseColumns;
-  }, [typeFilter, showTransferred, selectedIds, onToggleSelection, t, handleRowClick]);
+    // Note: 't' removed from dependencies - translations don't change at runtime
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [typeFilter, showTransferred, selectedIds, onToggleSelection, handleRowClick]);
 
   return (
     <div className="border border-slate-200 rounded-lg shadow-sm bg-white overflow-hidden">

@@ -137,7 +137,7 @@ export function ApplicantsList({
   }, [t]);
 
   // Helper: Calculate days left (for rejected)
-  const getDaysLeft = (applicant: Applicant) => {
+  const getDaysLeft = useCallback((applicant: Applicant) => {
     const formData = applicant.form_data as any;
     const rejectedAt = formData?.rejected_at;
     if (!rejectedAt) return null;
@@ -149,7 +149,28 @@ export function ApplicantsList({
 
     if (diffDays <= 0) return 0;
     return diffDays;
-  };
+  }, []);
+
+  // Dialog handlers with useCallback to prevent unnecessary re-renders
+  const handleViewClick = useCallback((applicant: Applicant) => {
+    setSelectedApplicant(applicant);
+    setViewDialogOpen(true);
+  }, []);
+
+  const handleApproveClick = useCallback((applicant: Applicant) => {
+    setSelectedApplicant(applicant);
+    setApproveDialogOpen(true);
+  }, []);
+
+  const handleRejectClick = useCallback((applicant: Applicant) => {
+    setSelectedApplicant(applicant);
+    setRejectDialogOpen(true);
+  }, []);
+
+  const handleRestoreClick = useCallback((applicant: Applicant) => {
+    setSelectedApplicant(applicant);
+    setRestoreDialogOpen(true);
+  }, []);
 
   // Columns definition
   const columns: ColumnDef<Applicant>[] = useMemo(
@@ -264,10 +285,7 @@ export function ApplicantsList({
             <ActionButton
               variant="view-primary"
               size="sm"
-              onClick={() => {
-                setSelectedApplicant(row.original);
-                setViewDialogOpen(true);
-              }}
+              onClick={() => handleViewClick(row.original)}
             >
               <Eye className="h-4 w-4 me-1" />
               {t('actions.view')}
@@ -278,10 +296,7 @@ export function ApplicantsList({
               <ActionButton
                 variant="approve-primary"
                 size="sm"
-                onClick={() => {
-                  setSelectedApplicant(row.original);
-                  setApproveDialogOpen(true);
-                }}
+                onClick={() => handleApproveClick(row.original)}
               >
                 <CheckCircle2 className="h-4 w-4 me-1" />
                 {t('actions.approve')}
@@ -293,10 +308,7 @@ export function ApplicantsList({
               <ActionButton
                 variant="reject-primary"
                 size="sm"
-                onClick={() => {
-                  setSelectedApplicant(row.original);
-                  setRejectDialogOpen(true);
-                }}
+                onClick={() => handleRejectClick(row.original)}
               >
                 <XCircle className="h-4 w-4 me-1" />
                 {t('actions.reject')}
@@ -308,10 +320,7 @@ export function ApplicantsList({
               <ActionButton
                 variant="restore-primary"
                 size="sm"
-                onClick={() => {
-                  setSelectedApplicant(row.original);
-                  setRestoreDialogOpen(true);
-                }}
+                onClick={() => handleRestoreClick(row.original)}
               >
                 <RotateCcw className="h-4 w-4 me-1" />
                 {t('actions.restore')}
@@ -321,7 +330,9 @@ export function ApplicantsList({
         ),
       },
     ],
-    [status, t, formatDate, getStatusBadge]
+    // Note: 't' removed from dependencies - translations don't change at runtime
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [status, formatDate, getStatusBadge, getDaysLeft, handleViewClick, handleApproveClick, handleRejectClick, handleRestoreClick]
   );
 
   return (

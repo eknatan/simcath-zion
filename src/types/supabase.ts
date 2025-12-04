@@ -695,6 +695,38 @@ export type Database = {
     Functions: {
       is_active_user: { Args: { user_id: string }; Returns: boolean }
       is_manager: { Args: { user_id: string }; Returns: boolean }
+      search_transfers: {
+        Args: {
+          p_search_term?: string | null
+          p_payment_type?: string | null
+          p_show_transferred?: boolean
+          p_date_from?: string | null
+          p_date_to?: string | null
+          p_amount_min?: number | null
+          p_amount_max?: number | null
+          p_city?: string | null
+          p_payment_month?: string | null
+        }
+        Returns: {
+          id: string
+          case_id: string
+          payment_type: string
+          payment_month: string | null
+          amount_usd: number | null
+          amount_ils: number
+          exchange_rate: number | null
+          approved_amount: number | null
+          approved_by: string | null
+          transferred_at: string | null
+          receipt_reference: string | null
+          notes: string | null
+          status: string
+          created_at: string
+          updated_at: string
+          case_data: Json
+          bank_details: Json | null
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

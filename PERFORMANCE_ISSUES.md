@@ -6,10 +6,11 @@
 ---
 
 ## Table of Contents
-1. [Critical Issues (High Priority)](#critical-issues)
-2. [Medium Priority Issues](#medium-priority)
-3. [Low Priority / Future Improvements](#low-priority)
-4. [Completed Fixes](#completed)
+1. [Critical Issues (High Priority)](#critical-issues) - All completed ✅
+2. [Medium Priority Issues](#medium-priority) - ISSUE-010 to ISSUE-012, ISSUE-018 to ISSUE-020 (remaining)
+3. [Low Priority / Future Improvements](#low-priority) - ISSUE-013 to ISSUE-016
+4. [Future Improvements](#future-improvements) - FUTURE-001 to FUTURE-005
+5. [Completed Fixes](#completed) - ISSUE-001 to 009, 017 (10 issues fixed)
 
 ---
 
@@ -103,55 +104,77 @@ const swrKey = ['transfers', paymentType, showTransferred, stableFiltersKey];
 ---
 
 ### ISSUE-003: Client-Side Search Filtering
-**Status:** [x] COMPLETED (2024-12-04) - Kept client-side (Supabase limitation with nested relations)
+**Status:** [x] COMPLETED (2024-12-04) - Created PostgreSQL RPC function
 **Priority:** HIGH
 **Impact:** Slow search with large datasets, no database index usage
 
 **File:** `src/lib/hooks/useTransfers.ts`
-**Lines:** 174-200
+**Lines:** 174-204
 
 **Current Code:**
 ```typescript
-// After fetching ALL data...
-if (filters?.search) {
-  const searchTerm = filters.search.toLowerCase();
+// Client-side search filter (Supabase doesn't support .or() on nested relations)
+if (filters.search && filters.search.trim()) {
+  const searchTerm = filters.search.trim().toLowerCase();
   results = results.filter((item) => {
-    const caseData = item.cases;
-    const caseNumber = String(caseData?.case_number || '').toLowerCase();
-    const groomName = (caseData?.groom_first_name || '').toLowerCase();
-    const groomLastName = (caseData?.groom_last_name || '').toLowerCase();
-    const brideName = (caseData?.bride_first_name || '').toLowerCase();
-    const brideLastName = (caseData?.bride_last_name || '').toLowerCase();
-
-    return (
-      caseNumber.includes(searchTerm) ||
-      groomName.includes(searchTerm) ||
-      groomLastName.includes(searchTerm) ||
-      brideName.includes(searchTerm) ||
-      brideLastName.includes(searchTerm)
-    );
+    const caseData = item.case;
+    const bankDetails = item.bank_details;
+    // ... filtering in JS memory
   });
 }
 ```
 
-**Problem:** Fetches ALL transfers from DB, then filters in JavaScript memory.
+**Problem:** Fetches ALL transfers from DB, then filters in JavaScript memory. Supabase client can't use `.or()` on nested relations.
 
-**Solution:** Move search to database query:
-```typescript
-// In the Supabase query builder section (before fetch)
-if (filters?.search) {
-  const searchTerm = `%${filters.search}%`;
-  query = query.or(
-    `cases.case_number.ilike.${searchTerm},` +
-    `cases.groom_first_name.ilike.${searchTerm},` +
-    `cases.groom_last_name.ilike.${searchTerm},` +
-    `cases.bride_first_name.ilike.${searchTerm},` +
-    `cases.bride_last_name.ilike.${searchTerm}`
-  );
-}
+**Solution:** Create PostgreSQL function for server-side search:
+```sql
+CREATE OR REPLACE FUNCTION search_transfers(
+  p_search_term TEXT DEFAULT NULL,
+  p_payment_type TEXT DEFAULT NULL,
+  p_show_transferred BOOLEAN DEFAULT FALSE,
+  p_date_from TIMESTAMPTZ DEFAULT NULL,
+  p_date_to TIMESTAMPTZ DEFAULT NULL,
+  p_city TEXT DEFAULT NULL,
+  p_payment_month TEXT DEFAULT NULL
+)
+RETURNS TABLE (
+  payment_id UUID,
+  -- ... all needed fields
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT p.id, ...
+  FROM payments p
+  JOIN cases c ON c.id = p.case_id
+  LEFT JOIN bank_details bd ON bd.case_id = c.id
+  WHERE
+    (p_search_term IS NULL OR (
+      c.case_number::TEXT ILIKE '%' || p_search_term || '%' OR
+      c.groom_first_name ILIKE '%' || p_search_term || '%' OR
+      c.groom_last_name ILIKE '%' || p_search_term || '%' OR
+      c.bride_first_name ILIKE '%' || p_search_term || '%' OR
+      c.bride_last_name ILIKE '%' || p_search_term || '%' OR
+      c.family_name ILIKE '%' || p_search_term || '%' OR
+      c.child_name ILIKE '%' || p_search_term || '%' OR
+      bd.account_holder_name ILIKE '%' || p_search_term || '%'
+    ))
+    AND (p_payment_type IS NULL OR p.payment_type = p_payment_type)
+    -- ... other filters
+  ORDER BY p.created_at DESC;
+END;
+$$ LANGUAGE plpgsql;
 ```
 
-**Note:** Need to verify Supabase nested filter syntax for joined tables.
+Then call from client:
+```typescript
+const { data, error } = await supabase.rpc('search_transfers', {
+  p_search_term: filters.search || null,
+  p_payment_type: paymentType || null,
+  p_show_transferred: showTransferred,
+});
+```
+
+**Benefit:** Search happens in database with index support, reduces payload size significantly.
 
 ---
 
@@ -233,7 +256,7 @@ const { data, error, isLoading, refetch } = useQuery({
 ## Medium Priority
 
 ### ISSUE-006: Missing useCallback for Dialog Handlers
-**Status:** [ ] Not Started
+**Status:** [x] COMPLETED (2024-12-04)
 **Priority:** MEDIUM
 **Impact:** Unnecessary re-renders of child components
 
@@ -268,7 +291,7 @@ const handleViewApplicant = useCallback((applicant: Applicant) => {
 ---
 
 ### ISSUE-007: Missing React.memo for Table Cell Components
-**Status:** [ ] Not Started
+**Status:** [x] COMPLETED (2024-12-04) - Removed 't' from useMemo dependencies
 **Priority:** MEDIUM
 **Impact:** All cells re-render when any table state changes
 
@@ -296,7 +319,7 @@ const StatusBadgeCell = React.memo(({ status }: { status: string }) => (
 ---
 
 ### ISSUE-008: Expensive Date Parsing in Render
-**Status:** [ ] Not Started
+**Status:** [x] COMPLETED (2024-12-04) - Pre-parse dates in useMemo
 **Priority:** MEDIUM
 **Impact:** Repeated date parsing on every comparison during sorting
 
@@ -342,7 +365,7 @@ const sortedData = useMemo(() => {
 ---
 
 ### ISSUE-009: Middleware Auth Check on Every Request
-**Status:** [ ] Not Started
+**Status:** [x] COMPLETED (2024-12-04) - Changed to getSession()
 **Priority:** MEDIUM
 **Impact:** 50-100ms added latency per page navigation
 
@@ -443,6 +466,114 @@ await mutate(`/api/cases/${caseId}/files`);  // Third call - duplicate!
 ```typescript
 await mutate(`/api/cases/${caseId}/files`);
 // Only invalidate parent if structure changed
+```
+
+---
+
+### ISSUE-017: React Query Devtools in Production
+**Status:** [x] COMPLETED (2024-12-04) - Lazy load only in development
+**Priority:** MEDIUM-HIGH
+**Impact:** Unnecessary bundle size in production
+
+**File:** `src/lib/providers/ReactQueryProvider.tsx`
+**Lines:** 22-25
+
+**Current Code:**
+```typescript
+// Devtools loaded regardless of environment
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+```
+
+**Solution:** Conditionally load devtools only in development:
+```typescript
+const ReactQueryDevtools = process.env.NODE_ENV === 'development'
+  ? React.lazy(() =>
+      import('@tanstack/react-query-devtools').then((mod) => ({
+        default: mod.ReactQueryDevtools,
+      }))
+    )
+  : () => null;
+```
+
+---
+
+### ISSUE-018: Eager Import of @react-pdf/renderer
+**Status:** [ ] Not Started
+**Priority:** MEDIUM
+**Impact:** ~250KB+ added to initial bundle
+
+**File:** `src/components/shared/ExportDocument/ExportDocument.tsx`
+**Line:** 17
+
+**Current Code:**
+```typescript
+import { Document, Page, Text, View, StyleSheet, Font, pdf } from '@react-pdf/renderer';
+```
+
+**Solution:** Dynamic import when PDF generation is needed:
+```typescript
+const generatePDF = async () => {
+  const { Document, Page, Text, View, StyleSheet, pdf } = await import('@react-pdf/renderer');
+  // ... generate PDF
+};
+```
+
+---
+
+### ISSUE-019: Applicants API Returns All Fields
+**Status:** [ ] Not Started
+**Priority:** MEDIUM
+**Impact:** Large payload size, includes unnecessary form_data JSON
+
+**File:** `src/app/api/applicants/route.ts`
+**Lines:** 332-406
+
+**Current Code:**
+```typescript
+const { data } = await supabase
+  .from('applicants')
+  .select('*')  // Returns everything including large form_data JSON
+```
+
+**Solution:** Select only needed fields:
+```typescript
+const { data } = await supabase
+  .from('applicants')
+  .select(`
+    id,
+    status,
+    applicant_type,
+    created_at,
+    wedding_date_hebrew,
+    wedding_date_gregorian,
+    city,
+    form_data->groom_first_name,
+    form_data->groom_last_name,
+    form_data->bride_first_name,
+    form_data->bride_last_name
+  `)
+```
+
+Also consider using `getSession()` instead of `getUser()` here.
+
+---
+
+### ISSUE-020: Manual Transfers Page Client-Side Filtering
+**Status:** [ ] Not Started
+**Priority:** MEDIUM
+**Impact:** All manual transfers loaded, filtered in browser
+
+**File:** `src/app/[locale]/(app)/manual-transfers/page.tsx`
+**Lines:** 45-235
+
+**Problem:** Loads all manual transfers and performs filtering/sorting with `new Date()` on each row in the client.
+
+**Solution:**
+1. Add server-side pagination and filtering
+2. Create database indexes:
+```sql
+CREATE INDEX idx_manual_transfers_exported_at ON manual_transfers(exported_at);
+CREATE INDEX idx_manual_transfers_status ON manual_transfers(status);
 ```
 
 ---
@@ -585,9 +716,14 @@ CREATE INDEX idx_payments_type_status ON payments(payment_type, status);
 |-------|---------------|-------|
 | ISSUE-001: N+1 Query in Payments Route | 2024-12-04 | Batch fetch profiles with single `.in()` query |
 | ISSUE-002: JSON.stringify in SWR Cache Key | 2024-12-04 | Migrated to React Query with stable queryKey via useMemo |
-| ISSUE-003: Client-Side Search Filtering | 2024-12-04 | Kept client-side - Supabase can't `.or()` on nested relations. Migrated to React Query with stable keys |
+| ISSUE-003: Client-Side Search Filtering | 2024-12-04 | Created PostgreSQL RPC function `search_transfers` for server-side search |
 | ISSUE-004: Translation Object in useEffect | 2024-12-04 | Removed tCommon from dependencies |
-| ISSUE-005: Mixed SWR and React Query | 2024-12-04 | Migrated all 6 hooks to React Query (useApplicants, useCase, useCaseFiles, useCasePayments, useCaseTranslation, useMonthlyCapSetting) |
+| ISSUE-005: Mixed SWR and React Query | 2024-12-04 | Migrated all 6 hooks to React Query |
+| ISSUE-006: Missing useCallback for Dialog Handlers | 2024-12-04 | Added useCallback for dialog handlers in ApplicantsList |
+| ISSUE-007: Missing React.memo for Table Cell Components | 2024-12-04 | Removed `t` from useMemo dependencies in TransfersTable, ApplicantsList |
+| ISSUE-008: Expensive Date Parsing in Render | 2024-12-04 | Pre-parse dates in useMemo before sorting in WeddingCasesList |
+| ISSUE-009: Middleware Auth Check on Every Request | 2024-12-04 | Changed from `getUser()` to `getSession()` (no DB round-trip) |
+| ISSUE-017: React Query Devtools in Production | 2024-12-04 | Lazy load devtools only in development |
 
 ---
 

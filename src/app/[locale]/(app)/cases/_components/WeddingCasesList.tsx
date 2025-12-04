@@ -71,27 +71,33 @@ export function WeddingCasesList({ cases }: WeddingCasesListProps) {
     router.push(`/cases/${caseItem.id}`);
   }, [router]);
 
-  // Sort the filtered data by the selected sort field
+  // Pre-parse dates once when data changes (performance optimization)
+  const dataWithParsedDates = useMemo(() =>
+    filteredData.map(item => ({
+      ...item,
+      _weddingTimestamp: item.wedding_date_gregorian
+        ? new Date(item.wedding_date_gregorian).getTime()
+        : Infinity,
+      _createdTimestamp: item.created_at
+        ? new Date(item.created_at).getTime()
+        : 0,
+    })),
+    [filteredData]
+  );
+
+  // Sort using pre-parsed timestamps (avoids repeated date parsing)
   const sortedData = useMemo(() => {
     const currentSortField = sortField || 'wedding_date_gregorian';
 
-    return [...filteredData].sort((a, b) => {
+    return [...dataWithParsedDates].sort((a, b) => {
       if (currentSortField === 'wedding_date_gregorian') {
-        const dateA = a.wedding_date_gregorian
-          ? new Date(a.wedding_date_gregorian).getTime()
-          : Infinity;
-        const dateB = b.wedding_date_gregorian
-          ? new Date(b.wedding_date_gregorian).getTime()
-          : Infinity;
-        return dateA - dateB;
+        return a._weddingTimestamp - b._weddingTimestamp;
       } else if (currentSortField === 'created_at') {
-        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
-        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
-        return dateB - dateA;
+        return b._createdTimestamp - a._createdTimestamp;
       }
       return 0;
     });
-  }, [filteredData, sortField]);
+  }, [dataWithParsedDates, sortField]);
 
   // Column translations
   const columnTranslations: WeddingColumnsTranslations = useMemo(() => ({
