@@ -2,6 +2,7 @@
 
 > Generated: December 2024
 > Status: Active document for tracking performance improvements
+> Last Updated: 2024-12-04 - 11 issues fixed, 9 remaining
 
 ---
 
@@ -725,6 +726,36 @@ CREATE INDEX idx_payments_type_status ON payments(payment_type, status);
 | ISSUE-009: Middleware Auth Check on Every Request | 2024-12-04 | Changed from `getUser()` to `getSession()` (no DB round-trip) |
 | ISSUE-017: React Query Devtools in Production | 2024-12-04 | Lazy load devtools only in development |
 | ISSUE-018: Eager Import of @react-pdf/renderer | 2024-12-04 | Dynamic import in handleExport function |
+
+---
+
+## Remaining Issues Summary
+
+### Medium Priority (To Do)
+| Issue | Description | Effort |
+|-------|-------------|--------|
+| ISSUE-010 | Large Components Without Code Splitting | High - needs careful refactoring |
+| ISSUE-011 | Sequential Data Fetches | ✅ Already fixed (React Query parallel) |
+| ISSUE-012 | Duplicate Cache Invalidation | Low - acceptable safety net |
+| ISSUE-019 | Applicants API Returns All Fields | Medium - requires client changes |
+| ISSUE-020 | Manual Transfers Client-Side Filtering | High - needs PostgreSQL function + refactor |
+
+### Low Priority (Future)
+| Issue | Description |
+|-------|-------------|
+| ISSUE-013 | Constants Defined Inside Components |
+| ISSUE-014 | Inline Style Objects in JSX |
+| ISSUE-015 | Helper Functions Defined Inside Components |
+| ISSUE-016 | Columns Memo with Large Dependency Array |
+
+### Future Improvements (When Scale Increases)
+| Issue | Trigger |
+|-------|---------|
+| FUTURE-001 | Add Pagination to Cases API (>500 cases) |
+| FUTURE-002 | Add Virtualization to Large Tables (>100 items) |
+| FUTURE-003 | Dynamic Import for Heavy Libraries |
+| FUTURE-004 | Add Database Indexes |
+| FUTURE-005 | Full-Text Search for Applicants |
 
 ---
 
