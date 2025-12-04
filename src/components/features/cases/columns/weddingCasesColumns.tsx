@@ -30,9 +30,9 @@ function formatHebrewDate(
  */
 export interface WeddingColumnsTranslations {
   caseNumber: string;
+  createdAt: string;
   names: string;
   weddingDate: string;
-  city: string;
   requestedAmount: string;
   approvedAmount: string;
   notApproved: string;
@@ -53,6 +53,22 @@ export function createWeddingCasesColumns(
   return [
     // Case number
     createCaseNumberColumn<CaseForTable>(translations.caseNumber),
+
+    // Created at
+    {
+      accessorKey: 'created_at',
+      header: translations.createdAt,
+      cell: ({ row }) => {
+        if (row.original.created_at) {
+          return (
+            <div className="text-sm text-slate-600">
+              {formatDate(row.original.created_at)}
+            </div>
+          );
+        }
+        return <div className="text-slate-500">-</div>;
+      },
+    },
 
     // Names (Groom & Bride)
     {
@@ -98,9 +114,6 @@ export function createWeddingCasesColumns(
         return <div className="text-slate-500">-</div>;
       },
     },
-
-    // City
-    createCityColumn<CaseForTable>(translations.city),
 
     // Requested amount (total_cost)
     {

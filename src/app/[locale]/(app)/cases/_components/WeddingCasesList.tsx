@@ -96,9 +96,9 @@ export function WeddingCasesList({ cases }: WeddingCasesListProps) {
   // Column translations
   const columnTranslations: WeddingColumnsTranslations = useMemo(() => ({
     caseNumber: t('table.caseNumber'),
+    createdAt: t('table.createdAt'),
     names: t('table.names'),
     weddingDate: tWedding('table.weddingDate'),
-    city: t('table.city'),
     requestedAmount: tWedding('table.requestedAmount'),
     approvedAmount: tWedding('table.approvedAmount'),
     notApproved: tWedding('table.notApproved'),
