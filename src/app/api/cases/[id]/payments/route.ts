@@ -48,29 +48,38 @@ export async function GET(
       );
     }
 
-    // Fetch profile names for approved_by users (if exists)
-    const paymentsWithUser = await Promise.all(
-      (payments || []).map(async (payment) => {
-        let approved_by_name = 'Unknown';
+    // ========================================
+    // Batch Fetch Profile Names (Optimized - Single Query)
+    // ========================================
+    // Get unique approver IDs to avoid N+1 queries
+    const approverIds = [
+      ...new Set(
+        payments
+          ?.filter((p): p is typeof p & { approved_by: string } => !!p.approved_by)
+          .map((p) => p.approved_by) || []
+      ),
+    ];
 
-        if (payment.approved_by) {
-          const { data: profile } = await supabase
+    // Single query for all profiles instead of one per payment
+    const { data: profiles } =
+      approverIds.length > 0
+        ? await supabase
             .from('profiles')
-            .select('name')
-            .eq('id', payment.approved_by)
-            .single();
+            .select('id, name')
+            .in('id', approverIds)
+        : { data: [] };
 
-          if (profile) {
-            approved_by_name = profile.name;
-          }
-        }
+    // Create lookup map for O(1) access
+    const profileMap = new Map(profiles?.map((p) => [p.id, p.name]) || []);
 
-        return {
-          ...payment,
-          approved_by_name,
-        };
-      })
-    );
+    // Map payments with names using the lookup
+    const paymentsWithUser =
+      payments?.map((payment) => ({
+        ...payment,
+        approved_by_name: payment.approved_by
+          ? profileMap.get(payment.approved_by) || 'Unknown'
+          : 'Unknown',
+      })) || [];
 
     return NextResponse.json(paymentsWithUser);
   } catch (error) {

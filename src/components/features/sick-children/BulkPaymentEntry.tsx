@@ -132,7 +132,7 @@ export function BulkPaymentEntry({ open, onOpenChange, onSuccess }: BulkPaymentE
         }
       } catch (error) {
         console.error('Error fetching families:', error);
-        toast.error(tCommon('loading'));
+        toast.error('שגיאה בטעינת נתונים');
       } finally {
         setIsLoading(false);
       }
@@ -141,7 +141,9 @@ export function BulkPaymentEntry({ open, onOpenChange, onSuccess }: BulkPaymentE
     if (open) {
       fetchFamilies();
     }
-  }, [open, selectedMonth, selectedYear, tCommon]);
+    // Note: tCommon removed from dependencies to prevent infinite re-fetches
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, selectedMonth, selectedYear]);
 
   // Handle amount change for a family
   const handleAmountChange = (familyId: string, value: string) => {
