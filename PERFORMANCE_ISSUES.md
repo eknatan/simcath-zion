@@ -7,10 +7,10 @@
 
 ## Table of Contents
 1. [Critical Issues (High Priority)](#critical-issues) - All completed ✅
-2. [Medium Priority Issues](#medium-priority) - ISSUE-010 to ISSUE-012, ISSUE-018 to ISSUE-020 (remaining)
+2. [Medium Priority Issues](#medium-priority) - ISSUE-010 to ISSUE-012, ISSUE-019 to ISSUE-020 (remaining)
 3. [Low Priority / Future Improvements](#low-priority) - ISSUE-013 to ISSUE-016
 4. [Future Improvements](#future-improvements) - FUTURE-001 to FUTURE-005
-5. [Completed Fixes](#completed) - ISSUE-001 to 009, 017 (10 issues fixed)
+5. [Completed Fixes](#completed) - ISSUE-001 to 009, 017, 018 (11 issues fixed)
 
 ---
 
@@ -498,7 +498,7 @@ const ReactQueryDevtools = process.env.NODE_ENV === 'development'
 ---
 
 ### ISSUE-018: Eager Import of @react-pdf/renderer
-**Status:** [ ] Not Started
+**Status:** [x] COMPLETED (2024-12-04) - Dynamic import in handleExport
 **Priority:** MEDIUM
 **Impact:** ~250KB+ added to initial bundle
 
@@ -724,6 +724,7 @@ CREATE INDEX idx_payments_type_status ON payments(payment_type, status);
 | ISSUE-008: Expensive Date Parsing in Render | 2024-12-04 | Pre-parse dates in useMemo before sorting in WeddingCasesList |
 | ISSUE-009: Middleware Auth Check on Every Request | 2024-12-04 | Changed from `getUser()` to `getSession()` (no DB round-trip) |
 | ISSUE-017: React Query Devtools in Production | 2024-12-04 | Lazy load devtools only in development |
+| ISSUE-018: Eager Import of @react-pdf/renderer | 2024-12-04 | Dynamic import in handleExport function |
 
 ---
 

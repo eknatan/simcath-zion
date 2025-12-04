@@ -18,7 +18,6 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { pdf } from '@react-pdf/renderer';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { FileDown, Loader2, ChevronDown } from 'lucide-react';
 import {
@@ -107,6 +106,9 @@ export function ExportPDFButton({
   const handleExport = async (locale: PDFLocale) => {
     try {
       setExporting(true);
+
+      // Dynamic import of @react-pdf/renderer to reduce initial bundle size (~250KB)
+      const { pdf } = await import('@react-pdf/renderer');
 
       // Generate PDF blob based on document type
       let blob: Blob;
