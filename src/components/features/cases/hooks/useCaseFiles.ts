@@ -1,18 +1,42 @@
+'use client';
+
 import { useState, useCallback } from 'react';
-import useSWR, { mutate } from 'swr';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CaseFile, WeddingFileType, MAX_FILE_SIZE } from '@/types/case.types';
 import { toast } from 'sonner';
+import { caseKeys } from './useCase';
+
+// ========================================
+// Query Keys
+// ========================================
+
+export const caseFilesKeys = {
+  all: ['caseFiles'] as const,
+  list: (caseId: string) => [...caseFilesKeys.all, caseId] as const,
+};
 
 interface UseCaseFilesReturn {
   files: CaseFile[] | undefined;
   isLoading: boolean;
-  error: Error | undefined;
+  error: Error | null;
   uploadFile: (file: File, fileType: WeddingFileType) => Promise<void>;
   deleteFile: (fileId: string) => Promise<void>;
   uploadProgress: Map<string, number>;
   isUploading: boolean;
   refresh: () => Promise<void>;
 }
+
+// ========================================
+// Fetcher
+// ========================================
+
+const fetchCaseFiles = async (caseId: string): Promise<CaseFile[]> => {
+  const response = await fetch(`/api/cases/${caseId}/files`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch files');
+  }
+  return response.json();
+};
 
 /**
  * Custom hook for managing case files
@@ -28,43 +52,182 @@ interface UseCaseFilesReturn {
  * @returns File management utilities
  */
 export function useCaseFiles(caseId: string): UseCaseFilesReturn {
+  const queryClient = useQueryClient();
+
   // ========================================
   // State
   // ========================================
 
-  const [uploadProgress, setUploadProgress] = useState<Map<string, number>>(new Map());
+  const [uploadProgress, setUploadProgress] = useState<Map<string, number>>(
+    new Map()
+  );
 
   // ========================================
-  // Data Fetching with SWR
+  // Query
   // ========================================
 
   const {
     data: files,
     error,
     isLoading,
-  } = useSWR<CaseFile[]>(
-    caseId ? `/api/cases/${caseId}/files` : null,
-    async (url: string) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Failed to fetch files');
+    refetch,
+  } = useQuery({
+    queryKey: caseFilesKeys.list(caseId),
+    queryFn: () => fetchCaseFiles(caseId),
+    enabled: !!caseId,
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+  });
+
+  // ========================================
+  // Upload Mutation
+  // ========================================
+
+  const uploadMutation = useMutation({
+    mutationFn: async ({
+      file,
+      fileType,
+      uploadId,
+    }: {
+      file: File;
+      fileType: WeddingFileType;
+      uploadId: string;
+    }) => {
+      // Create FormData
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('file_type', fileType);
+      formData.append('case_id', caseId);
+
+      // Simulate progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          const newMap = new Map(prev);
+          const current = newMap.get(uploadId) || 0;
+          if (current < 90) {
+            newMap.set(uploadId, Math.min(current + 10, 90));
+          }
+          return newMap;
+        });
+      }, 200);
+
+      try {
+        const response = await fetch(`/api/cases/${caseId}/files`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        clearInterval(progressInterval);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'העלאה נכשלה');
+        }
+
+        return response.json() as Promise<CaseFile>;
+      } catch (error) {
+        clearInterval(progressInterval);
+        throw error;
       }
-      return response.json();
     },
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 5000,
-    }
-  );
+    onMutate: async ({ uploadId }) => {
+      setUploadProgress((prev) => new Map(prev).set(uploadId, 0));
+    },
+    onSuccess: (uploadedFile, { uploadId }) => {
+      // Complete progress
+      setUploadProgress((prev) => new Map(prev).set(uploadId, 100));
+
+      // Optimistic update
+      queryClient.setQueryData<CaseFile[]>(
+        caseFilesKeys.list(caseId),
+        (old) => (old ? [...old, uploadedFile] : [uploadedFile])
+      );
+
+      // Invalidate case data to update file counts
+      queryClient.invalidateQueries({ queryKey: caseKeys.detail(caseId) });
+
+      toast.success('הקובץ הועלה בהצלחה');
+
+      // Remove from progress after delay
+      setTimeout(() => {
+        setUploadProgress((prev) => {
+          const newMap = new Map(prev);
+          newMap.delete(uploadId);
+          return newMap;
+        });
+      }, 1000);
+    },
+    onError: (error, { uploadId }) => {
+      const message = error instanceof Error ? error.message : 'העלאה נכשלה';
+      toast.error(message);
+      console.error('Upload error:', error);
+
+      setUploadProgress((prev) => {
+        const newMap = new Map(prev);
+        newMap.delete(uploadId);
+        return newMap;
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: caseFilesKeys.list(caseId) });
+    },
+  });
+
+  // ========================================
+  // Delete Mutation
+  // ========================================
+
+  const deleteMutation = useMutation({
+    mutationFn: async (fileId: string) => {
+      const response = await fetch(`/api/files/${fileId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('מחיקה נכשלה');
+      }
+    },
+    onMutate: async (fileId) => {
+      await queryClient.cancelQueries({
+        queryKey: caseFilesKeys.list(caseId),
+      });
+
+      const previousFiles = queryClient.getQueryData<CaseFile[]>(
+        caseFilesKeys.list(caseId)
+      );
+
+      queryClient.setQueryData<CaseFile[]>(
+        caseFilesKeys.list(caseId),
+        (old) => old?.filter((f) => f.id !== fileId) || []
+      );
+
+      return { previousFiles };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: caseKeys.detail(caseId) });
+      toast.success('הקובץ נמחק בהצלחה');
+    },
+    onError: (error, _fileId, context) => {
+      if (context?.previousFiles) {
+        queryClient.setQueryData(
+          caseFilesKeys.list(caseId),
+          context.previousFiles
+        );
+      }
+      const message = error instanceof Error ? error.message : 'מחיקה נכשלה';
+      toast.error(message);
+      console.error('Delete error:', error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: caseFilesKeys.list(caseId) });
+    },
+  });
 
   // ========================================
   // Upload File
   // ========================================
 
-  /**
-   * Upload a file to the case
-   */
   const uploadFile = useCallback(
     async (file: File, fileType: WeddingFileType): Promise<void> => {
       // Validate file size
@@ -83,149 +246,29 @@ export function useCaseFiles(caseId: string): UseCaseFilesReturn {
       }
 
       const uploadId = `${fileType}-${Date.now()}`;
-
-      try {
-        // Initialize progress
-        setUploadProgress((prev) => new Map(prev).set(uploadId, 0));
-
-        // Create FormData
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('file_type', fileType);
-        formData.append('case_id', caseId);
-
-        // Simulate progress (in real implementation, use XMLHttpRequest or fetch with progress)
-        const progressInterval = setInterval(() => {
-          setUploadProgress((prev) => {
-            const newMap = new Map(prev);
-            const current = newMap.get(uploadId) || 0;
-            if (current < 90) {
-              newMap.set(uploadId, Math.min(current + 10, 90));
-            }
-            return newMap;
-          });
-        }, 200);
-
-        // Upload
-        const response = await fetch(`/api/cases/${caseId}/files`, {
-          method: 'POST',
-          body: formData,
-        });
-
-        clearInterval(progressInterval);
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'העלאה נכשלה');
-        }
-
-        const uploadedFile: CaseFile = await response.json();
-
-        // Complete progress
-        setUploadProgress((prev) => new Map(prev).set(uploadId, 100));
-
-        // Optimistic update - add file to cache immediately
-        mutate(
-          `/api/cases/${caseId}/files`,
-          (currentFiles: CaseFile[] | undefined) => {
-            return currentFiles ? [...currentFiles, uploadedFile] : [uploadedFile];
-          },
-          false // Don't revalidate immediately
-        );
-
-        // Also invalidate the case data to update file counts
-        mutate(`/api/cases/${caseId}`);
-
-        toast.success('הקובץ הועלה בהצלחה');
-
-        // Remove from progress after delay
-        setTimeout(() => {
-          setUploadProgress((prev) => {
-            const newMap = new Map(prev);
-            newMap.delete(uploadId);
-            return newMap;
-          });
-        }, 1000);
-
-        // Revalidate after success
-        await mutate(`/api/cases/${caseId}/files`);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'העלאה נכשלה';
-        toast.error(message);
-        console.error('Upload error:', error);
-
-        // Remove from progress
-        setUploadProgress((prev) => {
-          const newMap = new Map(prev);
-          newMap.delete(uploadId);
-          return newMap;
-        });
-
-        throw error;
-      }
+      await uploadMutation.mutateAsync({ file, fileType, uploadId });
     },
-    [caseId]
+    [uploadMutation]
   );
 
   // ========================================
   // Delete File
   // ========================================
 
-  /**
-   * Delete a file from the case
-   */
   const deleteFile = useCallback(
     async (fileId: string): Promise<void> => {
-      try {
-        // Optimistic update - remove file from cache immediately
-        mutate(
-          `/api/cases/${caseId}/files`,
-          (currentFiles: CaseFile[] | undefined) => {
-            return currentFiles?.filter((f) => f.id !== fileId) || [];
-          },
-          false // Don't revalidate immediately
-        );
-
-        // Delete from server
-        const response = await fetch(`/api/files/${fileId}`, {
-          method: 'DELETE',
-        });
-
-        if (!response.ok) {
-          throw new Error('מחיקה נכשלה');
-        }
-
-        // Also invalidate the case data to update file counts
-        mutate(`/api/cases/${caseId}`);
-
-        toast.success('הקובץ נמחק בהצלחה');
-
-        // Revalidate after success
-        await mutate(`/api/cases/${caseId}/files`);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'מחיקה נכשלה';
-        toast.error(message);
-        console.error('Delete error:', error);
-
-        // Revert optimistic update on error
-        await mutate(`/api/cases/${caseId}/files`);
-
-        throw error;
-      }
+      await deleteMutation.mutateAsync(fileId);
     },
-    [caseId]
+    [deleteMutation]
   );
 
   // ========================================
   // Refresh
   // ========================================
 
-  /**
-   * Manually refresh files
-   */
   const refresh = useCallback(async (): Promise<void> => {
-    await mutate(`/api/cases/${caseId}/files`);
-  }, [caseId]);
+    await refetch();
+  }, [refetch]);
 
   // ========================================
   // Return
@@ -234,7 +277,7 @@ export function useCaseFiles(caseId: string): UseCaseFilesReturn {
   return {
     files,
     isLoading,
-    error,
+    error: error || null,
     uploadFile,
     deleteFile,
     uploadProgress,

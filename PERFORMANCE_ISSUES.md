@@ -194,7 +194,7 @@ useEffect(() => {
 ---
 
 ### ISSUE-005: Mixed SWR and React Query
-**Status:** [ ] Partially Started - useTransfers migrated
+**Status:** [x] COMPLETED (2024-12-04) - All hooks migrated to React Query
 **Priority:** MEDIUM-HIGH
 **Impact:** Inconsistent caching behavior, increased bundle size, maintenance complexity
 
@@ -587,6 +587,7 @@ CREATE INDEX idx_payments_type_status ON payments(payment_type, status);
 | ISSUE-002: JSON.stringify in SWR Cache Key | 2024-12-04 | Migrated to React Query with stable queryKey via useMemo |
 | ISSUE-003: Client-Side Search Filtering | 2024-12-04 | Kept client-side - Supabase can't `.or()` on nested relations. Migrated to React Query with stable keys |
 | ISSUE-004: Translation Object in useEffect | 2024-12-04 | Removed tCommon from dependencies |
+| ISSUE-005: Mixed SWR and React Query | 2024-12-04 | Migrated all 6 hooks to React Query (useApplicants, useCase, useCaseFiles, useCasePayments, useCaseTranslation, useMonthlyCapSetting) |
 
 ---
 

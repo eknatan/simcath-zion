@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import useSWR from 'swr';
+import { useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import type {
@@ -11,32 +11,39 @@ import type {
   MonthlyPaymentData,
   BankDetailsFormData,
 } from '@/types/case.types';
+import { caseKeys } from './useCase';
 
-/**
- * Fetcher function for SWR - Payments
- */
-const paymentsFetcher = async (url: string): Promise<PaymentWithUser[]> => {
-  const response = await fetch(url);
+// ========================================
+// Query Keys
+// ========================================
 
+export const casePaymentsKeys = {
+  all: ['casePayments'] as const,
+  list: (caseId: string) => [...casePaymentsKeys.all, caseId] as const,
+  bankDetails: (caseId: string) => ['bankDetails', caseId] as const,
+};
+
+// ========================================
+// Fetchers
+// ========================================
+
+const fetchPayments = async (caseId: string): Promise<PaymentWithUser[]> => {
+  const response = await fetch(`/api/cases/${caseId}/payments`);
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to fetch payments');
   }
-
   return response.json();
 };
 
-/**
- * Fetcher function for SWR - Bank Details
- */
-const bankDetailsFetcher = async (url: string): Promise<BankDetailsFormData | null> => {
-  const response = await fetch(url);
-
+const fetchBankDetails = async (
+  caseId: string
+): Promise<BankDetailsFormData | null> => {
+  const response = await fetch(`/api/cases/${caseId}/bank-details`);
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to fetch bank details');
   }
-
   return response.json();
 };
 
@@ -44,7 +51,7 @@ const bankDetailsFetcher = async (url: string): Promise<BankDetailsFormData | nu
  * Custom hook for managing case payments
  *
  * Provides:
- * - Payments list with SWR caching and revalidation
+ * - Payments list with React Query caching
  * - Bank details management
  * - Payment approval flow
  * - Monthly payment creation (for cleaning cases)
@@ -55,326 +62,295 @@ const bankDetailsFetcher = async (url: string): Promise<BankDetailsFormData | nu
  */
 export function useCasePayments(caseId: string) {
   const t = useTranslations('payments');
+  const queryClient = useQueryClient();
 
   // ========================================
-  // State Management
+  // Queries
   // ========================================
-  const [isApproving, setIsApproving] = useState(false);
-  const [isCreatingPayment, setIsCreatingPayment] = useState(false);
-  const [isSavingBankDetails, setIsSavingBankDetails] = useState(false);
-  const [isDeletingPayment, setIsDeletingPayment] = useState<string | null>(null);
 
-  // ========================================
-  // SWR Hook - Payments List
-  // ========================================
   const {
     data: payments,
     error: paymentsError,
     isLoading: isLoadingPayments,
-    mutate: mutatePayments,
-  } = useSWR<PaymentWithUser[]>(
-    caseId ? `/api/cases/${caseId}/payments` : null,
-    paymentsFetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
-      dedupingInterval: 5000,
-    }
-  );
+    refetch: refetchPayments,
+  } = useQuery({
+    queryKey: casePaymentsKeys.list(caseId),
+    queryFn: () => fetchPayments(caseId),
+    enabled: !!caseId,
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-  // ========================================
-  // SWR Hook - Bank Details
-  // ========================================
   const {
     data: bankDetails,
     error: bankDetailsError,
     isLoading: isLoadingBankDetails,
-    mutate: mutateBankDetails,
-  } = useSWR<BankDetailsFormData | null>(
-    caseId ? `/api/cases/${caseId}/bank-details` : null,
-    bankDetailsFetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
-      dedupingInterval: 5000,
-      onSuccess: (data) => {
-        console.log('[useCasePayments] Loaded bank details from API:', data);
-      },
-    }
-  );
+    refetch: refetchBankDetails,
+  } = useQuery({
+    queryKey: casePaymentsKeys.bankDetails(caseId),
+    queryFn: () => fetchBankDetails(caseId),
+    enabled: !!caseId,
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   // ========================================
-  // Save Bank Details
+  // Mutations
   // ========================================
 
-  /**
-   * Save or update bank details for the case
-   *
-   * @param data - Bank details form data
-   * @returns Promise that resolves when save is complete
-   */
-  const saveBankDetails = async (
-    data: BankDetailsFormData
-  ): Promise<boolean> => {
-    if (!caseId) {
-      toast.error(t('errors.invalidCase'));
-      return false;
-    }
-
-    setIsSavingBankDetails(true);
-
-    try {
+  const saveBankDetailsMutation = useMutation({
+    mutationFn: async (data: BankDetailsFormData) => {
       const response = await fetch(`/api/cases/${caseId}/bank-details`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to save bank details');
       }
-
-      const savedDetails = await response.json();
-
-      console.log('[useCasePayments] Saved bank details response:', savedDetails);
-
-      // Update local state
-      await mutateBankDetails(savedDetails, false);
-
-      console.log('[useCasePayments] Updated SWR cache with bank details');
-
+      return response.json();
+    },
+    onSuccess: (savedDetails) => {
+      queryClient.setQueryData(
+        casePaymentsKeys.bankDetails(caseId),
+        savedDetails
+      );
       toast.success(t('bankDetails.saveSuccess'));
-      return true;
-    } catch (error) {
-      console.error('Failed to save bank details:', error);
+    },
+    onError: (error: Error) => {
       toast.error(t('bankDetails.saveError'), {
-        description:
-          error instanceof Error ? error.message : t('errors.tryAgainLater'),
+        description: error.message || t('errors.tryAgainLater'),
       });
-      return false;
-    } finally {
-      setIsSavingBankDetails(false);
-    }
-  };
+    },
+  });
 
-  // ========================================
-  // Approve Payment (Wedding Cases)
-  // ========================================
-
-  /**
-   * Approve a payment for wedding case
-   *
-   * Steps:
-   * 1. Validate bank details exist
-   * 2. Create payment record
-   * 3. Update case status to 'pending_transfer'
-   * 4. Log in audit history
-   * 5. Show success notification
-   *
-   * @param approvalData - Payment approval data (amount, rate, etc.)
-   * @returns Promise that resolves when approval is complete
-   */
-  const approvePayment = async (
-    approvalData: PaymentApprovalData
-  ): Promise<Payment | null> => {
-    if (!caseId) {
-      toast.error(t('errors.invalidCase'));
-      return null;
-    }
-
-    // Validate bank details exist
-    if (!bankDetails) {
-      toast.error(t('errors.missingBankDetails'), {
-        description: t('errors.pleaseFillBankDetails'),
-      });
-      return null;
-    }
-
-    setIsApproving(true);
-
-    try {
+  const approvePaymentMutation = useMutation({
+    mutationFn: async (approvalData: PaymentApprovalData) => {
       const response = await fetch(`/api/cases/${caseId}/payments/approve`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(approvalData),
       });
-
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to approve payment');
       }
-
-      const payment: Payment = await response.json();
-
-      // Refresh payments list
-      await mutatePayments();
-
+      return response.json() as Promise<Payment>;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: casePaymentsKeys.list(caseId),
+      });
+      queryClient.invalidateQueries({ queryKey: caseKeys.detail(caseId) });
       toast.success(t('approval.success'), {
         description: t('approval.successDescription'),
       });
-
-      return payment;
-    } catch (error) {
-      console.error('Failed to approve payment:', error);
+    },
+    onError: (error: Error) => {
       toast.error(t('approval.error'), {
-        description:
-          error instanceof Error ? error.message : t('errors.tryAgainLater'),
-        action: {
-          label: t('common.tryAgain'),
-          onClick: () => approvePayment(approvalData),
-        },
+        description: error.message || t('errors.tryAgainLater'),
       });
-      return null;
-    } finally {
-      setIsApproving(false);
-    }
-  };
+    },
+  });
 
-  // ========================================
-  // Create Monthly Payment (Cleaning Cases)
-  // ========================================
-
-  /**
-   * Create a monthly payment for cleaning case
-   *
-   * @param monthlyData - Monthly payment data
-   * @returns Promise that resolves when payment is created
-   */
-  const createMonthlyPayment = async (
-    monthlyData: MonthlyPaymentData
-  ): Promise<Payment | null> => {
-    if (!caseId) {
-      toast.error(t('errors.invalidCase'));
-      return null;
-    }
-
-    // Validate bank details exist
-    if (!bankDetails) {
-      toast.error(t('errors.missingBankDetails'), {
-        description: t('errors.pleaseFillBankDetails'),
-      });
-      return null;
-    }
-
-    setIsCreatingPayment(true);
-
-    try {
+  const createMonthlyPaymentMutation = useMutation({
+    mutationFn: async (monthlyData: MonthlyPaymentData) => {
       const response = await fetch(`/api/cases/${caseId}/payments/monthly`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(monthlyData),
       });
-
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to create monthly payment');
       }
-
-      const payment: Payment = await response.json();
-
-      // Refresh payments list
-      await mutatePayments();
-
+      return response.json() as Promise<Payment>;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: casePaymentsKeys.list(caseId),
+      });
       toast.success(t('monthly.success'));
-
-      return payment;
-    } catch (error) {
-      console.error('Failed to create monthly payment:', error);
+    },
+    onError: (error: Error) => {
       toast.error(t('monthly.error'), {
-        description:
-          error instanceof Error ? error.message : t('errors.tryAgainLater'),
-        action: {
-          label: t('common.tryAgain'),
-          onClick: () => createMonthlyPayment(monthlyData),
-        },
+        description: error.message || t('errors.tryAgainLater'),
       });
-      return null;
-    } finally {
-      setIsCreatingPayment(false);
-    }
-  };
+    },
+  });
 
-  // ========================================
-  // Delete Payment
-  // ========================================
-
-  /**
-   * Delete an approved payment (only allowed for 'approved' status)
-   *
-   * @param paymentId - ID of the payment to delete
-   * @returns Promise that resolves when deletion is complete
-   */
-  const deletePayment = async (paymentId: string): Promise<boolean> => {
-    if (!caseId) {
-      toast.error(t('errors.invalidCase'));
-      return false;
-    }
-
-    setIsDeletingPayment(paymentId);
-
-    try {
-      const response = await fetch(`/api/cases/${caseId}/payments/${paymentId}`, {
-        method: 'DELETE',
-      });
-
+  const deletePaymentMutation = useMutation({
+    mutationFn: async (paymentId: string) => {
+      const response = await fetch(
+        `/api/cases/${caseId}/payments/${paymentId}`,
+        { method: 'DELETE' }
+      );
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to delete payment');
       }
-
-      // Refresh payments list
-      await mutatePayments();
-
-      toast.success(t('delete.success'));
-      return true;
-    } catch (error) {
-      console.error('Failed to delete payment:', error);
-      toast.error(t('delete.error'), {
-        description:
-          error instanceof Error ? error.message : t('errors.tryAgainLater'),
+      return paymentId;
+    },
+    onMutate: async (paymentId) => {
+      await queryClient.cancelQueries({
+        queryKey: casePaymentsKeys.list(caseId),
       });
-      return false;
-    } finally {
-      setIsDeletingPayment(null);
-    }
-  };
+      const previousPayments = queryClient.getQueryData<PaymentWithUser[]>(
+        casePaymentsKeys.list(caseId)
+      );
+      queryClient.setQueryData<PaymentWithUser[]>(
+        casePaymentsKeys.list(caseId),
+        (old) => old?.filter((p) => p.id !== paymentId) || []
+      );
+      return { previousPayments };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: caseKeys.detail(caseId) });
+      toast.success(t('delete.success'));
+    },
+    onError: (error: Error, _paymentId, context) => {
+      if (context?.previousPayments) {
+        queryClient.setQueryData(
+          casePaymentsKeys.list(caseId),
+          context.previousPayments
+        );
+      }
+      toast.error(t('delete.error'), {
+        description: error.message || t('errors.tryAgainLater'),
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: casePaymentsKeys.list(caseId),
+      });
+    },
+  });
 
   // ========================================
-  // Refresh Functions
+  // Actions (backward compatible)
   // ========================================
 
-  /**
-   * Force refresh payments list from server
-   */
-  const refreshPayments = async () => {
+  const saveBankDetails = useCallback(
+    async (data: BankDetailsFormData): Promise<boolean> => {
+      if (!caseId) {
+        toast.error(t('errors.invalidCase'));
+        return false;
+      }
+      try {
+        await saveBankDetailsMutation.mutateAsync(data);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [caseId, saveBankDetailsMutation, t]
+  );
+
+  const approvePayment = useCallback(
+    async (approvalData: PaymentApprovalData): Promise<Payment | null> => {
+      if (!caseId) {
+        toast.error(t('errors.invalidCase'));
+        return null;
+      }
+      if (!bankDetails) {
+        toast.error(t('errors.missingBankDetails'), {
+          description: t('errors.pleaseFillBankDetails'),
+        });
+        return null;
+      }
+      try {
+        return await approvePaymentMutation.mutateAsync(approvalData);
+      } catch {
+        return null;
+      }
+    },
+    [caseId, bankDetails, approvePaymentMutation, t]
+  );
+
+  const createMonthlyPayment = useCallback(
+    async (monthlyData: MonthlyPaymentData): Promise<Payment | null> => {
+      if (!caseId) {
+        toast.error(t('errors.invalidCase'));
+        return null;
+      }
+      if (!bankDetails) {
+        toast.error(t('errors.missingBankDetails'), {
+          description: t('errors.pleaseFillBankDetails'),
+        });
+        return null;
+      }
+      try {
+        return await createMonthlyPaymentMutation.mutateAsync(monthlyData);
+      } catch {
+        return null;
+      }
+    },
+    [caseId, bankDetails, createMonthlyPaymentMutation, t]
+  );
+
+  const deletePayment = useCallback(
+    async (paymentId: string): Promise<boolean> => {
+      if (!caseId) {
+        toast.error(t('errors.invalidCase'));
+        return false;
+      }
+      try {
+        await deletePaymentMutation.mutateAsync(paymentId);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [caseId, deletePaymentMutation, t]
+  );
+
+  const refreshPayments = useCallback(async () => {
     try {
-      await mutatePayments();
+      await refetchPayments();
     } catch (error) {
       console.error('Failed to refresh payments:', error);
       toast.error(t('errors.refreshFailed'));
     }
-  };
+  }, [refetchPayments, t]);
 
-  /**
-   * Force refresh bank details from server
-   */
-  const refreshBankDetails = async () => {
+  const refreshBankDetails = useCallback(async () => {
     try {
-      await mutateBankDetails();
+      await refetchBankDetails();
     } catch (error) {
       console.error('Failed to refresh bank details:', error);
       toast.error(t('errors.refreshFailed'));
     }
-  };
+  }, [refetchBankDetails, t]);
+
+  // Backward compatible mutate functions
+  const mutatePayments = useCallback(
+    (data?: PaymentWithUser[]) => {
+      if (data) {
+        queryClient.setQueryData(casePaymentsKeys.list(caseId), data);
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: casePaymentsKeys.list(caseId),
+        });
+      }
+    },
+    [queryClient, caseId]
+  );
+
+  const mutateBankDetails = useCallback(
+    (data?: BankDetailsFormData | null) => {
+      if (data !== undefined) {
+        queryClient.setQueryData(casePaymentsKeys.bankDetails(caseId), data);
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: casePaymentsKeys.bankDetails(caseId),
+        });
+      }
+    },
+    [queryClient, caseId]
+  );
 
   // ========================================
   // Return Hook Interface
@@ -387,10 +363,12 @@ export function useCasePayments(caseId: string) {
     // States
     isLoadingPayments,
     isLoadingBankDetails,
-    isApproving,
-    isCreatingPayment,
-    isSavingBankDetails,
-    isDeletingPayment,
+    isApproving: approvePaymentMutation.isPending,
+    isCreatingPayment: createMonthlyPaymentMutation.isPending,
+    isSavingBankDetails: saveBankDetailsMutation.isPending,
+    isDeletingPayment: deletePaymentMutation.isPending
+      ? deletePaymentMutation.variables
+      : null,
     paymentsError,
     bankDetailsError,
 

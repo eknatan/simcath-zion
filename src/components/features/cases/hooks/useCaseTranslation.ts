@@ -1,7 +1,18 @@
+'use client';
+
 import { useState, useCallback } from 'react';
-import useSWR, { mutate } from 'swr';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Translation, TranslatedContent } from '@/types/case.types';
+
+// ========================================
+// Query Keys
+// ========================================
+
+export const translationKeys = {
+  all: ['translations'] as const,
+  list: (caseId: string) => [...translationKeys.all, caseId] as const,
+};
 
 // ========================================
 // Types
@@ -27,8 +38,8 @@ interface UpdateTranslationResponse {
 // API Functions
 // ========================================
 
-const fetcher = async (url: string): Promise<Translation[]> => {
-  const response = await fetch(url);
+const fetchTranslations = async (caseId: string): Promise<Translation[]> => {
+  const response = await fetch(`/api/cases/${caseId}/translations`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch translations: ${response.statusText}`);
@@ -48,34 +59,39 @@ const fetcher = async (url: string): Promise<Translation[]> => {
   return [];
 };
 
-const translateCase = async (caseId: string): Promise<TranslationResponse> => {
+const translateCaseApi = async (
+  caseId: string
+): Promise<TranslationResponse> => {
   const response = await fetch(`/api/cases/${caseId}/translate`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
   });
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `Translation failed: ${response.statusText}`);
+    throw new Error(
+      errorData.error || `Translation failed: ${response.statusText}`
+    );
   }
 
   return response.json();
 };
 
-const updateTranslationApi = async (caseId: string, content: TranslatedContent): Promise<UpdateTranslationResponse> => {
+const updateTranslationApi = async (
+  caseId: string,
+  content: TranslatedContent
+): Promise<UpdateTranslationResponse> => {
   const response = await fetch(`/api/cases/${caseId}/translate`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content }),
   });
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `Update failed: ${response.statusText}`);
+    throw new Error(
+      errorData.error || `Update failed: ${response.statusText}`
+    );
   }
 
   return response.json();
@@ -97,47 +113,103 @@ const updateTranslationApi = async (caseId: string, content: TranslatedContent):
  * - Loading states
  *
  * @param options - Hook options containing caseId
- *
- * @example
- * ```tsx
- * const {
- *   translation,
- *   isTranslating,
- *   isSaving,
- *   error,
- *   translate,
- *   updateTranslation,
- *   retranslate
- * } = useCaseTranslation({ caseId: 'case-123' });
- * ```
  */
 export function useCaseTranslation({ caseId }: UseCaseTranslationOptions) {
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch translations for this case
-  const { data: translations = [], isLoading } = useSWR<Translation[]>(
-    `/api/cases/${caseId}/translations`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-    }
-  );
+  // Query
+  const { data: translations = [], isLoading } = useQuery({
+    queryKey: translationKeys.list(caseId),
+    queryFn: () => fetchTranslations(caseId),
+    enabled: !!caseId,
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+  });
 
   // Get the English translation (should be only one per case for now)
   const translation = Array.isArray(translations)
-    ? translations.find(t => t.lang_from === 'he' && t.lang_to === 'en')
+    ? translations.find((t) => t.lang_from === 'he' && t.lang_to === 'en')
     : undefined;
 
   // ========================================
-  // Translate Function
+  // Mutations
   // ========================================
 
-  /**
-   * Translate the case from Hebrew to English using AI
-   */
+  const translateMutation = useMutation({
+    mutationFn: () => translateCaseApi(caseId),
+    onSuccess: (result) => {
+      if (result.success && result.data) {
+        // Optimistic update
+        queryClient.setQueryData<Translation[]>(
+          translationKeys.list(caseId),
+          (old = []) => [
+            ...old.filter(
+              (t) => !(t.lang_from === 'he' && t.lang_to === 'en')
+            ),
+            {
+              id: `temp-${Date.now()}`,
+              case_id: caseId,
+              lang_from: 'he',
+              lang_to: 'en',
+              content_json: result.data,
+              edited_by_user: false,
+              translated_by: '',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            } as Translation,
+          ]
+        );
+        toast.success('התיק תורגם בהצלחה לאנגלית');
+      }
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+      toast.error(
+        `תרגום אוטומטי נכשל: ${err.message}. אתה יכול להמשיך ולתרגם ידנית.`
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: translationKeys.list(caseId) });
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (content: TranslatedContent) =>
+      updateTranslationApi(caseId, content),
+    onSuccess: (result) => {
+      if (result.success && result.data) {
+        queryClient.setQueryData<Translation[]>(
+          translationKeys.list(caseId),
+          (old = []) =>
+            old.map((t) =>
+              t.id === translation?.id
+                ? {
+                    ...t,
+                    ...result.data,
+                    edited_by_user: true,
+                    updated_at: new Date().toISOString(),
+                  }
+                : t
+            )
+        );
+        toast.success('התרגום עודכן בהצלחה');
+      }
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+      toast.error(`שמירת התרגום נכשלה: ${err.message}. נסה שוב מאוחר יותר.`);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: translationKeys.list(caseId) });
+    },
+  });
+
+  // ========================================
+  // Actions
+  // ========================================
+
   const translate = useCallback(async (): Promise<boolean> => {
     if (!caseId) {
       const errorMessage = 'Case ID is required';
@@ -146,113 +218,47 @@ export function useCaseTranslation({ caseId }: UseCaseTranslationOptions) {
       return false;
     }
 
-    setIsTranslating(true);
     setError(null);
+    const toastId = toast.loading('מתרגם תיק לאנגלית...');
 
     try {
-      // Show optimistic loading toast
-      const toastId = toast.loading('מתרגם תיק לאנגלית...');
-
-      const result = await translateCase(caseId);
-
-      if (result.success && result.data) {
-        // Optimistic update - add the new translation to the cache
-        mutate(() => [
-          ...(Array.isArray(translations) ? translations : []),
-          {
-            id: `temp-${Date.now()}`, // Will be replaced by real ID from server
-            case_id: caseId,
-            lang_from: 'he',
-            lang_to: 'en',
-            content_json: result.data,
-            edited_by_user: false,
-            translated_by: '', // Will be filled by server
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          } as Translation,
-        ], false);
-
-        toast.success('התיק תורגם בהצלחה לאנגלית', { id: toastId });
-        return true;
-      } else {
-        const errorMessage = result.error || 'Translation failed';
-        setError(errorMessage);
-        toast.error(errorMessage, { id: toastId });
-        return false;
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Translation failed';
-      setError(errorMessage);
-      toast.error(`תרגום אוטומטי נכשל: ${errorMessage}. אתה יכול להמשיך ולתרגם ידנית.`);
-      return false;
-    } finally {
-      setIsTranslating(false);
-    }
-  }, [caseId, translations]);
-
-  // ========================================
-  // Update Translation Function
-  // ========================================
-
-  /**
-   * Update translation with manual edits
-   */
-  const updateTranslation = useCallback(async (content: TranslatedContent): Promise<boolean> => {
-    if (!caseId) {
-      const errorMessage = 'Case ID is required';
-      setError(errorMessage);
-      toast.error(errorMessage);
+      const result = await translateMutation.mutateAsync();
+      toast.dismiss(toastId);
+      return result.success && !!result.data;
+    } catch {
+      toast.dismiss(toastId);
       return false;
     }
+  }, [caseId, translateMutation]);
 
-    if (!translation) {
-      const errorMessage = 'No translation found to update';
-      setError(errorMessage);
-      toast.error(errorMessage);
-      return false;
-    }
-
-    setIsSaving(true);
-    setError(null);
-
-    try {
-      const result = await updateTranslationApi(caseId, content);
-
-      if (result.success && result.data) {
-        // Optimistic update - update the translation in cache
-        mutate(`/api/cases/${caseId}/translations`, (current: Translation[] = []) =>
-          current.map(t =>
-            t.id === translation.id
-              ? { ...t, ...result.data, edited_by_user: true, updated_at: new Date().toISOString() }
-              : t
-          )
-        , false);
-
-        toast.success('התרגום עודכן בהצלחה');
-        return true;
-      } else {
-        const errorMessage = result.error || 'Update failed';
+  const updateTranslation = useCallback(
+    async (content: TranslatedContent): Promise<boolean> => {
+      if (!caseId) {
+        const errorMessage = 'Case ID is required';
         setError(errorMessage);
         toast.error(errorMessage);
         return false;
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Update failed';
-      setError(errorMessage);
-      toast.error(`שמירת התרגום נכשלה: ${errorMessage}. נסה שוב מאוחר יותר.`);
-      return false;
-    } finally {
-      setIsSaving(false);
-    }
-  }, [caseId, translation]);
 
-  // ========================================
-  // Retranslate Function
-  // ========================================
+      if (!translation) {
+        const errorMessage = 'No translation found to update';
+        setError(errorMessage);
+        toast.error(errorMessage);
+        return false;
+      }
 
-  /**
-   * Retranslate the case (replaces existing translation)
-   */
+      setError(null);
+
+      try {
+        const result = await updateMutation.mutateAsync(content);
+        return result.success && !!result.data;
+      } catch {
+        return false;
+      }
+    },
+    [caseId, translation, updateMutation]
+  );
+
   const retranslate = useCallback(async (): Promise<boolean> => {
     if (!caseId) {
       const errorMessage = 'Case ID is required';
@@ -261,64 +267,29 @@ export function useCaseTranslation({ caseId }: UseCaseTranslationOptions) {
       return false;
     }
 
-    setIsTranslating(true);
     setError(null);
+    const toastId = toast.loading('מתרגם מחדש תיק לאנגלית...');
 
     try {
-      const toastId = toast.loading('מתרגם מחדש תיק לאנגלית...');
-
-      const result = await translateCase(caseId);
-
-      if (result.success && result.data) {
-        // Optimistic update - replace the translation in cache
-        mutate(() =>
-          (Array.isArray(translations) ? translations : []).map(t =>
-            (t.lang_from === 'he' && t.lang_to === 'en')
-              ? {
-                  ...t,
-                  content_json: result.data,
-                  edited_by_user: false, // Reset edited flag
-                  updated_at: new Date().toISOString(),
-                } as Translation
-              : t
-          )
-        , false);
-
-        toast.success('התיק תורגם מחדש בהצלחה', { id: toastId });
-        return true;
-      } else {
-        const errorMessage = result.error || 'Retranslation failed';
-        setError(errorMessage);
-        toast.error(errorMessage, { id: toastId });
-        return false;
+      const result = await translateMutation.mutateAsync();
+      toast.dismiss(toastId);
+      if (result.success) {
+        toast.success('התיק תורגם מחדש בהצלחה');
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Retranslation failed';
-      setError(errorMessage);
-      toast.error(`תרגום מחדש נכשל: ${errorMessage}. אתה יכול להמשיך לערוך ידנית.`);
+      return result.success && !!result.data;
+    } catch {
+      toast.dismiss(toastId);
       return false;
-    } finally {
-      setIsTranslating(false);
     }
-  }, [caseId, translations]);
+  }, [caseId, translateMutation]);
 
-  // ========================================
-  // Utility Functions
-  // ========================================
-
-  /**
-   * Clear any errors
-   */
   const clearError = useCallback(() => {
     setError(null);
   }, []);
 
-  /**
-   * Revalidate translations from server
-   */
   const refresh = useCallback(() => {
-    mutate(`/api/cases/${caseId}/translations`);
-  }, [caseId]);
+    queryClient.invalidateQueries({ queryKey: translationKeys.list(caseId) });
+  }, [queryClient, caseId]);
 
   // ========================================
   // Return Value
@@ -331,8 +302,8 @@ export function useCaseTranslation({ caseId }: UseCaseTranslationOptions) {
 
     // Loading states
     isLoading,
-    isTranslating,
-    isSaving,
+    isTranslating: translateMutation.isPending,
+    isSaving: updateMutation.isPending,
 
     // Error state
     error,

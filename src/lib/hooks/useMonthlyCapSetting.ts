@@ -5,17 +5,30 @@
  *
  * עקרונות SOLID:
  * - Single Responsibility: רק ניהול תקרת תשלום
- * - משתמש ב-SWR לcaching אוטומטי
+ * - משתמש ב-React Query לcaching אוטומטי
  */
 
 'use client';
 
-import useSWR from 'swr';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 const DEFAULT_MONTHLY_CAP = 720;
 
-// Global fetcher for SWR
+// ========================================
+// Query Keys
+// ========================================
+
+export const monthlyCapKeys = {
+  all: ['monthlyCap'] as const,
+  setting: () => [...monthlyCapKeys.all, 'setting'] as const,
+};
+
+// ========================================
+// Fetcher
+// ========================================
+
 const fetchMonthlyCap = async (): Promise<number> => {
   const supabase = createClient();
 
@@ -30,9 +43,10 @@ const fetchMonthlyCap = async (): Promise<number> => {
     return DEFAULT_MONTHLY_CAP;
   }
 
-  const value = typeof data.setting_value === 'number'
-    ? data.setting_value
-    : Number(data.setting_value);
+  const value =
+    typeof data.setting_value === 'number'
+      ? data.setting_value
+      : Number(data.setting_value);
 
   return value > 0 ? value : DEFAULT_MONTHLY_CAP;
 };
@@ -54,20 +68,20 @@ interface UseMonthlyCapSettingReturn {
  * // הערך נשמר ב-cache למשך 5 דקות
  */
 export function useMonthlyCapSetting(): UseMonthlyCapSettingReturn {
-  const { data, error, isLoading, mutate } = useSWR(
-    'monthly-cap-setting',
-    fetchMonthlyCap,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      dedupingInterval: 300000, // 5 minutes cache
-      fallbackData: DEFAULT_MONTHLY_CAP,
-    }
-  );
+  const queryClient = useQueryClient();
 
-  const refresh = async () => {
-    await mutate();
-  };
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: monthlyCapKeys.setting(),
+    queryFn: fetchMonthlyCap,
+    staleTime: 300000, // 5 minutes cache
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    initialData: DEFAULT_MONTHLY_CAP,
+  });
+
+  const refresh = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   return {
     monthlyCap: data ?? DEFAULT_MONTHLY_CAP,
