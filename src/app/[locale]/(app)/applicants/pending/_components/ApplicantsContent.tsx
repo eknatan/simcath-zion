@@ -16,7 +16,7 @@ import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { XCircle, Clock, Search } from 'lucide-react';
+import { XCircle, Clock } from 'lucide-react';
 import { ApplicantsList } from './ApplicantsList';
 import { ApplicantStats } from './ApplicantStats';
 import { FormLinkCard } from './FormLinkCard';
@@ -93,13 +93,12 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
         {/* Search + Tabs in same row */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           {/* Search Bar */}
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="w-full sm:w-80">
             <Input
               placeholder={t('search_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="ps-10 border-2"
+              className="border-2"
             />
           </div>
 

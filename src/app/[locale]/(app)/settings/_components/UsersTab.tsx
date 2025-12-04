@@ -51,7 +51,6 @@ import {
   UserX,
   UserCheck,
   KeyRound,
-  Search,
   Loader2,
 } from 'lucide-react';
 import { useUsers, useDeleteUser, useSuspendUser, useActivateUser, useSendResetPassword } from '@/lib/hooks/useUsers';
@@ -274,18 +273,15 @@ export function UsersTab() {
       <div className="space-y-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex-1 max-w-md">
-            <div className="relative">
-              <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder={t('users.searchPlaceholder')}
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(1); // Reset to first page on search
-                }}
-                className="ps-10 border-2"
-              />
-            </div>
+            <Input
+              placeholder={t('users.searchPlaceholder')}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1); // Reset to first page on search
+              }}
+              className="border-2"
+            />
           </div>
           <Button
             onClick={() => {

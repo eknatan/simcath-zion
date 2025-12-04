@@ -112,6 +112,7 @@ export function FilesTab({ caseData }: FilesTabProps) {
   // ========================================
 
   const [deleteDialogFile, setDeleteDialogFile] = useState<CaseFile | null>(null);
+  const [downloadingFileId, setDownloadingFileId] = useState<string | null>(null);
 
   // Use the custom hook for file management
   const {
@@ -190,6 +191,35 @@ export function FilesTab({ caseData }: FilesTabProps) {
     },
     [uploadFile]
   );
+
+  // ========================================
+  // Download Handler
+  // ========================================
+
+  /**
+   * Handle file download - fetches the file and triggers browser download
+   */
+  const handleDownload = async (file: CaseFile) => {
+    try {
+      setDownloadingFileId(file.id);
+
+      const response = await fetch(file.path_or_url);
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = file.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download error:', error);
+    } finally {
+      setDownloadingFileId(null);
+    }
+  };
 
   // ========================================
   // Delete Handler
@@ -317,12 +347,15 @@ export function FilesTab({ caseData }: FilesTabProps) {
                 <ActionButton
                   variant="view"
                   size="sm"
-                  asChild
+                  onClick={() => handleDownload(file)}
+                  disabled={downloadingFileId === file.id}
                   aria-label={tCommon('download')}
                 >
-                  <a href={file.path_or_url} download={file.filename}>
+                  {downloadingFileId === file.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
                     <Download className="h-4 w-4" />
-                  </a>
+                  )}
                 </ActionButton>
 
                 <ActionButton

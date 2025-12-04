@@ -8,7 +8,7 @@ import { StatusBadge } from '@/components/shared/StatusBadge';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Eye, Heart, Users, Search } from 'lucide-react';
+import { Eye, Heart, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Case } from '@/types/case.types';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
@@ -222,14 +222,12 @@ export function CasesList({ cases }: CasesListProps) {
     <div className="space-y-4">
       {/* Search */}
       <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <div className="flex-1">
           <Input
             type="text"
             placeholder={t('searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pe-10"
           />
         </div>
       </div>

@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, History, Calendar, Clock } from 'lucide-react';
+import { History, Calendar, Clock } from 'lucide-react';
 
 // ========================================
 // Types
@@ -104,14 +104,12 @@ export function CasesFilterBar({
   return (
     <div className="flex flex-wrap items-center gap-3">
       {/* Search */}
-      <div className="relative flex-1 min-w-[200px]">
-        <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+      <div className="flex-1 min-w-[200px]">
         <Input
           type="text"
           placeholder={searchPlaceholder}
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pe-10"
         />
       </div>
 

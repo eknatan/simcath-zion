@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { TransferFilters as TransferFiltersType } from '@/types/transfers.types';
-import { Search, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useState } from 'react';
 
 interface TransferFiltersProps {
@@ -43,17 +43,14 @@ export function TransferFilters({
             <Label htmlFor="search" className="text-sm font-medium text-slate-700">
               {t('search')}
             </Label>
-            <div className="relative">
-              <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <Input
-                id="search"
-                type="text"
-                placeholder={t('searchPlaceholder')}
-                value={localFilters.search || ''}
-                onChange={(e) => handleChange('search', e.target.value)}
-                className="ps-10 border-slate-200"
-              />
-            </div>
+            <Input
+              id="search"
+              type="text"
+              placeholder={t('searchPlaceholder')}
+              value={localFilters.search || ''}
+              onChange={(e) => handleChange('search', e.target.value)}
+              className="border-slate-200"
+            />
           </div>
 
           {/* Date From */}
