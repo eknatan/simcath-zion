@@ -5,7 +5,9 @@ import { useTranslations } from 'next-intl';
 
 const STATUS_VARIANTS = {
   new: 'default',
+  pending: 'secondary',
   pending_transfer: 'secondary',
+  approved: 'success',
   transferred: 'success',
   rejected: 'destructive',
   expired: 'outline',

@@ -4,6 +4,7 @@
     "saving": "שומר...",
     "cancel": "בטל",
     "delete": "מחק",
+    "deleting": "מוחק...",
     "edit": "ערוך",
     "loading": "טוען...",
     "search": "חיפוש",
@@ -108,7 +109,8 @@
     "rejected": "נדחה",
     "expired": "פג תוקף",
     "active": "פעיל",
-    "inactive": "לא פעיל"
+    "inactive": "לא פעיל",
+    "approved": "מאושר"
   },
   "validation": {
     "required": "שדה חובה",
@@ -1685,7 +1687,8 @@
       "errorLoading": "שגיאה בטעינת תשלומים",
       "fillAllFields": "יש למלא את כל השדות",
       "invalidAmount": "יש להזין סכום תקין",
-      "duplicateMonth": "כבר קיים תשלום לחודש {month} {year}"
+      "duplicateMonth": "כבר קיים תשלום לחודש {month} {year}",
+      "notesPlaceholder": "הערות אופציונליות..."
     },
     "closeCase": {
       "title": "סגירת תיק",

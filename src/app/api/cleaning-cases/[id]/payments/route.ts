@@ -177,7 +177,8 @@ export async function POST(request: NextRequest, context: RouteParams) {
     const monthlyCap = await getMonthlyCapFromSettings();
     const exceedsCap = amount_ils > monthlyCap;
 
-    // Create payment with 'approved' status so it appears in transfers module
+    // Create payment with 'approved' status - ready for transfer export
+    // Will change to 'transferred' when exported to MASAV
     const { data: newPayment, error: createError } = await supabase
       .from('payments')
       .insert({
@@ -185,7 +186,7 @@ export async function POST(request: NextRequest, context: RouteParams) {
         payment_type: 'monthly_cleaning',
         payment_month: formattedMonth,
         amount_ils,
-        status: 'approved', // Phase 9: Set to 'approved' for immediate transfer integration
+        status: 'approved',
         notes: notes || null,
         created_at: new Date().toISOString(),
       })

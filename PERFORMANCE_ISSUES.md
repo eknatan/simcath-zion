@@ -392,18 +392,39 @@ if (isSensitiveRoute(request.nextUrl.pathname)) {
 ---
 
 ### ISSUE-010: Large Components Without Code Splitting
-**Status:** [ ] Not Started
+**Status:** [x] PARTIALLY COMPLETED (2024-12-04)
 **Priority:** MEDIUM
 **Impact:** Slower initial page loads
 
 **Large files identified:**
-| File | Lines | Recommendation |
-|------|-------|----------------|
-| `src/components/shared/FormRenderer/FormRenderer.tsx` | 693 | Split into section components |
-| `src/components/features/sick-children/CleaningPaymentsTab.tsx` | 629 | Extract PaymentsList, PaymentForm, PaymentFilters |
-| `src/components/features/sick-children/SendEmailsFlow.tsx` | 587 | Extract EmailEditor, EmailSender |
-| `src/app/[locale]/(app)/manual-transfers/page.tsx` | 517 | Split into sub-components |
-| `src/components/features/sick-children-form/SickChildrenForm.tsx` | 444 | Split by form sections |
+| File | Lines | Status |
+|------|-------|--------|
+| `src/components/shared/FormRenderer/FormRenderer.tsx` | 693 | Not started |
+| `src/components/features/sick-children/CleaningPaymentsTab.tsx` | 629 → 175 | **COMPLETED** - Split into 7 files |
+| `src/components/features/sick-children/SendEmailsFlow.tsx` | 587 | Not started |
+| `src/app/[locale]/(app)/manual-transfers/page.tsx` | 517 | Not started |
+| `src/components/features/sick-children-form/SickChildrenForm.tsx` | 444 | Not started |
+
+**CleaningPaymentsTab Refactoring (Completed 2024-12-04):**
+- Main component: 175 lines (was 629)
+- New structure in `cleaning-payments/`:
+  - `types.ts` - 104 lines (shared interfaces)
+  - `useCleaningPayments.ts` - 258 lines (hook with React Query)
+  - `PaymentForm.tsx` - 167 lines
+  - `PaymentsTable.tsx` - 109 lines
+  - `EditPaymentDialog.tsx` - 187 lines
+  - `DeletePaymentDialog.tsx` - 63 lines
+  - `index.ts` - 11 lines
+- Benefits: SOLID principles applied, better testability, reusable components
+
+**Recommendation for remaining files:**
+Don't refactor just for refactoring. The other large files should only be split when:
+- There's a bug that's hard to fix due to messy code
+- A new feature requires significant changes
+- There's a real (not theoretical) performance issue
+
+Files like `FormRenderer.tsx` are already internally split into functions and only display data.
+`SickChildrenForm.tsx` is a form - hard to split meaningfully.
 
 ---
 
