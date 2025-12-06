@@ -20,7 +20,7 @@ import { XCircle, Clock } from 'lucide-react';
 import { ApplicantsList } from './ApplicantsList';
 import { ApplicantStats } from './ApplicantStats';
 import { FormLinkCard } from './FormLinkCard';
-import { useApplicants } from '@/lib/hooks/useApplicants';
+import { useApplicants, useApplicantStats } from '@/lib/hooks/useApplicants';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { ErrorDisplay } from '@/components/shared/ErrorDisplay';
 import { ApplicantStatus } from '@/types/case.types';
@@ -50,12 +50,8 @@ export function ApplicantsContent({ locale }: ApplicantsContentProps) {
     refetch,
   } = useApplicants(initialFilters);
 
-  // Calculate stats
-  const stats = {
-    pending: applicants?.filter((a) => !a.status || a.status === 'pending_approval')?.length || 0,
-    approved: 0, // נחשב בנפרד אם צריך
-    rejected: applicants?.filter((a) => a.status === 'rejected')?.length || 0,
-  };
+  // Fetch stats separately (from all applicants, not just filtered)
+  const { stats } = useApplicantStats();
 
   if (isLoading) {
     return <LoadingSpinner />;

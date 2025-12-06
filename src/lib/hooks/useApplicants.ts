@@ -444,5 +444,43 @@ export function useRestoreApplicant() {
   };
 }
 
+// ========================================
+// Stats Hook
+// ========================================
+
+interface ApplicantStats {
+  pending: number;
+  approved: number;
+  rejected: number;
+}
+
+/**
+ * Hook לשליפת סטטיסטיקות בקשות
+ * טוען את כל הסטטוסים בנפרד מה-API
+ */
+export function useApplicantStats() {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['applicants', 'stats'],
+    queryFn: async (): Promise<ApplicantStats> => {
+      const res = await fetch('/api/applicants/stats');
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to fetch stats');
+      }
+      const result = await res.json();
+      return result.data;
+    },
+    staleTime: 30000, // 30 seconds
+    refetchOnWindowFocus: true,
+  });
+
+  return {
+    stats: data || { pending: 0, approved: 0, rejected: 0 },
+    isLoading,
+    error,
+    refetch,
+  };
+}
+
 // Export Applicant type for backward compatibility
 export type { Applicant };
