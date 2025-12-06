@@ -5,11 +5,16 @@
  * Provides abstraction layer for storage operations.
  *
  * Features:
- * - Upload files to Supabase Storage
+ * - Upload files to Supabase Storage (private bucket)
  * - Delete files from Supabase Storage
- * - Generate public URLs
+ * - Generate signed URLs (temporary, secure access)
  * - File validation
  * - Error handling
+ *
+ * Security:
+ * - Bucket is private - no public access
+ * - All file access requires authentication via signed URLs
+ * - Signed URLs expire after 1 hour
  */
 
 import { createClient } from '@/lib/supabase/server';
@@ -22,8 +27,13 @@ interface UploadOptions {
 }
 
 interface UploadResult {
-  url: string;
+  /** The storage path (used to generate signed URLs) */
+  path: string;
+  /** @deprecated Use path instead - kept for backwards compatibility */
   pathname: string;
+  /** @deprecated No longer used - files are accessed via signed URLs */
+  url: string;
+  /** @deprecated No longer used - files are accessed via signed URLs */
   downloadUrl: string;
 }
 
@@ -35,6 +45,11 @@ interface UploadResult {
  * Supabase Storage bucket name for case files
  */
 const STORAGE_BUCKET = 'case-files';
+
+/**
+ * Signed URL expiration time in seconds (1 hour)
+ */
+const SIGNED_URL_EXPIRY = 3600;
 
 // ========================================
 // Upload
@@ -87,15 +102,14 @@ export async function uploadToStorage(
       throw new Error(`Upload failed: ${error.message}`);
     }
 
-    // Get public URL
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(data.path);
-
+    // Return the path - signed URLs will be generated on demand
+    // We keep url/downloadUrl for backwards compatibility but they won't work
+    // once the bucket is made private
     return {
-      url: publicUrl,
+      path: data.path,
       pathname: data.path,
-      downloadUrl: publicUrl,
+      url: data.path, // No longer a URL, just the path
+      downloadUrl: data.path,
     };
   } catch (error) {
     console.error('Error uploading to storage:', error);
@@ -150,25 +164,49 @@ export async function deleteFromStorage(pathname: string): Promise<void> {
 }
 
 // ========================================
-// Get Public URL
+// Get Signed URL
 // ========================================
 
 /**
- * Get a public URL for a file
+ * Get a signed URL for a file (valid for 1 hour)
  *
- * @param pathname - The pathname of the file in storage
- * @returns Public URL
+ * @param pathOrUrl - The pathname of the file in storage, or a legacy full URL
+ * @returns Signed URL with temporary access
  *
- * Note: This is an async function because it needs to create a Supabase client
+ * Security:
+ * - Signed URLs expire after SIGNED_URL_EXPIRY seconds (1 hour)
+ * - Each request generates a new signed URL
+ * - URLs cannot be guessed without the signature
  */
-export async function getPublicUrl(pathname: string): Promise<string> {
+export async function getSignedUrl(pathOrUrl: string): Promise<string> {
   const supabase = await createClient();
 
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(pathname);
+  // Extract path from URL if a full URL was provided (backwards compatibility)
+  let path = pathOrUrl;
+  if (pathOrUrl.startsWith('http')) {
+    const urlParts = pathOrUrl.split('/case-files/');
+    if (urlParts.length > 1) {
+      path = urlParts[1];
+    }
+  }
 
-  return publicUrl;
+  const { data, error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .createSignedUrl(path, SIGNED_URL_EXPIRY);
+
+  if (error || !data?.signedUrl) {
+    throw new Error(`Failed to create signed URL: ${error?.message || 'Unknown error'}`);
+  }
+
+  return data.signedUrl;
+}
+
+/**
+ * @deprecated Use getSignedUrl instead - public URLs no longer work with private bucket
+ */
+export async function getPublicUrl(pathname: string): Promise<string> {
+  console.warn('getPublicUrl is deprecated - use getSignedUrl instead');
+  return getSignedUrl(pathname);
 }
 
 // ========================================

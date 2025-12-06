@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { weddingFormSchema } from '@/lib/validations/wedding-form.schema';
 import { z } from 'zod';
+import { getPublicFormLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 /**
  * API Route: POST /api/applicants
@@ -130,6 +131,31 @@ const applicantRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting for public form submissions
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ??
+               request.headers.get('x-real-ip') ??
+               'unknown';
+
+    const limiter = getPublicFormLimiter();
+    const { success: notRateLimited } = await checkRateLimit(limiter, ip);
+
+    if (!notRateLimited) {
+      return NextResponse.json(
+        {
+          error: 'Too many requests',
+          message: 'Too many requests. Please try again later.',
+          retryAfter: '1 hour',
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': '3600',
+            'X-RateLimit-Remaining': '0',
+          }
+        }
+      );
+    }
+
     // Parse request body
     const body = await request.json();
 

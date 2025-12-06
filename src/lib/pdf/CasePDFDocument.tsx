@@ -2,6 +2,7 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import './fonts';
 import { translations, PDFLocale } from './translations';
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 
 // Styles
 const styles = StyleSheet.create({
@@ -149,8 +150,10 @@ export function CasePDFDocument({ caseData, locale, title }: CasePDFDocumentProp
   ) || 0;
   const activeMonths = caseData.payments?.length || 0;
 
-  // Get wedding info values
-  const weddingDateHebrew = getValue(caseData.wedding_date_hebrew, 'wedding_info', 'wedding_date_hebrew');
+  // Get wedding info values - use structured Hebrew date fields
+  const weddingDateHebrew = caseData.hebrew_day && caseData.hebrew_month && caseData.hebrew_year
+    ? formatHebrewDateForDisplay(caseData.hebrew_day, caseData.hebrew_month, caseData.hebrew_year, isRTL ? 'he' : 'en')
+    : getValue(caseData.wedding_date_hebrew, 'wedding_info', 'wedding_date_hebrew');
   const city = getValue(caseData.city, 'wedding_info', 'city');
   const venue = getValue(caseData.venue, 'wedding_info', 'venue');
   const requestBackground = getValue(caseData.request_background, 'wedding_info', 'request_background');

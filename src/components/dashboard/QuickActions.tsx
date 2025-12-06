@@ -21,28 +21,24 @@ export function QuickActions() {
       icon: Plus,
       label: t('quickActions.newCase', { defaultValue: 'פתח תיק חדש' }),
       href: '/applicants/pending',
-      color: 'bg-blue-500 hover:bg-blue-600',
     },
     {
       id: 'view-cases',
       icon: FileText,
       label: t('quickActions.viewCases', { defaultValue: 'צפה בתיקים' }),
       href: '/cases',
-      color: 'bg-emerald-500 hover:bg-emerald-600',
     },
     {
       id: 'send-emails',
       icon: Mail,
       label: t('quickActions.sendEmails', { defaultValue: 'שלח מיילים' }),
       href: '/cases?tab=cleaning',
-      color: 'bg-purple-500 hover:bg-purple-600',
     },
     {
       id: 'export-masav',
       icon: Download,
       label: t('quickActions.exportMasav', { defaultValue: 'ייצא MASAV' }),
       href: '/transfers',
-      color: 'bg-orange-500 hover:bg-orange-600',
     },
   ];
 
@@ -59,10 +55,10 @@ export function QuickActions() {
           {actions.map((action) => (
             <Link key={action.id} href={action.href}>
               <Button
-                variant="ghost"
-                className={`w-full h-auto py-4 flex flex-col items-center gap-2 text-white ${action.color}`}
+                variant="outline"
+                className="w-full h-auto py-4 flex flex-col items-center gap-2 border-primary/20 hover:border-primary/40 hover:bg-primary/5"
               >
-                <action.icon className="h-5 w-5" />
+                <action.icon className="h-5 w-5 text-primary" />
                 <span className="text-xs font-medium text-center leading-tight">
                   {action.label}
                 </span>

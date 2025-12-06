@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -113,6 +113,8 @@ export function FilesTab({ caseData }: FilesTabProps) {
 
   const [deleteDialogFile, setDeleteDialogFile] = useState<CaseFile | null>(null);
   const [downloadingFileId, setDownloadingFileId] = useState<string | null>(null);
+  const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
+  const [loadingUrls, setLoadingUrls] = useState<Set<string>>(new Set());
 
   // Use the custom hook for file management
   const {
@@ -125,6 +127,63 @@ export function FilesTab({ caseData }: FilesTabProps) {
 
   // Use fetched files if available, otherwise fall back to initial data
   const files = fetchedFiles || caseData.files || [];
+
+  // ========================================
+  // Signed URL Fetching
+  // ========================================
+
+  /**
+   * Fetch signed URL for a file
+   */
+  const fetchSignedUrl = useCallback(async (fileId: string): Promise<string | null> => {
+    // Return cached URL if available
+    if (signedUrls[fileId]) {
+      return signedUrls[fileId];
+    }
+
+    // Don't fetch if already loading
+    if (loadingUrls.has(fileId)) {
+      return null;
+    }
+
+    try {
+      setLoadingUrls(prev => new Set(prev).add(fileId));
+
+      const response = await fetch(`/api/files/${fileId}/url`);
+      if (!response.ok) {
+        throw new Error('Failed to get signed URL');
+      }
+
+      const data = await response.json();
+
+      setSignedUrls(prev => ({
+        ...prev,
+        [fileId]: data.url
+      }));
+
+      return data.url;
+    } catch (error) {
+      console.error('Error fetching signed URL:', error);
+      return null;
+    } finally {
+      setLoadingUrls(prev => {
+        const next = new Set(prev);
+        next.delete(fileId);
+        return next;
+      });
+    }
+  }, [signedUrls, loadingUrls]);
+
+  /**
+   * Fetch signed URLs for all files on mount/update
+   */
+  useEffect(() => {
+    files.forEach(file => {
+      if (!signedUrls[file.id] && !loadingUrls.has(file.id)) {
+        fetchSignedUrl(file.id);
+      }
+    });
+  }, [files, signedUrls, loadingUrls, fetchSignedUrl]);
 
   // ========================================
   // Helpers
@@ -197,23 +256,29 @@ export function FilesTab({ caseData }: FilesTabProps) {
   // ========================================
 
   /**
-   * Handle file download - fetches the file and triggers browser download
+   * Handle file download - fetches signed URL and triggers browser download
    */
   const handleDownload = async (file: CaseFile) => {
     try {
       setDownloadingFileId(file.id);
 
-      const response = await fetch(file.path_or_url);
+      // Get signed URL (from cache or fetch new)
+      const url = signedUrls[file.id] || await fetchSignedUrl(file.id);
+      if (!url) {
+        throw new Error('Failed to get download URL');
+      }
+
+      const response = await fetch(url);
       const blob = await response.blob();
 
-      const url = window.URL.createObjectURL(blob);
+      const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = url;
+      link.href = blobUrl;
       link.download = file.filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error('Download error:', error);
     } finally {
@@ -309,14 +374,18 @@ export function FilesTab({ caseData }: FilesTabProps) {
             >
               {/* File icon/thumbnail */}
               <div className="flex-shrink-0">
-                {isImageFile(file.filename) ? (
+                {isImageFile(file.filename) && signedUrls[file.id] ? (
                   <div className="relative w-12 h-12 rounded overflow-hidden bg-slate-100">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={file.path_or_url}
+                      src={signedUrls[file.id]}
                       alt={file.filename}
                       className="w-full h-full object-cover"
                     />
+                  </div>
+                ) : isImageFile(file.filename) && loadingUrls.has(file.id) ? (
+                  <div className="w-12 h-12 rounded flex items-center justify-center bg-slate-100">
+                    <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
                   </div>
                 ) : (
                   <div className="w-12 h-12 rounded flex items-center justify-center bg-red-50 border border-red-200">
@@ -338,10 +407,18 @@ export function FilesTab({ caseData }: FilesTabProps) {
                 <ActionButton
                   variant="view"
                   size="sm"
-                  onClick={() => window.open(file.path_or_url, '_blank')}
+                  onClick={async () => {
+                    const url = signedUrls[file.id] || await fetchSignedUrl(file.id);
+                    if (url) window.open(url, '_blank');
+                  }}
+                  disabled={loadingUrls.has(file.id)}
                   aria-label={tCommon('view')}
                 >
-                  <Eye className="h-4 w-4" />
+                  {loadingUrls.has(file.id) ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </ActionButton>
 
                 <ActionButton

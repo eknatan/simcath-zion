@@ -105,13 +105,14 @@ export async function POST(
     });
 
     // Save file metadata to database
+    // Store the path (not URL) - signed URLs are generated on demand
     const { data: savedFile, error: saveError } = await supabase
       .from('files')
       .insert({
         case_id: id,
         file_type: fileType,
         filename: file.name,
-        path_or_url: uploadResult.url,
+        path_or_url: uploadResult.path, // Store path, not URL
         size_bytes: file.size,
         uploaded_by: user.id,
       })
