@@ -131,29 +131,36 @@ const applicantRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting for public form submissions
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ??
-               request.headers.get('x-real-ip') ??
-               'unknown';
+    // Check if user is authenticated (skip rate limit for logged-in users)
+    const supabaseAuth = await createClient();
+    const { data: { session } } = await supabaseAuth.auth.getSession();
+    const isAuthenticated = !!session;
 
-    const limiter = getPublicFormLimiter();
-    const { success: notRateLimited } = await checkRateLimit(limiter, ip);
+    // Rate limiting only for public (non-authenticated) submissions
+    if (!isAuthenticated) {
+      const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ??
+                 request.headers.get('x-real-ip') ??
+                 'unknown';
 
-    if (!notRateLimited) {
-      return NextResponse.json(
-        {
-          error: 'Too many requests',
-          message: 'Too many requests. Please try again later.',
-          retryAfter: '1 hour',
-        },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': '3600',
-            'X-RateLimit-Remaining': '0',
+      const limiter = getPublicFormLimiter();
+      const { success: notRateLimited } = await checkRateLimit(limiter, ip);
+
+      if (!notRateLimited) {
+        return NextResponse.json(
+          {
+            error: 'Too many requests',
+            message: 'Too many requests. Please try again later.',
+            retryAfter: '1 hour',
+          },
+          {
+            status: 429,
+            headers: {
+              'Retry-After': '3600',
+              'X-RateLimit-Remaining': '0',
+            }
           }
-        }
-      );
+        );
+      }
     }
 
     // Parse request body
