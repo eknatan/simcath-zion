@@ -191,7 +191,7 @@ export function CasePDFDocument({ caseData, locale, title }: CasePDFDocumentProp
           <>
             {/* Couple Names */}
             <Text style={styles.subHeader}>
-              {`${groomFirstName} ${groomLastName} ♥ ${brideFirstName} ${brideLastName}`}
+              {`${groomFirstName} ${groomLastName} & ${brideFirstName} ${brideLastName}`}
             </Text>
 
             {/* Wedding Details */}

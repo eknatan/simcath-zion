@@ -46,7 +46,7 @@ export async function GET() {
       return {
         ...wedding,
         daysUntil,
-        coupleName: `${wedding.groom_first_name || ''} & ${wedding.bride_first_name || ''}`.trim() || `תיק #${wedding.case_number}`,
+        coupleName: `${wedding.groom_first_name || ''} ${wedding.groom_last_name || ''} & ${wedding.bride_first_name || ''} ${wedding.bride_last_name || ''}`.replace(/\s+/g, ' ').trim() || `תיק #${wedding.case_number}`,
       };
     }) || [];
 

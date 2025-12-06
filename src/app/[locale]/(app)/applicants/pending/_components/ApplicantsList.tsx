@@ -33,6 +33,7 @@ import { RejectDialog } from './RejectDialog';
 import { RestoreDialog } from './RestoreDialog';
 import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 
 interface ApplicantsListProps {
   applicants: Applicant[];
@@ -100,8 +101,36 @@ export function ApplicantsList({
   // Helper: Get wedding date
   const getWeddingDate = (applicant: Applicant) => {
     const formData = applicant.form_data as any;
-    const hebrewDate = formData.wedding_info?.date_hebrew || '';
-    const gregorianDate = formData.wedding_info?.date_gregorian || '';
+    const weddingInfo = formData.wedding_info;
+
+    // Support both old format (date_hebrew string) and new format (hebrew_date object)
+    let hebrewDate = '';
+    let gregorianDate = '';
+
+    if (weddingInfo?.hebrew_date) {
+      // New structured format
+      const { day, month, year, gregorianDate: gregDate } = weddingInfo.hebrew_date;
+      if (day && month && year) {
+        hebrewDate = formatHebrewDateForDisplay(day, month, year, locale as 'he' | 'en');
+      }
+      gregorianDate = gregDate || '';
+    } else {
+      // Old format (backwards compatibility)
+      hebrewDate = weddingInfo?.date_hebrew || '';
+      gregorianDate = weddingInfo?.date_gregorian || '';
+    }
+
+    // Format gregorian date for display
+    if (gregorianDate) {
+      try {
+        gregorianDate = format(new Date(gregorianDate), 'dd/MM/yyyy', {
+          locale: locale === 'he' ? he : undefined,
+        });
+      } catch {
+        // Keep as-is if formatting fails
+      }
+    }
+
     return { hebrew: hebrewDate, gregorian: gregorianDate };
   };
 
