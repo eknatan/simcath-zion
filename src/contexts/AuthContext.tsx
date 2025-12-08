@@ -9,6 +9,8 @@ interface AuthContextType {
   session: Session | null;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signInWithMagicLink: (email: string) => Promise<{ error: AuthError | null }>;
+  sendOtpCode: (email: string) => Promise<{ error: AuthError | null }>;
+  verifyOtpCode: (email: string, token: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<{ error: AuthError | null }>;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -131,6 +133,66 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const sendOtpCode = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false, // Only allow existing users
+        },
+      });
+
+      if (error) {
+        return { error };
+      }
+
+      return { error: null };
+    } catch (error) {
+      console.error('OTP send error:', error);
+      return { error: error as AuthError };
+    }
+  };
+
+  const verifyOtpCode = async (email: string, token: string) => {
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: 'email',
+      });
+
+      if (error) {
+        return { error };
+      }
+
+      // Sync user_metadata with profile role
+      if (data.user) {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', data.user.id)
+            .single();
+
+          if (profile?.role && data.user.user_metadata?.role !== profile.role) {
+            await supabase.auth.updateUser({
+              data: { role: profile.role }
+            });
+          }
+        } catch (metadataError) {
+          console.error('Error syncing user metadata:', metadataError);
+        }
+      }
+
+      setSession(data.session);
+      setUser(data.user);
+      return { error: null };
+    } catch (error) {
+      console.error('OTP verify error:', error);
+      return { error: error as AuthError };
+    }
+  };
+
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -153,6 +215,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     session,
     signIn,
     signInWithMagicLink,
+    sendOtpCode,
+    verifyOtpCode,
     signOut,
     isLoading,
     isAuthenticated: !!user,

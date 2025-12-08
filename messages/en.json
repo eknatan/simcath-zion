@@ -160,7 +160,21 @@
       "or": "or",
       "usePassword": "Sign in with password",
       "useMagicLink": "Sign in with email link",
-      "footer": "Secure system for managing cases and payments"
+      "useOtp": "Sign in with one-time code",
+      "footer": "Secure system for managing cases and payments",
+      "otp": {
+        "title": "Enter the code",
+        "description": "We sent a 6-digit code to {email}",
+        "enterEmail": "We'll send you a login code to your email",
+        "sendCode": "Send Login Code",
+        "sending": "Sending code...",
+        "verify": "Verify and Sign In",
+        "verifying": "Verifying...",
+        "resend": "Send new code",
+        "changeEmail": "Change email address",
+        "invalidCode": "Please enter a 6-digit code",
+        "expiredCode": "Code expired or invalid. Try sending a new code."
+      }
     },
     "invitation": {
       "title": "Welcome to the System",

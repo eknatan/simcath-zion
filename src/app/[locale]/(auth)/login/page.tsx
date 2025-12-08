@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,23 +9,27 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, KeyRound } from 'lucide-react';
+import { Loader2, Mail, KeyRound, ArrowRight, Link } from 'lucide-react';
 import { RetroGrid } from '@/components/ui/retro-grid';
 import Image from 'next/image';
 
-type LoginMode = 'password' | 'magiclink';
+type LoginMode = 'password' | 'otp' | 'magiclink';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
   const router = useRouter();
-  const { signIn, signInWithMagicLink } = useAuth();
+  const { signIn, sendOtpCode, verifyOtpCode, signInWithMagicLink } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loginMode, setLoginMode] = useState<LoginMode>('password');
+  const [otpSent, setOtpSent] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
+
+  const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,13 +49,39 @@ export default function LoginPage() {
       return;
     }
 
+    // OTP mode - send code
+    if (loginMode === 'otp' && !otpSent) {
+      try {
+        const { error: otpError } = await sendOtpCode(email);
+
+        if (otpError) {
+          if (otpError.message?.includes('user') || otpError.message?.includes('User')) {
+            setError(t('errors.userNotFound'));
+          } else {
+            setError(otpError.message || t('errors.somethingWentWrong'));
+          }
+          setIsLoading(false);
+          return;
+        }
+
+        setOtpSent(true);
+        setIsLoading(false);
+        // Focus first OTP input
+        setTimeout(() => otpInputRefs.current[0]?.focus(), 100);
+      } catch (err) {
+        console.error('OTP send error:', err);
+        setError(t('errors.somethingWentWrong'));
+        setIsLoading(false);
+      }
+      return;
+    }
+
     // Magic Link mode
     if (loginMode === 'magiclink') {
       try {
         const { error: magicLinkError } = await signInWithMagicLink(email);
 
         if (magicLinkError) {
-          // Handle "user not found" error gracefully
           if (magicLinkError.message?.includes('user') || magicLinkError.message?.includes('User')) {
             setError(t('errors.userNotFound'));
           } else {
@@ -72,34 +102,142 @@ export default function LoginPage() {
     }
 
     // Password mode
-    if (!password) {
-      setError(t('validation.required'));
+    if (loginMode === 'password') {
+      if (!password) {
+        setError(t('validation.required'));
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const { error: signInError } = await signIn(email, password);
+
+        if (signInError) {
+          setError(signInError.message || t('errors.invalidCredentials'));
+          setIsLoading(false);
+          return;
+        }
+
+        router.push('/dashboard');
+      } catch (err) {
+        console.error('Login error:', err);
+        setError(t('errors.somethingWentWrong'));
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleOtpSubmit = async () => {
+    setError(null);
+    setIsLoading(true);
+
+    const code = otpCode.join('');
+    if (code.length !== 6) {
+      setError(t('login.otp.invalidCode'));
       setIsLoading(false);
       return;
     }
 
     try {
-      const { error: signInError } = await signIn(email, password);
+      const { error: verifyError } = await verifyOtpCode(email, code);
 
-      if (signInError) {
-        setError(signInError.message || t('errors.invalidCredentials'));
+      if (verifyError) {
+        if (verifyError.message?.includes('expired') || verifyError.message?.includes('invalid')) {
+          setError(t('login.otp.expiredCode'));
+        } else {
+          setError(verifyError.message || t('errors.somethingWentWrong'));
+        }
         setIsLoading(false);
         return;
       }
 
-      // Redirect to dashboard on success (locale is automatically added)
       router.push('/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('OTP verify error:', err);
       setError(t('errors.somethingWentWrong'));
       setIsLoading(false);
     }
   };
 
-  const toggleLoginMode = () => {
-    setLoginMode(prev => prev === 'password' ? 'magiclink' : 'password');
+  const handleOtpChange = (index: number, value: string) => {
+    // Only allow digits
+    if (value && !/^\d$/.test(value)) return;
+
+    const newOtp = [...otpCode];
+    newOtp[index] = value;
+    setOtpCode(newOtp);
+
+    // Auto-focus next input
+    if (value && index < 5) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
+
+    // Auto-submit when all 6 digits are entered
+    if (value && index === 5 && newOtp.every(digit => digit !== '')) {
+      setTimeout(() => handleOtpSubmit(), 100);
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !otpCode[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (pastedData) {
+      const newOtp = [...otpCode];
+      for (let i = 0; i < pastedData.length; i++) {
+        newOtp[i] = pastedData[i];
+      }
+      setOtpCode(newOtp);
+
+      // Focus the next empty input or the last one
+      const nextEmpty = newOtp.findIndex(d => d === '');
+      otpInputRefs.current[nextEmpty === -1 ? 5 : nextEmpty]?.focus();
+
+      // Auto-submit if complete
+      if (pastedData.length === 6) {
+        setTimeout(() => handleOtpSubmit(), 100);
+      }
+    }
+  };
+
+  const setMode = (mode: LoginMode) => {
+    setLoginMode(mode);
     setError(null);
+    setOtpSent(false);
     setMagicLinkSent(false);
+    setOtpCode(['', '', '', '', '', '']);
+  };
+
+  const handleBackToEmail = () => {
+    setOtpSent(false);
+    setMagicLinkSent(false);
+    setOtpCode(['', '', '', '', '', '']);
+    setError(null);
+  };
+
+  const handleResendCode = async () => {
+    setError(null);
+    setIsLoading(true);
+    setOtpCode(['', '', '', '', '', '']);
+
+    try {
+      const { error: otpError } = await sendOtpCode(email);
+
+      if (otpError) {
+        setError(otpError.message || t('errors.somethingWentWrong'));
+      }
+    } catch (err) {
+      console.error('OTP resend error:', err);
+      setError(t('errors.somethingWentWrong'));
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => otpInputRefs.current[0]?.focus(), 100);
+    }
   };
 
   return (
@@ -138,16 +276,22 @@ export default function LoginPage() {
         <Card className="border-2 shadow-2xl backdrop-blur-sm">
           <CardHeader className="space-y-1 pb-4">
             <CardTitle className="text-2xl font-bold text-center">
-              {t('login.title')}
+              {otpSent ? t('login.otp.title') : t('login.title')}
             </CardTitle>
             <CardDescription className="text-center">
-              {loginMode === 'magiclink'
-                ? t('login.magicLinkDescription')
-                : t('login.description')}
+              {otpSent
+                ? t('login.otp.description', { email })
+                : magicLinkSent
+                  ? t('login.magicLinkSentDescription')
+                  : loginMode === 'otp'
+                    ? t('login.otp.enterEmail')
+                    : loginMode === 'magiclink'
+                      ? t('login.magicLinkDescription')
+                      : t('login.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Magic Link Success Message */}
+            {/* Magic Link Sent */}
             {magicLinkSent ? (
               <div className="space-y-4">
                 <Alert className="border-green-200 bg-green-50 dark:bg-green-950/20">
@@ -161,13 +305,79 @@ export default function LoginPage() {
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={() => {
-                    setMagicLinkSent(false);
-                    setEmail('');
-                  }}
+                  onClick={handleBackToEmail}
                 >
                   {t('login.tryAnotherEmail')}
                 </Button>
+              </div>
+            ) : otpSent ? (
+              <div className="space-y-6">
+                {error && (
+                  <Alert variant="destructive" className="animate-in fade-in-50">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* OTP Input Boxes */}
+                <div className="flex justify-center gap-2 direction-ltr" dir="ltr">
+                  {otpCode.map((digit, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => { otpInputRefs.current[index] = el; }}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleOtpChange(index, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                      onPaste={handleOtpPaste}
+                      disabled={isLoading}
+                      className="w-12 h-14 text-center text-2xl font-bold border-2 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:opacity-50 bg-background"
+                    />
+                  ))}
+                </div>
+
+                {/* Verify Button */}
+                <Button
+                  type="button"
+                  className="w-full h-11 text-base font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all"
+                  disabled={isLoading || otpCode.some(d => d === '')}
+                  onClick={handleOtpSubmit}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="me-2 h-5 w-5 animate-spin" />
+                      {t('login.otp.verifying')}
+                    </>
+                  ) : (
+                    <>
+                      <ArrowRight className="me-2 h-5 w-5" />
+                      {t('login.otp.verify')}
+                    </>
+                  )}
+                </Button>
+
+                {/* Resend & Back buttons */}
+                <div className="flex flex-col gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full"
+                    onClick={handleResendCode}
+                    disabled={isLoading}
+                  >
+                    {t('login.otp.resend')}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={handleBackToEmail}
+                    disabled={isLoading}
+                  >
+                    {t('login.otp.changeEmail')}
+                  </Button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -218,13 +428,22 @@ export default function LoginPage() {
                   {isLoading ? (
                     <>
                       <Loader2 className="me-2 h-5 w-5 animate-spin" />
-                      {loginMode === 'magiclink' ? t('login.sendingLink') : t('login.loggingIn')}
+                      {loginMode === 'otp'
+                        ? t('login.otp.sending')
+                        : loginMode === 'magiclink'
+                          ? t('login.sendingLink')
+                          : t('login.loggingIn')}
                     </>
                   ) : (
                     <>
-                      {loginMode === 'magiclink' ? (
+                      {loginMode === 'otp' ? (
                         <>
                           <Mail className="me-2 h-5 w-5" />
+                          {t('login.otp.sendCode')}
+                        </>
+                      ) : loginMode === 'magiclink' ? (
+                        <>
+                          <Link className="me-2 h-5 w-5" />
                           {t('login.sendMagicLink')}
                         </>
                       ) : (
@@ -234,7 +453,7 @@ export default function LoginPage() {
                   )}
                 </Button>
 
-                {/* Toggle Login Mode */}
+                {/* Alternative Login Methods */}
                 <div className="relative my-4">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
@@ -246,24 +465,41 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full h-11"
-                  onClick={toggleLoginMode}
-                >
-                  {loginMode === 'magiclink' ? (
-                    <>
+                <div className="flex flex-col gap-2">
+                  {loginMode !== 'password' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-10"
+                      onClick={() => setMode('password')}
+                    >
                       <KeyRound className="me-2 h-4 w-4" />
                       {t('login.usePassword')}
-                    </>
-                  ) : (
-                    <>
-                      <Mail className="me-2 h-4 w-4" />
-                      {t('login.useMagicLink')}
-                    </>
+                    </Button>
                   )}
-                </Button>
+                  {loginMode !== 'otp' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-10"
+                      onClick={() => setMode('otp')}
+                    >
+                      <Mail className="me-2 h-4 w-4" />
+                      {t('login.useOtp')}
+                    </Button>
+                  )}
+                  {loginMode !== 'magiclink' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-10"
+                      onClick={() => setMode('magiclink')}
+                    >
+                      <Link className="me-2 h-4 w-4" />
+                      {t('login.useMagicLink')}
+                    </Button>
+                  )}
+                </div>
               </form>
             )}
           </CardContent>
