@@ -26,11 +26,9 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<ExcelImportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    if (!selectedFile) return;
-
+  const processFile = async (selectedFile: File) => {
     setFile(selectedFile);
     setError(null);
     setImporting(true);
@@ -49,6 +47,47 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
     } finally {
       setImporting(false);
     }
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) return;
+    await processFile(selectedFile);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!importing) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    if (importing) return;
+
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (!droppedFile) return;
+
+    // Validate file type
+    const validTypes = ['.xlsx', '.xls'];
+    const fileExtension = droppedFile.name.toLowerCase().slice(droppedFile.name.lastIndexOf('.'));
+    if (!validTypes.includes(fileExtension)) {
+      setError(t('import.invalidFileType'));
+      return;
+    }
+
+    await processFile(droppedFile);
   };
 
   const handleConfirm = async () => {
@@ -126,11 +165,20 @@ export function ExcelImportDialog({ open, onOpenChange, onSuccess }: ExcelImport
           {/* Step 1: Upload */}
           {step === 'upload' && (
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center">
-                <FileSpreadsheet className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+              <div
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                  isDragging
+                    ? 'border-primary bg-primary/5'
+                    : 'border-slate-300 hover:border-slate-400'
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <FileSpreadsheet className={`h-12 w-12 mx-auto mb-4 ${isDragging ? 'text-primary' : 'text-slate-400'}`} />
                 <h3 className="text-lg font-semibold mb-2">{t('import.uploadTitle')}</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  {t('import.uploadDescription')}
+                  {isDragging ? t('import.dropHere') : t('import.uploadDescription')}
                 </p>
                 <label htmlFor="file-upload">
                   <Button type="button" disabled={importing} asChild>

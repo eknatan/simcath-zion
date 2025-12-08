@@ -1589,7 +1589,9 @@
     "import": {
       "title": "Import Transfers from Excel",
       "uploadTitle": "Upload Excel File",
-      "uploadDescription": "File should include 6 columns: Name, ID (optional), Amount, Bank, Branch, Account",
+      "uploadDescription": "Drag file here or click to select. File should include: Name, ID (optional), Amount, Bank, Branch, Account",
+      "dropHere": "Drop file here...",
+      "invalidFileType": "Invalid file type. Please upload an Excel file (.xlsx or .xls)",
       "processing": "Processing...",
       "selectFile": "Select File",
       "processError": "Error processing file",
