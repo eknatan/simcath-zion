@@ -42,6 +42,10 @@ export function CallbackHandler() {
     if (type === 'invite') {
       handleInvitation();
     }
+    // טיפול ב-magic link - כניסה ללא סיסמה
+    else if (type === 'magiclink' || type === 'email') {
+      handleMagicLink();
+    }
     // טיפול ב-recovery (reset password) - מפנה לדף המתאים עם כל הפרמטרים
     else if (type === 'recovery') {
       // מעבירים את ה-hash כמו שהוא לדף reset-password
@@ -127,6 +131,77 @@ export function CallbackHandler() {
 
     } catch (err: any) {
       console.error('Error handling invitation:', err);
+      setError(err.message || t('auth.errors.invalidToken'));
+      setIsLoading(false);
+    }
+  };
+
+  const handleMagicLink = async () => {
+    try {
+      // קודם בודקים אם יש session קיים
+      const { data: { session: existingSession } } = await supabase.auth.getSession();
+      if (existingSession) {
+        // יש session - מפנים ישירות ל-dashboard
+        router.push('/dashboard');
+        return;
+      }
+
+      // מנסים לקרוא tokens מה-URL (query params או hash)
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const queryParams = new URLSearchParams(window.location.search);
+
+      const tokenHash = hashParams.get('token_hash') || queryParams.get('token_hash');
+      const type = hashParams.get('type') || queryParams.get('type');
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+
+      // אם יש access_token ב-hash, מגדירים את ה-session ישירות
+      if (accessToken) {
+        const { data, error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || '',
+        });
+
+        if (sessionError) throw sessionError;
+        if (data.session) {
+          router.push('/dashboard');
+          return;
+        }
+      }
+
+      // אם יש token_hash, מאמתים אותו
+      if (tokenHash && type) {
+        const { data, error: verifyError } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: type as EmailOtpType,
+        });
+
+        if (verifyError) throw verifyError;
+        if (data.session) {
+          router.push('/dashboard');
+          return;
+        }
+      }
+
+      // מאזינים ל-auth state change כ-fallback
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (event, currentSession) => {
+          if (currentSession) {
+            router.push('/dashboard');
+            subscription.unsubscribe();
+          }
+        }
+      );
+
+      // Timeout
+      setTimeout(() => {
+        setError(t('auth.errors.invalidToken'));
+        setIsLoading(false);
+        subscription.unsubscribe();
+      }, 5000);
+
+    } catch (err: any) {
+      console.error('Error handling magic link:', err);
       setError(err.message || t('auth.errors.invalidToken'));
       setIsLoading(false);
     }

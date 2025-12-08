@@ -156,12 +156,21 @@
       "systemDescription": "תמיכה לחתונות יתומים וילדים חולים",
       "title": "כניסה למערכת",
       "description": "הזן את פרטי ההתחברות שלך",
+      "magicLinkDescription": "נשלח לך קישור כניסה למייל",
       "email": "דוא״ל",
       "emailPlaceholder": "הזן כתובת דוא״ל",
       "password": "סיסמה",
       "passwordPlaceholder": "הזן סיסמה",
       "submit": "התחבר",
       "loggingIn": "מתחבר...",
+      "sendMagicLink": "שלח קישור כניסה",
+      "sendingLink": "שולח קישור...",
+      "magicLinkSent": "בדוק את המייל שלך!",
+      "magicLinkSentDescription": "שלחנו קישור כניסה למייל שלך. לחץ על הקישור כדי להיכנס למערכת.",
+      "tryAnotherEmail": "נסה כתובת אחרת",
+      "or": "או",
+      "usePassword": "התחבר עם סיסמה",
+      "useMagicLink": "התחבר עם קישור למייל",
       "footer": "מערכת מאובטחת לניהול תיקים ותשלומים"
     },
     "invitation": {
@@ -195,7 +204,8 @@
       "noSession": "לא נמצאה סשן פעיל",
       "passwordMismatch": "הסיסמאות אינן תואמות",
       "weakPassword": "הסיסמה חלשה מדי",
-      "serverError": "שגיאת שרת, נסה שוב מאוחר יותר"
+      "serverError": "שגיאת שרת, נסה שוב מאוחר יותר",
+      "userNotFound": "לא נמצא חשבון עם כתובת מייל זו"
     }
   },
   "payments": {

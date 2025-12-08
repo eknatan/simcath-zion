@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signInWithMagicLink: (email: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<{ error: AuthError | null }>;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -109,6 +110,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const signInWithMagicLink = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false, // Only allow existing users
+          emailRedirectTo: `${window.location.origin}/auth/callback?type=magiclink`,
+        },
+      });
+
+      if (error) {
+        return { error };
+      }
+
+      return { error: null };
+    } catch (error) {
+      console.error('Magic link error:', error);
+      return { error: error as AuthError };
+    }
+  };
+
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -130,6 +152,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     user,
     session,
     signIn,
+    signInWithMagicLink,
     signOut,
     isLoading,
     isAuthenticated: !!user,
