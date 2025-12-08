@@ -332,7 +332,8 @@ export default function LoginPage() {
                       onKeyDown={(e) => handleOtpKeyDown(index, e)}
                       onPaste={handleOtpPaste}
                       disabled={isLoading}
-                      className="w-12 h-14 text-center text-2xl font-bold border-2 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:opacity-50 bg-background"
+                      style={{ textAlign: 'center', paddingLeft: 0, paddingRight: 0 }}
+                      className="w-12 h-14 text-2xl font-bold border-2 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:opacity-50 bg-background leading-none"
                     />
                   ))}
                 </div>
