@@ -7,6 +7,7 @@ interface DashboardStats {
   totalCases: number;
   activeCases: number;
   pendingTransfers: number;
+  pendingApplicants: number;
   totalTransferred: number;
   lastMonthCases: number;
   weddingCases: number;

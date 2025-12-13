@@ -17,6 +17,7 @@ import { UsersTab } from './_components/UsersTab';
 import { EmailSettingsCard } from './_components/EmailSettingsCard';
 import { MasavSettingsCard } from './_components/MasavSettingsCard';
 import { MonthlyCapSettingsCard } from './_components/MonthlyCapSettingsCard';
+import { WelcomeCardSettingsCard } from './_components/WelcomeCardSettingsCard';
 
 export async function generateMetadata({
   params,
@@ -73,7 +74,10 @@ export default async function SettingsPage({
         {/* General Tab */}
         <TabsContent value="general" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <WelcomeCardSettingsCard />
             <MonthlyCapSettingsCard />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <EmailSettingsCard />
           </div>
           <MasavSettingsCard />

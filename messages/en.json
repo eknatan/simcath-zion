@@ -61,6 +61,7 @@
       "morning": "Good Morning",
       "afternoon": "Good Afternoon",
       "evening": "Good Evening",
+      "night": "Good Night",
       "subtitle": "You have",
       "subtitle_full": "You have <bold>{requests} new requests</bold> and <bold>{weddings} weddings</bold> today.",
       "requests": "new requests",
@@ -112,6 +113,30 @@
       "title": "Recent Activity",
       "noActivity": "No recent activity to display",
       "error": "Error loading activity"
+    },
+    "welcomeCard": {
+      "settings": {
+        "title": "Card Settings",
+        "showCard": "Show welcome card",
+        "showHebrewDate": "Hebrew date",
+        "showWeddingsToday": "Today's weddings",
+        "showPendingTransfers": "Pending transfers",
+        "showPendingApplicants": "Pending applications",
+        "showUrgentAlerts": "Urgent alerts"
+      },
+      "badges": {
+        "weddings": "weddings today",
+        "transfers": "pending transfers",
+        "applicants": "pending applications",
+        "alerts": "urgent alerts"
+      },
+      "info": {
+        "pendingTransfers": "{count} pending transfers",
+        "weddingsToday": "{count} weddings today",
+        "pendingApplicants": "{count} pending applications",
+        "urgentAlerts": "{count} urgent alerts",
+        "allClear": "All clear!"
+      }
     }
   },
   "status": {
@@ -649,6 +674,25 @@
       "users": "User Management",
       "notifications": "Notifications",
       "system": "System"
+    },
+    "welcomeCard": {
+      "title": "Welcome Card",
+      "description": "Customize the welcome card on the dashboard",
+      "options": {
+        "show": "Show welcome card",
+        "showDescription": "Display the greeting card at the top of the dashboard",
+        "showHebrewDate": "Hebrew date",
+        "showHebrewDateDescription": "Display the Hebrew date in gematria",
+        "showWeddingsToday": "Today's weddings",
+        "showWeddingsTodayDescription": "Show the number of weddings scheduled for today",
+        "showPendingTransfers": "Pending transfers",
+        "showPendingTransfersDescription": "Show the number of transfers awaiting processing",
+        "showPendingApplicants": "Pending applications",
+        "showPendingApplicantsDescription": "Show the number of applications awaiting approval",
+        "showUrgentAlerts": "Urgent alerts",
+        "showUrgentAlertsDescription": "Show the number of high priority alerts"
+      },
+      "note": "Changes are saved automatically"
     }
   },
   "users": {

@@ -17,6 +17,7 @@ export async function GET() {
       pendingTransfersResult,
       transferredThisYearResult,
       lastMonthCasesResult,
+      pendingApplicantsResult,
     ] = await Promise.all([
       // Total cases
       supabase
@@ -55,6 +56,12 @@ export async function GET() {
         .from('cases')
         .select('id', { count: 'exact', head: true })
         .gte('created_at', new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString()),
+
+      // Pending applicants count
+      supabase
+        .from('applicants')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'pending_approval'),
     ]);
 
     // Calculate total transferred amount
@@ -77,6 +84,7 @@ export async function GET() {
       totalCases: totalCasesResult.count || 0,
       activeCases,
       pendingTransfers: pendingTransfersResult.count || 0,
+      pendingApplicants: pendingApplicantsResult.count || 0,
       totalTransferred,
       lastMonthCases: lastMonthCount,
       weddingCases: weddingCasesResult.data?.length || 0,

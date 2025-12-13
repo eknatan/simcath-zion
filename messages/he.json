@@ -63,7 +63,8 @@
       "morning": "בוקר טוב",
       "afternoon": "צהריים טובים",
       "evening": "ערב טוב",
-      "subtitle": "יש לך",
+      "night": "לילה טוב",
+      "subtitle": "שיהיה יום מוצלח!",
       "subtitle_full": "יש לך <bold>{requests} בקשות חדשות</bold> ו-<bold>{weddings} חתונות</bold> היום.",
       "requests": "בקשות חדשות",
       "pending": "שמחכות לאישור שלך שמחת ציון.",
@@ -114,6 +115,30 @@
       "title": "פעילות אחרונה",
       "noActivity": "אין פעילות אחרונה להצגה",
       "error": "שגיאה בטעינת הפעילות"
+    },
+    "welcomeCard": {
+      "settings": {
+        "title": "הגדרות כרטיס",
+        "showCard": "הצג כרטיס ברוכים הבאים",
+        "showHebrewDate": "תאריך עברי",
+        "showWeddingsToday": "חתונות היום",
+        "showPendingTransfers": "העברות ממתינות",
+        "showPendingApplicants": "בקשות ממתינות",
+        "showUrgentAlerts": "התראות"
+      },
+      "badges": {
+        "weddings": "חתונות היום",
+        "transfers": "העברות ממתינות",
+        "applicants": "בקשות ממתינות",
+        "alerts": "התראות"
+      },
+      "info": {
+        "pendingTransfers": "{count} העברות ממתינות",
+        "weddingsToday": "{count} חתונות היום",
+        "pendingApplicants": "{count} בקשות ממתינות",
+        "urgentAlerts": "{count} התראות",
+        "allClear": "הכל תקין!"
+      }
     }
   },
   "status": {
@@ -686,6 +711,25 @@
       "users": "ניהול משתמשים",
       "notifications": "התראות",
       "system": "מערכת"
+    },
+    "welcomeCard": {
+      "title": "כרטיס ברוכים הבאים",
+      "description": "התאמה אישית של כרטיס הברכה בדשבורד",
+      "options": {
+        "show": "הצג כרטיס ברוכים הבאים",
+        "showDescription": "הצג את כרטיס הברכה בראש הדשבורד",
+        "showHebrewDate": "תאריך עברי",
+        "showHebrewDateDescription": "הצג את התאריך העברי בגימטריה",
+        "showWeddingsToday": "חתונות היום",
+        "showWeddingsTodayDescription": "הצג את מספר החתונות המתוכננות להיום",
+        "showPendingTransfers": "העברות ממתינות",
+        "showPendingTransfersDescription": "הצג את מספר ההעברות שממתינות לביצוע",
+        "showPendingApplicants": "בקשות ממתינות",
+        "showPendingApplicantsDescription": "הצג את מספר הבקשות שממתינות לאישור",
+        "showUrgentAlerts": "התראות דחופות",
+        "showUrgentAlertsDescription": "הצג את מספר ההתראות בעדיפות גבוהה"
+      },
+      "note": "השינויים נשמרים אוטומטית"
     }
   },
   "users": {
