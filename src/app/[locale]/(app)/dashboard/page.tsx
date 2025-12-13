@@ -6,6 +6,7 @@ import {
   QuickActions,
   AlertsWidget,
   RecentActivity,
+  WelcomeHeader,
 } from "@/components/dashboard";
 
 export default async function DashboardPage() {
@@ -14,12 +15,8 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Page Header */}
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-          {t("title")}
-        </h1>
-        <p className="text-lg text-slate-600">{t("description")}</p>
-      </div>
+      <WelcomeHeader />
+
 
       {/* Stats Grid */}
       <DashboardStats />

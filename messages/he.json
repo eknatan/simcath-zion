@@ -59,6 +59,16 @@
     "title": "לוח בקרה",
     "description": "מעקב אחר כל התיקים והתשלומים במערכת",
     "welcome": "שלום, {name}",
+    "greeting": {
+      "morning": "בוקר טוב",
+      "afternoon": "צהריים טובים",
+      "evening": "ערב טוב",
+      "subtitle": "יש לך",
+      "subtitle_full": "יש לך <bold>{requests} בקשות חדשות</bold> ו-<bold>{weddings} חתונות</bold> היום.",
+      "requests": "בקשות חדשות",
+      "pending": "שמחכות לאישור שלך שמחת ציון.",
+      "wishing": "שיהיה יום מבורך ומוצלח!"
+    },
     "stats": {
       "totalCases": "סה״כ תיקים",
       "pending": "ממתינים",
@@ -89,6 +99,7 @@
     },
     "quickActions": {
       "title": "פעולות מהירות",
+      "calendar": "לוח שנה",
       "newCase": "פתח תיק חדש",
       "viewCases": "צפה בתיקים",
       "sendEmails": "שלח מיילים",

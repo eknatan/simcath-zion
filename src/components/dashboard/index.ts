@@ -1,3 +1,4 @@
+export * from './WelcomeHeader';
 export { DashboardStats } from './DashboardStats';
 export { MiniCalendar } from './MiniCalendar';
 export { UpcomingWeddings } from './UpcomingWeddings';

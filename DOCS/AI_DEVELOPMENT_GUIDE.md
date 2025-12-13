@@ -1216,6 +1216,127 @@ npx shadcn-ui@latest add avatar alert progress
 
 ---
 
+## אנימציות עם Framer Motion
+
+### למה Framer Motion?
+
+Framer Motion מוסיפה אנימציות מקצועיות ו-micro-interactions שמשפרות את חוויית המשתמש:
+- ✅ Page transitions
+- ✅ Hover effects
+- ✅ Scroll animations
+- ✅ Stagger animations (רשימות)
+- ✅ Layout animations
+
+### התקנה
+
+```bash
+npm install framer-motion
+```
+
+### שימוש בסיסי
+
+```tsx
+'use client';
+
+import { motion } from 'framer-motion';
+
+export function AnimatedCard() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="p-6 bg-card rounded-lg"
+    >
+      <h2>כרטיס עם אנימציה</h2>
+    </motion.div>
+  );
+}
+```
+
+### דוגמאות נפוצות
+
+**1. Fade In על טעינה:**
+```tsx
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.3 }}
+>
+  {children}
+</motion.div>
+```
+
+**2. Slide In מלמטה:**
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  {children}
+</motion.div>
+```
+
+**3. Hover Scale:**
+```tsx
+<motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="px-4 py-2 bg-primary text-white rounded"
+>
+  לחץ כאן
+</motion.button>
+```
+
+**4. Stagger List (רשימה עם delay):**
+```tsx
+<motion.div
+  initial="hidden"
+  animate="visible"
+  variants={{
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }}
+>
+  {items.map((item) => (
+    <motion.div
+      key={item.id}
+      variants={{
+        hidden: { opacity: 0, x: -20 },
+        visible: { opacity: 1, x: 0 }
+      }}
+    >
+      {item.name}
+    </motion.div>
+  ))}
+</motion.div>
+```
+
+### כללי שימוש
+
+1. **תמיד השתמש ב-'use client'** - framer-motion עובד רק ב-client components
+2. **אל תגזים** - אנימציות צריכות להיות עדינות (0.3-0.5s)
+3. **השתמש ב-reduced-motion** - כבד העדפות נגישות:
+
+```tsx
+const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+<motion.div
+  initial={shouldReduceMotion ? {} : { opacity: 0 }}
+  animate={shouldReduceMotion ? {} : { opacity: 1 }}
+>
+  {children}
+</motion.div>
+```
+
+---
+
 ## ניהול State והקשרים
 
 ### AuthContext
@@ -1323,6 +1444,7 @@ npm install next-intl
 npm install @hebcal/core
 npm install react-dropzone
 npm install sonner
+npm install framer-motion
 
 2. התקנת shadcn:
 npx shadcn-ui@latest init
@@ -1602,11 +1724,13 @@ function CaseList() {
 1. ✅ שימוש ב-Supabase לכל DB operations
 2. ✅ i18n בכל טקסט (useTranslations)
 3. ✅ RTL/LTR support (dir attribute)
-4. ✅ shadcn/ui בלבד
+4. ✅ shadcn/ui לכל UI components
 5. ✅ TypeScript מלא
 6. ✅ Custom hooks לכל לוגיקה
 7. ✅ Error handling + toast
 8. ✅ Loading states
+9. ✅ שימוש ב-CSS variables מה-design system (לא hard-coded colors)
+10. ✅ Framer Motion לאנימציות (אופציונלי אבל מומלץ)
 
 ### דברים שאסור:
 
@@ -1616,6 +1740,8 @@ function CaseList() {
 4. ❌ any types
 5. ❌ inline styles
 6. ❌ לשכוח RTL
+7. ❌ Hard-coded colors (שימוש ב-#FFF או bg-rose-600 במקום CSS variables)
+8. ❌ שינוי ברירת מחדל של shadcn components (השתמש ב-variants במקום)
 
 ---
 
@@ -1627,11 +1753,14 @@ function CaseList() {
 דרישות:
 1. עקוב אחרי AI_DEVELOPMENT_GUIDE.md
 2. Supabase לכל DB
-3. i18n לכל טקסט
+3. i18n לכל טקסט (useTranslations)
 4. RTL support
-5. shadcn/ui components
-6. TypeScript מלא
-7. Error handling
+5. shadcn/ui components בלבד
+6. TypeScript מלא (ללא any)
+7. Error handling + toast
+8. שימוש ב-CSS variables (--primary, --secondary וכו')
+9. Framer Motion לאנימציות (אם רלוונטי)
+10. צור variants במקום לשנות shadcn defaults
 
 קבצים:
 - [רשימה]

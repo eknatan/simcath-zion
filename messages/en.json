@@ -57,6 +57,16 @@
     "title": "Dashboard",
     "description": "Track all cases and payments in the system",
     "welcome": "Hello, {name}",
+    "greeting": {
+      "morning": "Good Morning",
+      "afternoon": "Good Afternoon",
+      "evening": "Good Evening",
+      "subtitle": "You have",
+      "subtitle_full": "You have <bold>{requests} new requests</bold> and <bold>{weddings} weddings</bold> today.",
+      "requests": "new requests",
+      "pending": "pending your approval.",
+      "wishing": "Have a blessed and successful day!"
+    },
     "stats": {
       "totalCases": "Total Cases",
       "pending": "Pending",
@@ -87,6 +97,7 @@
     },
     "quickActions": {
       "title": "Quick Actions",
+      "calendar": "Calendar",
       "newCase": "Open New Case",
       "viewCases": "View Cases",
       "sendEmails": "Send Emails",
