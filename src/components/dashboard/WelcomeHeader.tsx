@@ -169,7 +169,7 @@ export function WelcomeHeader() {
                   {greeting}, {firstName}
                 </h1>
                 <p className="text-base text-muted-foreground font-light">
-                  {t('greeting.wishing', { defaultValue: 'שיהיה יום מבורך ומוצלח!' })}
+                  {/* {t('greeting.wishing', { defaultValue: 'שיהיה יום מבורך ומוצלח!' })} */}
                 </p>
               </div>
 

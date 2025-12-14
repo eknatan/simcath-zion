@@ -32,7 +32,7 @@ export default async function PublicWeddingFormPage({ params }: { params: Promis
   const t = await getTranslations({ locale, namespace: 'wedding_form' });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-white dir-rtl">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
