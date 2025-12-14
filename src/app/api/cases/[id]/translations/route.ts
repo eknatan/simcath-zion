@@ -32,18 +32,17 @@ const translationsRequestSchema = z.object({
 // ========================================
 
 /**
- * Check if user has permission to access this case
+ * Check if case exists (any authenticated user can access)
  */
-async function checkCasePermission(supabase: any, caseId: string, userId: string) {
+async function checkCaseExists(supabase: any, caseId: string) {
   const { data, error } = await supabase
     .from('cases')
     .select('id')
     .eq('id', caseId)
-    .eq('created_by', userId)
     .single();
 
   if (error || !data) {
-    throw new Error('Unauthorized: You do not have permission to access this case');
+    throw new Error('Case not found');
   }
 
   return data;
@@ -115,8 +114,8 @@ export async function GET(
       );
     }
 
-    // Check permissions
-    await checkCasePermission(supabase, caseId, user.id);
+    // Check case exists
+    await checkCaseExists(supabase, caseId);
 
     // Get translations
     const translations = await getTranslations(supabase, caseId);

@@ -26,14 +26,16 @@ export function CasesContent({ cases }: CasesContentProps) {
     () => cases.filter((c) => c.case_type === 'wedding'),
     [cases]
   );
+  // Only pass active cleaning cases as initial data
+  // The CleaningCasesDashboard will fetch inactive cases from the API when needed
   const cleaningCases = useMemo(
-    () => cases.filter((c) => c.case_type === 'cleaning'),
+    () => cases.filter((c) => c.case_type === 'cleaning' && c.status === 'active'),
     [cases]
   );
 
   // Count active cases
   const weddingCount = weddingCases.length;
-  const cleaningCount = cleaningCases.filter((c) => c.status === 'active').length;
+  const cleaningCount = cleaningCases.length; // Already filtered to active only
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

@@ -46,7 +46,8 @@ export function useCleaningCases({
       }
       return response.json();
     },
-    initialData,
+    // Only use initialData for active status (SSR data is active-only)
+    initialData: status === 'active' ? initialData : undefined,
     staleTime: 2 * 60 * 1000, // 2 minutes - won't refetch if data is "fresh"
     gcTime: 10 * 60 * 1000, // 10 minutes - keep in cache
   });
