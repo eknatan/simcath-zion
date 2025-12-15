@@ -1006,7 +1006,9 @@
       "reject": "דחה תיק",
       "editDetails": "ערוך פרטים",
       "closeCase": "סגור תיק",
+      "closeWeddingCase": "סגור תיק",
       "restoreCase": "שחזר תיק",
+      "restoreFromHistory": "החזר לפעיל",
       "print": "הדפס תיק",
       "exportPdf": "ייצא PDF",
       "delete": "מחק תיק"
@@ -1042,6 +1044,20 @@
       "errorDescription": "אנא נסה שוב",
       "expiredTitle": "לא ניתן לשחזר",
       "expiredDescription": "עברו יותר מ-30 יום מהדחייה"
+    },
+    "closeDialog": {
+      "title": "סגירת תיק",
+      "question": "האם אתה בטוח שברצונך לסגור את התיק?",
+      "info": "התיק יועבר להיסטוריה",
+      "cancel": "ביטול",
+      "confirm": "סגור תיק",
+      "processing": "סוגר את התיק...",
+      "pleaseWait": "אנא המתן",
+      "closing": "סוגר...",
+      "successTitle": "התיק נסגר",
+      "successDescription": "התיק הועבר להיסטוריה",
+      "errorTitle": "שגיאה בסגירת התיק",
+      "errorDescription": "אנא נסה שוב"
     },
     "tabs": {
       "originalRequest": "מקור הבקשה",
@@ -1558,7 +1574,8 @@
       "exporting": "מייצא...",
       "downloading": "מוריד...",
       "validating": "בודק תקינות...",
-      "markAsTransferred": "סמן כהועבר ומחק ממתינים"
+      "markAsTransferred": "סמן כהועבר והעבר תיקים להיסטוריה",
+      "markAsTransferredHint": "התיקים יועברו להיסטוריה ולא יופיעו ברשימה הפעילה"
     },
     "email": {
       "title": "שליחת מייל",
@@ -1826,6 +1843,7 @@
       "allStatuses": "כל הסטטוסים",
       "new": "חדש",
       "pendingTransfer": "ממתין להעברה",
+      "active": "פעיל",
       "sortByWeddingDate": "תאריך חתונה",
       "sortByCreatedAt": "תאריך יצירה",
       "history": "היסטוריה"

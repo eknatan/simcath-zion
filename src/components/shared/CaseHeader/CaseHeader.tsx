@@ -8,7 +8,7 @@ import { CleaningCaseHeader } from './CleaningCaseHeader';
 import { CaseHeaderActions } from './CaseHeaderActions';
 import { useCleaningFinancials } from './hooks/useCaseFinancials';
 import { CloseDialog, ReopenDialog } from '@/components/features/sick-children/CloseDialog';
-import { RejectCaseDialog, RestoreCaseDialog } from '@/components/features/weddings/CaseRejectRestoreDialogs';
+import { RejectCaseDialog, RestoreCaseDialog, CloseCaseDialog } from '@/components/features/weddings/CaseRejectRestoreDialogs';
 
 interface CaseHeaderProps {
   caseData: CaseWithRelations;
@@ -28,6 +28,7 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
   // Dialog states - Wedding
   const [showRejectDialog, setShowRejectDialog] = useState(false);
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+  const [showWeddingCloseDialog, setShowWeddingCloseDialog] = useState(false);
   // Dialog states - Cleaning
   const [showCloseDialog, setShowCloseDialog] = useState(false);
   const [showReopenDialog, setShowReopenDialog] = useState(false);
@@ -62,7 +63,7 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
           caseData={caseData}
           onRejectCase={() => setShowRejectDialog(true)}
           onRestoreCase={() => setShowRestoreDialog(true)}
-          onCloseCase={() => setShowCloseDialog(true)}
+          onCloseCase={() => isWedding ? setShowWeddingCloseDialog(true) : setShowCloseDialog(true)}
           onReopenCase={() => setShowReopenDialog(true)}
         />
       </div>
@@ -86,6 +87,15 @@ export function CaseHeader({ caseData, locale = 'he' }: CaseHeaderProps) {
             brideName={caseData.bride_first_name ?? undefined}
             open={showRestoreDialog}
             onOpenChange={setShowRestoreDialog}
+            onSuccess={handleSuccess}
+          />
+          <CloseCaseDialog
+            caseId={caseData.id}
+            caseNumber={String(caseData.case_number)}
+            groomName={caseData.groom_first_name ?? undefined}
+            brideName={caseData.bride_first_name ?? undefined}
+            open={showWeddingCloseDialog}
+            onOpenChange={setShowWeddingCloseDialog}
             onSuccess={handleSuccess}
           />
         </>

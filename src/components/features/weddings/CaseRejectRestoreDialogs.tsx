@@ -3,9 +3,10 @@
 /**
  * CaseRejectRestoreDialogs
  *
- * דיאלוגים לדחייה ושחזור תיקי חתונה
- * - RejectCaseDialog: דחיית תיק עם סיבה אופציונלית
- * - RestoreCaseDialog: שחזור תיק נדחה (תוך 30 יום)
+ * דיאלוגים לדחייה, סגירה ושחזור תיקי חתונה
+ * - RejectCaseDialog: דחיית תיק עם סיבה אופציונלית (לתיקים ללא תשלום)
+ * - CloseCaseDialog: סגירת תיק (לתיקים עם תשלום - ללא צורך בסיבה)
+ * - RestoreCaseDialog: שחזור תיק נדחה או שהועבר
  */
 
 import { useState } from 'react';
@@ -22,7 +23,7 @@ import {
 import { ActionButton } from '@/components/shared/ActionButton';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { XCircle, X, AlertTriangle, Loader2, RotateCcw, Info } from 'lucide-react';
+import { XCircle, X, AlertTriangle, Loader2, RotateCcw, Info, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 // ===========================================
@@ -290,6 +291,130 @@ export function RestoreCaseDialog({
             ) : (
               <>
                 <RotateCcw className="h-4 w-4 me-2" />
+                {t('confirm')}
+              </>
+            )}
+          </ActionButton>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+// ===========================================
+// CloseCaseDialog
+// ===========================================
+
+interface CloseCaseDialogProps {
+  caseId: string;
+  caseNumber: string;
+  groomName?: string;
+  brideName?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
+}
+
+export function CloseCaseDialog({
+  caseId,
+  caseNumber,
+  groomName,
+  brideName,
+  open,
+  onOpenChange,
+  onSuccess,
+}: CloseCaseDialogProps) {
+  const t = useTranslations('case.closeDialog');
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const displayName = groomName && brideName
+    ? `${groomName} & ${brideName}`
+    : `תיק ${caseNumber}`;
+
+  const handleClose = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/cases/${caseId}/close`, {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || t('errorDescription'));
+      }
+
+      toast.success(t('successTitle'), {
+        description: t('successDescription'),
+      });
+
+      onOpenChange(false);
+      onSuccess?.();
+      router.refresh();
+    } catch (error: any) {
+      toast.error(t('errorTitle'), {
+        description: error.message || t('errorDescription'),
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <AlertDialog open={open} onOpenChange={isLoading ? undefined : onOpenChange}>
+      <AlertDialogContent className="max-w-md">
+        {/* Loading overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
+            <div className="flex flex-col items-center gap-4 p-8 bg-white rounded-lg shadow-lg border-2 border-emerald-200">
+              <Loader2 className="h-12 w-12 animate-spin text-emerald-600" />
+              <div className="text-center">
+                <p className="text-base font-bold text-slate-900">{t('processing')}</p>
+                <p className="text-sm text-slate-600 mt-1">{t('pleaseWait')}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-xl font-bold flex items-center gap-2">
+            <CheckCircle className="h-6 w-6 text-emerald-600" />
+            {t('title')}
+          </AlertDialogTitle>
+          <div className="space-y-4 mt-4 text-base">
+            <p className="text-slate-700">{t('question')}</p>
+            <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-3">
+              <p className="font-bold text-emerald-900 text-lg">{displayName}</p>
+            </div>
+
+            {/* Info */}
+            <div className="bg-sky-50 border-2 border-sky-200 rounded-lg p-3 flex items-start gap-2">
+              <Info className="h-5 w-5 text-sky-600 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-sky-900">{t('info')}</p>
+            </div>
+          </div>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="gap-3">
+          <AlertDialogCancel asChild disabled={isLoading}>
+            <ActionButton variant="cancel" disabled={isLoading}>
+              <X className="h-4 w-4 me-2" />
+              {t('cancel')}
+            </ActionButton>
+          </AlertDialogCancel>
+          <ActionButton
+            variant="restore-primary"
+            onClick={handleClose}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                {t('closing')}
+              </>
+            ) : (
+              <>
+                <CheckCircle className="h-4 w-4 me-2" />
                 {t('confirm')}
               </>
             )}

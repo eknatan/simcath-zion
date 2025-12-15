@@ -1088,10 +1088,58 @@
       "reject": "Reject Application",
       "editDetails": "Edit Details",
       "closeCase": "Close Case",
+      "closeWeddingCase": "Close Case",
       "restoreCase": "Restore Case",
+      "restoreFromHistory": "Restore to Active",
       "print": "Print Case",
       "exportPdf": "Export PDF",
       "delete": "Delete Case"
+    },
+    "rejectDialog": {
+      "title": "Reject Case",
+      "question": "Are you sure you want to reject this case?",
+      "reasonLabel": "Rejection reason (optional)",
+      "reasonPlaceholder": "Enter reason for rejection...",
+      "warning": "The case can be restored within 30 days",
+      "cancel": "Cancel",
+      "confirm": "Reject Case",
+      "processing": "Rejecting case...",
+      "pleaseWait": "Please wait",
+      "rejecting": "Rejecting...",
+      "successTitle": "Case Rejected",
+      "successDescription": "Can be restored within 30 days",
+      "errorTitle": "Error rejecting case",
+      "errorDescription": "Please try again"
+    },
+    "restoreDialog": {
+      "title": "Restore Case",
+      "question": "Are you sure you want to restore this case?",
+      "info": "The case will return to its previous status",
+      "cancel": "Cancel",
+      "confirm": "Restore Case",
+      "processing": "Restoring case...",
+      "pleaseWait": "Please wait",
+      "restoring": "Restoring...",
+      "successTitle": "Case Restored",
+      "successDescription": "The case returned to its previous status",
+      "errorTitle": "Error restoring case",
+      "errorDescription": "Please try again",
+      "expiredTitle": "Cannot restore",
+      "expiredDescription": "More than 30 days have passed since rejection"
+    },
+    "closeDialog": {
+      "title": "Close Case",
+      "question": "Are you sure you want to close this case?",
+      "info": "The case will be moved to history",
+      "cancel": "Cancel",
+      "confirm": "Close Case",
+      "processing": "Closing case...",
+      "pleaseWait": "Please wait",
+      "closing": "Closing...",
+      "successTitle": "Case Closed",
+      "successDescription": "The case was moved to history",
+      "errorTitle": "Error closing case",
+      "errorDescription": "Please try again"
     },
     "tabs": {
       "originalRequest": "Source Application",
@@ -1466,7 +1514,8 @@
       "exporting": "Exporting...",
       "downloading": "Downloading...",
       "validating": "Validating...",
-      "markAsTransferred": "Mark as transferred and remove from pending"
+      "markAsTransferred": "Mark as transferred and move cases to history",
+      "markAsTransferredHint": "Cases will be moved to history and won't appear in the active list"
     },
     "email": {
       "title": "Send Email",
@@ -1734,6 +1783,7 @@
       "allStatuses": "All Statuses",
       "new": "New",
       "pendingTransfer": "Pending Transfer",
+      "active": "Active",
       "sortByWeddingDate": "Wedding Date",
       "sortByCreatedAt": "Created Date",
       "history": "History"

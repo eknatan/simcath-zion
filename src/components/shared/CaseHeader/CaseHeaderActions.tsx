@@ -16,6 +16,7 @@ import {
   MoreVertical,
   Printer,
   RotateCcw,
+  CheckCircle,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -54,8 +55,8 @@ export function CaseHeaderActions({
       {/* Wedding Actions */}
       {isWedding && (
         <>
-          {/* Reject button - shown when NOT rejected */}
-          {caseData.status !== 'rejected' && (
+          {/* Reject button - shown only when status is 'new' (no payment yet) */}
+          {caseData.status === 'new' && (
             <ActionButton
               variant="reject"
               size="sm"
@@ -67,8 +68,21 @@ export function CaseHeaderActions({
             </ActionButton>
           )}
 
-          {/* Restore button - shown when rejected */}
-          {caseData.status === 'rejected' && (
+          {/* Close Case button - shown when status is 'pending_transfer' or 'active' (has payment) */}
+          {(caseData.status === 'pending_transfer' || caseData.status === 'active') && (
+            <ActionButton
+              variant="restore"
+              size="sm"
+              onClick={onCloseCase}
+              data-testid="action-button"
+            >
+              <CheckCircle className="h-4 w-4 me-1" />
+              {t('actions.closeWeddingCase')}
+            </ActionButton>
+          )}
+
+          {/* Restore button - shown when rejected or transferred */}
+          {(caseData.status === 'rejected' || caseData.status === 'transferred') && (
             <ActionButton
               variant="restore"
               size="sm"
@@ -76,7 +90,9 @@ export function CaseHeaderActions({
               data-testid="action-button"
             >
               <RotateCcw className="h-4 w-4 me-1" />
-              {t('actions.restoreCase')}
+              {caseData.status === 'transferred'
+                ? t('actions.restoreFromHistory')
+                : t('actions.restoreCase')}
             </ActionButton>
           )}
         </>

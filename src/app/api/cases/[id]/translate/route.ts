@@ -17,7 +17,8 @@ async function getSupabaseClient() {
     return null;
   }
 }
-import { translationService, TranslationRequest } from '@/lib/services/translation.service';
+import { translationFactory, TranslationProvider } from '@/lib/services/translation-factory';
+import { TranslationRequest } from '@/lib/services/translation.service';
 import { TranslatedContent } from '@/types/case.types';
 import { CaseType } from '@/types/case.types';
 import { z } from 'zod';
@@ -316,7 +317,7 @@ export async function POST(
       hebrewData,
     };
 
-    const translationResult = await translationService.translateCase(translationRequest);
+    const translationResult = await translationFactory.translateWithFallback(translationRequest);
 
     if (!translationResult.success || !translationResult.data) {
       return NextResponse.json(

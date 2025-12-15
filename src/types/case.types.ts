@@ -39,6 +39,7 @@ export enum ApplicantStatus {
 export enum WeddingCaseStatus {
   NEW = 'new',
   PENDING_TRANSFER = 'pending_transfer',
+  ACTIVE = 'active', // Had transfers, restored for more activity
   TRANSFERRED = 'transferred',
   REJECTED = 'rejected',
   EXPIRED = 'expired',

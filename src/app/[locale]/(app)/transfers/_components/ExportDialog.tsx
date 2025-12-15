@@ -51,8 +51,8 @@ export function ExportDialog({
   const [executionDate, setExecutionDate] = useState('');
   const [validateFirst, setValidateFirst] = useState(true);
 
-  // Common option - Mark as transferred
-  const [markAsTransferred, setMarkAsTransferred] = useState(true);
+  // Common option - Mark as transferred and move cases to history
+  const [markAsTransferred, setMarkAsTransferred] = useState(false);
 
   const handleConfirm = () => {
     if (type === 'excel') {
@@ -119,15 +119,18 @@ export function ExportDialog({
               </div>
 
               {/* Mark as Transferred */}
-              <div className="flex items-center space-x-2 pt-2 border-t border-slate-200">
-                <Checkbox
-                  id="markAsTransferred"
-                  checked={markAsTransferred}
-                  onCheckedChange={(checked) => setMarkAsTransferred(checked as boolean)}
-                />
-                <Label htmlFor="markAsTransferred" className="text-sm font-medium text-slate-700">
-                  {t('markAsTransferred')}
-                </Label>
+              <div className="pt-2 border-t border-slate-200 space-y-1">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="markAsTransferred"
+                    checked={markAsTransferred}
+                    onCheckedChange={(checked) => setMarkAsTransferred(checked as boolean)}
+                  />
+                  <Label htmlFor="markAsTransferred" className="text-sm font-medium text-slate-700">
+                    {t('markAsTransferred')}
+                  </Label>
+                </div>
+                <p className="text-xs text-slate-500 mr-6">{t('markAsTransferredHint')}</p>
               </div>
             </>
           )}
@@ -177,15 +180,18 @@ export function ExportDialog({
               </div>
 
               {/* Mark as Transferred */}
-              <div className="flex items-center space-x-2 pt-2 border-t border-slate-200">
-                <Checkbox
-                  id="markAsTransferred"
-                  checked={markAsTransferred}
-                  onCheckedChange={(checked) => setMarkAsTransferred(checked as boolean)}
-                />
-                <Label htmlFor="markAsTransferred" className="text-sm font-medium text-slate-700">
-                  {t('markAsTransferred')}
-                </Label>
+              <div className="pt-2 border-t border-slate-200 space-y-1">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="markAsTransferredMasav"
+                    checked={markAsTransferred}
+                    onCheckedChange={(checked) => setMarkAsTransferred(checked as boolean)}
+                  />
+                  <Label htmlFor="markAsTransferredMasav" className="text-sm font-medium text-slate-700">
+                    {t('markAsTransferred')}
+                  </Label>
+                </div>
+                <p className="text-xs text-slate-500 mr-6">{t('markAsTransferredHint')}</p>
               </div>
             </>
           )}

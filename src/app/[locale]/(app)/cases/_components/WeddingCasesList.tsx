@@ -21,7 +21,7 @@ interface WeddingCasesListProps {
 // Constants
 // ========================================
 
-const ACTIVE_STATUSES = [WeddingCaseStatus.NEW, WeddingCaseStatus.PENDING_TRANSFER];
+const ACTIVE_STATUSES = [WeddingCaseStatus.NEW, WeddingCaseStatus.PENDING_TRANSFER, WeddingCaseStatus.ACTIVE];
 const HISTORY_STATUSES = [WeddingCaseStatus.TRANSFERRED, WeddingCaseStatus.REJECTED, WeddingCaseStatus.EXPIRED];
 
 const SEARCH_FIELDS: (keyof CaseForTable)[] = [
@@ -133,6 +133,7 @@ export function WeddingCasesList({ cases }: WeddingCasesListProps) {
         { value: 'all', label: tWedding('filters.allStatuses') },
         { value: WeddingCaseStatus.NEW, label: tWedding('filters.new') },
         { value: WeddingCaseStatus.PENDING_TRANSFER, label: tWedding('filters.pendingTransfer') },
+        { value: WeddingCaseStatus.ACTIVE, label: tWedding('filters.active') },
       ],
     },
   ], [tWedding, filters.status, setFilter, showHistory]);

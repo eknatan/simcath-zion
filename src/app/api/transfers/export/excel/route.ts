@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { exportToExcel } from '@/lib/services/export.service';
-import { recordExport } from '@/lib/services/transfers.service';
+import { recordExport, markTransfersAsTransferred } from '@/lib/services/transfers.service';
 import { PaymentType } from '@/types/case.types';
 import {
   authenticateExportRequest,
@@ -62,19 +62,12 @@ export async function POST(request: NextRequest) {
       // Continue even if recording fails
     }
 
-    // Update payment statuses to 'transferred' if requested
-    if (exportOptions.mark_as_transferred !== false) {
+    // Update payment and case statuses to 'transferred' if requested
+    if (exportOptions.mark_as_transferred === true) {
       try {
-        await supabase
-          .from('payments')
-          .update({
-            status: 'transferred',
-            transferred_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .in('id', transfer_ids);
+        await markTransfersAsTransferred(transfer_ids);
       } catch (updateError) {
-        console.error('Failed to update payment statuses:', updateError);
+        console.error('Failed to update statuses:', updateError);
         // Continue even if update fails
       }
     }
