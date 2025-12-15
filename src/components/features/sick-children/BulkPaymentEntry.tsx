@@ -141,8 +141,6 @@ export function BulkPaymentEntry({ open, onOpenChange, onSuccess }: BulkPaymentE
     if (open) {
       fetchFamilies();
     }
-    // Note: tCommon removed from dependencies to prevent infinite re-fetches
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, selectedMonth, selectedYear]);
 
   // Handle amount change for a family

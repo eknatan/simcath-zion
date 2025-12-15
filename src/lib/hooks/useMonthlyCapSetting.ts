@@ -10,7 +10,7 @@
 
 'use client';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -68,8 +68,6 @@ interface UseMonthlyCapSettingReturn {
  * // הערך נשמר ב-cache למשך 5 דקות
  */
 export function useMonthlyCapSetting(): UseMonthlyCapSettingReturn {
-  const queryClient = useQueryClient();
-
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: monthlyCapKeys.setting(),
     queryFn: fetchMonthlyCap,

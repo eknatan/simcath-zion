@@ -73,7 +73,7 @@ export default function ManualTransfersPage() {
     } finally {
       setLoading(false);
     }
-  }, [activeTab]);
+  }, [activeTab, t]);
 
   useEffect(() => {
     loadTransfers();

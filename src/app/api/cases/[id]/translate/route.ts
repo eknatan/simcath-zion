@@ -17,11 +17,39 @@ async function getSupabaseClient() {
     return null;
   }
 }
-import { translationFactory, TranslationProvider } from '@/lib/services/translation-factory';
+import { translationFactory, TranslationProvider, TranslationApiKeys } from '@/lib/services/translation-factory';
 import { TranslationRequest } from '@/lib/services/translation.service';
 import { TranslatedContent } from '@/types/case.types';
 import { CaseType } from '@/types/case.types';
+import { settingsService } from '@/lib/settings/settings-service';
 import { z } from 'zod';
+
+// ========================================
+// Helper: Load Translation Settings from DB
+// ========================================
+
+async function loadTranslationSettings(): Promise<{ provider: TranslationProvider; apiKeys: TranslationApiKeys }> {
+  try {
+    const providerSetting = await settingsService.getSetting('translation_provider');
+    const apiKeysSetting = await settingsService.getSetting('translation_api_keys');
+
+    // settingsService.getSetting() already returns setting_value directly
+    const provider = (providerSetting as any)?.provider || 'microsoft';
+    const apiKeys = (apiKeysSetting as TranslationApiKeys) || {};
+
+    // Update factory with settings from DB
+    if (apiKeys && Object.keys(apiKeys).length > 0) {
+      translationFactory.setApiKeys(apiKeys);
+    }
+    translationFactory.setDefaultProvider(provider);
+
+    return { provider, apiKeys };
+  } catch (error) {
+    console.error('Failed to load translation settings:', error);
+    // Use defaults
+    return { provider: 'microsoft', apiKeys: {} };
+  }
+}
 
 // ========================================
 // Validation Schemas
@@ -311,13 +339,16 @@ export async function POST(
     // Prepare Hebrew data for translation
     const hebrewData = prepareHebrewData(caseData, caseType);
 
+    // Load translation settings from database
+    await loadTranslationSettings();
+
     // Call translation service
     const translationRequest: TranslationRequest = {
       caseType,
       hebrewData,
     };
 
-    const translationResult = await translationFactory.translateWithFallback(translationRequest);
+    const translationResult = await translationFactory.translate(translationRequest);
 
     if (!translationResult.success || !translationResult.data) {
       return NextResponse.json(

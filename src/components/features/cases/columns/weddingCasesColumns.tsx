@@ -8,7 +8,6 @@ import { formatCurrency, formatDate } from '@/lib/utils/format';
 import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 import {
   createCaseNumberColumn,
-  createCityColumn,
   createStatusColumn,
   createActionsColumn,
 } from './sharedColumns';

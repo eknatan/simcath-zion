@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, KeyRound, ArrowRight, Link } from 'lucide-react';
+import { Loader2, Mail, KeyRound, ArrowRight, Link, Eye, EyeOff } from 'lucide-react';
 import { RetroGrid } from '@/components/ui/retro-grid';
 import Image from 'next/image';
 
@@ -22,6 +22,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -407,17 +408,31 @@ export default function LoginPage() {
                 {loginMode === 'password' && (
                   <div className="space-y-2">
                     <Label htmlFor="password">{t('login.password')}</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder={t('login.passwordPlaceholder')}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      disabled={isLoading}
-                      required
-                      autoComplete="current-password"
-                      className="h-11"
-                    />
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder={t('login.passwordPlaceholder')}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={isLoading}
+                        required
+                        autoComplete="current-password"
+                        className="h-11 pe-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 )}
 

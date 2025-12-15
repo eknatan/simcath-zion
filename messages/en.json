@@ -693,6 +693,34 @@
         "showUrgentAlertsDescription": "Show the number of high priority alerts"
       },
       "note": "Changes are saved automatically"
+    },
+    "translation": {
+      "title": "Translation Settings",
+      "description": "Choose translation provider and configure API keys",
+      "provider": "Default translation provider",
+      "providers": {
+        "google": "Google Gemini (AI)",
+        "microsoft": "Microsoft Translator",
+        "groq": "Groq (Llama 3.3)"
+      },
+      "apiKeys": "API Keys",
+      "googleKey": "Google API Key",
+      "microsoftKey": "Microsoft Translator Key",
+      "microsoftRegion": "Microsoft Region",
+      "groqKey": "Groq API Key",
+      "enterApiKey": "Enter API key...",
+      "keyConfigured": "Key configured - enter new to replace",
+      "configured": "Configured",
+      "save": "Save Settings",
+      "saved": "Settings saved successfully",
+      "test": "Test",
+      "testSuccess": "Connection successful!",
+      "testFailed": "Test failed",
+      "infoTitle": "How does it work?",
+      "infoDescription": "Choose your preferred translation provider. If the provider fails, the system will not try another provider - you will get an error message. Make sure you have a valid API key for the selected provider.",
+      "confirmReplaceTitle": "Replace existing key?",
+      "confirmReplaceDescription": "You are about to replace the following keys:",
+      "confirmReplace": "Yes, Replace"
     }
   },
   "users": {

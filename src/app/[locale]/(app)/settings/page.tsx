@@ -18,6 +18,7 @@ import { EmailSettingsCard } from './_components/EmailSettingsCard';
 import { MasavSettingsCard } from './_components/MasavSettingsCard';
 import { MonthlyCapSettingsCard } from './_components/MonthlyCapSettingsCard';
 import { WelcomeCardSettingsCard } from './_components/WelcomeCardSettingsCard';
+import { TranslationSettingsCard } from './_components/TranslationSettingsCard';
 
 export async function generateMetadata({
   params,
@@ -79,6 +80,7 @@ export default async function SettingsPage({
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <EmailSettingsCard />
+            <TranslationSettingsCard />
           </div>
           <MasavSettingsCard />
         </TabsContent>

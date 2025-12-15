@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -126,7 +126,7 @@ export function FilesTab({ caseData }: FilesTabProps) {
   } = useCaseFiles(caseData.id);
 
   // Use fetched files if available, otherwise fall back to initial data
-  const files = fetchedFiles || caseData.files || [];
+  const files = useMemo(() => fetchedFiles || caseData.files || [], [fetchedFiles, caseData.files]);
 
   // ========================================
   // Signed URL Fetching

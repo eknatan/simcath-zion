@@ -1,4 +1,3 @@
-import { getTranslations } from "next-intl/server";
 import {
   DashboardStats,
   MiniCalendar,
@@ -10,8 +9,6 @@ import {
 } from "@/components/dashboard";
 
 export default async function DashboardPage() {
-  const t = await getTranslations("dashboard");
-
   return (
     <div className="space-y-8">
       {/* Page Header */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -49,7 +49,7 @@ export function ManualTransfersTable({
     }).format(new Date(date));
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = useCallback((status: string) => {
     const styles = {
       pending: 'bg-amber-100 text-amber-700 border-amber-200',
       selected: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -63,7 +63,7 @@ export function ManualTransfersTable({
         {t(`table.status.${statusKey}`)}
       </span>
     );
-  };
+  }, [t]);
 
   const columns = useMemo<ColumnDef<ManualTransfer>[]>(() => {
     const handleSelectAllMemo = (checked: boolean) => {
@@ -191,7 +191,7 @@ export function ManualTransfersTable({
       size: 100,
     },
   ];
-  }, [selectedIds, transfers, showExportedDate, onDelete, onEdit, onSelectionChange, t]);
+  }, [selectedIds, transfers, showExportedDate, onDelete, onEdit, onSelectionChange, t, getStatusBadge]);
 
   return (
     <div className="space-y-0">

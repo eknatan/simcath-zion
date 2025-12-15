@@ -730,6 +730,34 @@
         "showUrgentAlertsDescription": "הצג את מספר ההתראות בעדיפות גבוהה"
       },
       "note": "השינויים נשמרים אוטומטית"
+    },
+    "translation": {
+      "title": "הגדרות תרגום",
+      "description": "בחר ספק תרגום והגדר מפתחות API",
+      "provider": "ספק תרגום ברירת מחדל",
+      "providers": {
+        "google": "Google Gemini (AI)",
+        "microsoft": "Microsoft Translator",
+        "groq": "Groq (Llama 3.3)"
+      },
+      "apiKeys": "מפתחות API",
+      "googleKey": "Google API Key",
+      "microsoftKey": "Microsoft Translator Key",
+      "microsoftRegion": "Microsoft Region",
+      "groqKey": "Groq API Key",
+      "enterApiKey": "הזן מפתח API...",
+      "keyConfigured": "מפתח מוגדר - הזן חדש להחלפה",
+      "configured": "מוגדר",
+      "save": "שמור הגדרות",
+      "saved": "ההגדרות נשמרו בהצלחה",
+      "test": "בדיקה",
+      "testSuccess": "החיבור תקין!",
+      "testFailed": "בדיקה נכשלה",
+      "infoTitle": "איך זה עובד?",
+      "infoDescription": "בחר את ספק התרגום המועדף. אם הספק נכשל, המערכת לא תנסה ספק אחר - תקבל הודעת שגיאה. וודא שיש לך מפתח API תקף לספק הנבחר.",
+      "confirmReplaceTitle": "האם להחליף מפתח קיים?",
+      "confirmReplaceDescription": "אתה עומד להחליף את המפתחות הבאים:",
+      "confirmReplace": "כן, החלף"
     }
   },
   "users": {
