@@ -1,5 +1,5 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import './fonts';
 import { translations, PDFLocale } from './translations';
 import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
@@ -11,12 +11,30 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik',
     fontSize: 10,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    gap: 20,
+  },
+  headerContainerRtl: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    gap: 20,
+  },
+  logo: {
+    width: 100,
+    height: 50,
+    objectFit: 'contain',
+  },
   header: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1e40af',
     textAlign: 'center',
-    marginBottom: 10,
   },
   subHeader: {
     fontSize: 14,
@@ -90,6 +108,7 @@ interface CasePDFDocumentProps {
   caseData: any;
   locale: PDFLocale;
   title?: string;
+  logoUrl?: string;
 }
 
 // Helper component for field row
@@ -124,7 +143,7 @@ function SectionTitle({ title, isRTL }: { title: string; isRTL: boolean }) {
   );
 }
 
-export function CasePDFDocument({ caseData, locale, title }: CasePDFDocumentProps) {
+export function CasePDFDocument({ caseData, locale, title, logoUrl }: CasePDFDocumentProps) {
   const t = translations[locale];
   const isRTL = locale === 'he';
   const isWedding = caseData.case_type === 'wedding';
@@ -180,10 +199,13 @@ export function CasePDFDocument({ caseData, locale, title }: CasePDFDocumentProp
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <Text style={styles.header}>
-          {title || `${t.caseNumber} ${caseData.case_number}`}
-        </Text>
+        {/* Header with Logo */}
+        <View style={isRTL ? styles.headerContainerRtl : styles.headerContainer}>
+          {logoUrl && <Image style={styles.logo} src={logoUrl} />}
+          <Text style={styles.header}>
+            {title || `${t.caseNumber} ${caseData.case_number}`}
+          </Text>
+        </View>
 
         <View style={styles.divider} />
 

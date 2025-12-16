@@ -111,10 +111,13 @@ export function ExportPDFButton({
       const { pdf } = await import('@react-pdf/renderer');
 
       // Generate PDF blob based on document type
+      // Logo URL - use origin for full path that @react-pdf/renderer can fetch
+      const logoUrl = typeof window !== 'undefined' ? `${window.location.origin}/logo-gold.png` : undefined;
+
       let blob: Blob;
       if (documentType === 'case') {
         blob = await pdf(
-          <CasePDFDocument caseData={data} locale={locale} title={title} />
+          <CasePDFDocument caseData={data} locale={locale} title={title} logoUrl={logoUrl} />
         ).toBlob();
       } else {
         blob = await pdf(
