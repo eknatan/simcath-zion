@@ -236,7 +236,6 @@ export function HebrewDatePicker({
           <div className="flex items-center justify-between">
             <Label className="text-xs">
               {t('hebrew_date')}
-              {!showGregorianInput && required && <span className="text-destructive ms-1">*</span>}
             </Label>
             {!disabled && (
               <Button

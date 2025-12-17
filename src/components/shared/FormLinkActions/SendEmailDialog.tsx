@@ -52,7 +52,7 @@ interface SendEmailDialogProps {
 // Validation schema
 const emailFormSchema = z.object({
   recipientEmail: z.string().email(),
-  recipientName: z.string().min(2).optional(),
+  recipientName: z.string().optional(),
   customMessage: z.string().optional(),
   emailLanguage: z.enum(['he', 'en']),
 });

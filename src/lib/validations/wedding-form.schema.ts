@@ -53,6 +53,12 @@ const hebrewDateStructuredSchema = z.object({
     return (hasDay && hasMonth && hasYear) || (!hasDay && !hasMonth && !hasYear);
   },
   { message: 'validation.invalidHebrewDate' }
+).refine(
+  (data) => {
+    // Gregorian date is required
+    return data.gregorianDate !== null && data.gregorianDate !== '';
+  },
+  { message: 'validation.required' }
 );
 
 // === Section Schemas ===

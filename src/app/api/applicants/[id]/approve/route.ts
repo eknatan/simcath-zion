@@ -89,14 +89,12 @@ function mapFormDataToCaseFields(formData: any, caseType: string) {
  * Helper: Get next case number
  * מחזיר את מספר התיק הבא (מתחיל מ-7000)
  */
-async function getNextCaseNumber(
-  supabase: any,
-  caseType: string
-): Promise<number> {
+async function getNextCaseNumber(supabase: any): Promise<number> {
+  // Query ALL case types to get the global max case_number
+  // (case_number is unique across all case types)
   const { data, error } = await supabase
     .from('cases')
     .select('case_number')
-    .eq('case_type', caseType)
     .order('case_number', { ascending: false })
     .limit(1)
     .single();
@@ -159,8 +157,8 @@ export async function POST(request: NextRequest, context: RouteParams) {
       );
     }
 
-    // 4. Get next case number
-    const caseNumber = await getNextCaseNumber(supabase, applicant.case_type);
+    // 4. Get next case number (global across all case types)
+    const caseNumber = await getNextCaseNumber(supabase);
 
     // 5. Map form_data to case fields
     const caseFields = mapFormDataToCaseFields(
