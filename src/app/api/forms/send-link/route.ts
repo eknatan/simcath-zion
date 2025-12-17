@@ -16,7 +16,7 @@ import { createClient } from '@/lib/supabase/server';
 // Request validation schema
 const sendLinkSchema = z.object({
   recipientEmail: z.string().email('Invalid email address'),
-  recipientName: z.string().min(2).optional(),
+  recipientName: z.string().optional(),
   customMessage: z.string().optional(),
   formType: z.enum(['wedding', 'sick-children']),
   formUrl: z.string().url('Invalid URL'),
