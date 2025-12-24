@@ -58,14 +58,19 @@ export function WelcomeHeader() {
   // Extract first name from full name
   const firstName = userName.split(' ')[0] || '';
 
-  // Determine user greeting based on time
+  // Determine user greeting based on time of day
   const currentHour = new Date().getHours();
-  let greeting = t('greeting.morning', { defaultValue: 'בוקר טוב' }); // Default to morning (5-12)
-  
-  if (currentHour >= 12 && currentHour < 17) greeting = t('greeting.afternoon', { defaultValue: 'צהריים טובים' });
-  else if (currentHour >= 17 || currentHour < 24) greeting = t('greeting.evening', { defaultValue: 'ערב טוב' });
-  
-  if (currentHour >= 0 && currentHour < 5) greeting = t('greeting.night', { defaultValue: 'לילה טוב' });
+  let greeting: string;
+
+  if (currentHour >= 5 && currentHour < 12) {
+    greeting = t('greeting.morning', { defaultValue: 'בוקר טוב' });
+  } else if (currentHour >= 12 && currentHour < 17) {
+    greeting = t('greeting.afternoon', { defaultValue: 'צהריים טובים' });
+  } else if (currentHour >= 17 && currentHour < 21) {
+    greeting = t('greeting.evening', { defaultValue: 'ערב טוב' });
+  } else {
+    greeting = t('greeting.night', { defaultValue: 'לילה טוב' });
+  }
 
   // Count weddings happening today (daysUntil === 0)
   const weddingsToday = upcomingWeddings?.filter(w => w.daysUntil === 0).length || 0;
