@@ -1,5 +1,6 @@
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { SupportChat } from '@/components/support-chat/SupportChat';
 
 export default function AppLayout({
   children,
@@ -26,6 +27,9 @@ export default function AppLayout({
           </div>
         </main>
       </div>
+
+      {/* Support Chat FAB */}
+      <SupportChat />
     </div>
   );
 }
