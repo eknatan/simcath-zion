@@ -134,6 +134,8 @@ export function FormField({
               disabled={isSaving}
               className={cn(saveError && 'border-rose-500')}
               rows={3}
+              spellCheck={true}
+              lang="en"
             />
           ) : (
             <Input
@@ -144,6 +146,8 @@ export function FormField({
               placeholder={placeholder}
               disabled={isSaving}
               className={cn(saveError && 'border-rose-500')}
+              spellCheck={type === 'text'}
+              lang="en"
             />
           )}
 
