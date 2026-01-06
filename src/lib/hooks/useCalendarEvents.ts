@@ -14,7 +14,9 @@ interface WeddingCaseData {
   wedding_date_hebrew: string | null;
   wedding_date_gregorian: string | null;
   groom_first_name: string | null;
+  groom_last_name: string | null;
   bride_first_name: string | null;
+  bride_last_name: string | null;
   status: string;
 }
 
@@ -53,12 +55,12 @@ function transformToCalendarEvents(cases: WeddingCaseData[]): CalendarEvent[] {
       hebrewDateStr = caseData.wedding_date_hebrew || '';
     }
 
-    // Create event title
-    const groomName = caseData.groom_first_name || '';
-    const brideName = caseData.bride_first_name || '';
-    const title = groomName && brideName
-      ? `${groomName} & ${brideName}`
-      : groomName || brideName || `תיק #${caseData.case_number}`;
+    // Create event title with full names (first + last)
+    const groomFullName = [caseData.groom_first_name, caseData.groom_last_name].filter(Boolean).join(' ');
+    const brideFullName = [caseData.bride_first_name, caseData.bride_last_name].filter(Boolean).join(' ');
+    const title = groomFullName && brideFullName
+      ? `${groomFullName} & ${brideFullName}`
+      : groomFullName || brideFullName || `תיק #${caseData.case_number}`;
 
     events.push({
       id: caseData.id,
@@ -96,7 +98,9 @@ export function useCalendarEvents(hebrewMonth: number, hebrewYear: number) {
           wedding_date_hebrew,
           wedding_date_gregorian,
           groom_first_name,
+          groom_last_name,
           bride_first_name,
+          bride_last_name,
           status
         `)
         .eq('case_type', 'wedding')
@@ -136,7 +140,9 @@ export function useYearlyCalendarEvents(hebrewYear: number) {
           wedding_date_hebrew,
           wedding_date_gregorian,
           groom_first_name,
+          groom_last_name,
           bride_first_name,
+          bride_last_name,
           status
         `)
         .eq('case_type', 'wedding')

@@ -40,7 +40,9 @@ export async function GET(request: NextRequest) {
         wedding_date_hebrew,
         wedding_date_gregorian,
         groom_first_name,
+        groom_last_name,
         bride_first_name,
+        bride_last_name,
         status
       `)
       .eq('case_type', 'wedding')
@@ -88,9 +90,11 @@ export async function GET(request: NextRequest) {
         hebrewDateStr = caseData.wedding_date_hebrew || '';
       }
 
-      const groomName = caseData.groom_first_name || '';
-      const brideName = caseData.bride_first_name || '';
-      const title = `${groomName} & ${brideName}`.trim() || 'חתונה';
+      const groomFullName = [caseData.groom_first_name, caseData.groom_last_name].filter(Boolean).join(' ');
+      const brideFullName = [caseData.bride_first_name, caseData.bride_last_name].filter(Boolean).join(' ');
+      const title = groomFullName && brideFullName
+        ? `${groomFullName} & ${brideFullName}`
+        : groomFullName || brideFullName || 'חתונה';
 
       events.push({
         id: caseData.id,
