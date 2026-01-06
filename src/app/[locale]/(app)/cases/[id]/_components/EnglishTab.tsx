@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ActionButton } from '@/components/shared/ActionButton';
 import {
@@ -85,6 +85,13 @@ export function EnglishTab({ caseData }: EnglishTabProps) {
     }
     return {};
   });
+
+  // Sync editForm when translation data loads/updates from server
+  useEffect(() => {
+    if (translation?.content_json) {
+      setEditForm(translation.content_json as TranslatedContent);
+    }
+  }, [translation?.content_json]);
 
   // ========================================
   // Event Handlers
