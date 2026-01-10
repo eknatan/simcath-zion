@@ -23,7 +23,7 @@ export const translations: Record<PDFLocale, Record<string, string>> = {
     city: 'עיר',
     venue: 'מקום האירוע',
     guestsCount: 'מספר אורחים',
-    approvedAmount: 'סכום מאושר',
+    totalCost: 'עלות כוללת',
 
     // Groom details
     groomDetails: 'פרטי החתן',
@@ -94,7 +94,7 @@ export const translations: Record<PDFLocale, Record<string, string>> = {
     city: 'City',
     venue: 'Venue',
     guestsCount: 'Guests Count',
-    approvedAmount: 'Approved Amount',
+    totalCost: 'Total Cost',
 
     // Groom details
     groomDetails: 'Groom Details',

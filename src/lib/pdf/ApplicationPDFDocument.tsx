@@ -144,7 +144,7 @@ export function ApplicationPDFDocument({ formData, locale, title }: ApplicationP
         <FieldRow label={t.venue} value={weddingInfo.venue} isRTL={isRTL} />
         <FieldRow label={t.guestsCount} value={weddingInfo.guests_count} isRTL={isRTL} />
         <FieldRow
-          label={t.approvedAmount}
+          label={t.totalCost}
           value={weddingInfo.total_cost ? `₪${weddingInfo.total_cost.toLocaleString()}` : null}
           isRTL={isRTL}
         />
