@@ -423,9 +423,13 @@
       "venue_placeholder": "Example: Garden Event Hall",
       "guests_count": "Estimated Number of Guests",
       "guests_count_placeholder": "300",
+      "cost_per_plate": "Cost Per Plate",
+      "cost_per_plate_placeholder": "150",
+      "venue_cost": "Venue Cost",
+      "venue_cost_placeholder": "10000",
       "total_cost": "Total Wedding Cost",
       "total_cost_placeholder": "50000",
-      "total_cost_helper": "Including catering, and venue",
+      "total_cost_helper": "Auto-calculated from plate and venue costs, can be changed manually",
       "request_background": "Background About the Request (Optional)",
       "request_background_placeholder": "Tell us about the request...",
       "request_background_helper": "Additional information about the request to help us better understand the situation"
@@ -1214,6 +1218,8 @@
         "city": "City",
         "venue": "Venue",
         "guestsCount": "Number of Guests",
+        "costPerPlate": "Cost Per Plate (₪)",
+        "venueCost": "Venue Cost (₪)",
         "totalCost": "Total Cost (₪)",
         "requestBackground": "Background request"
       },

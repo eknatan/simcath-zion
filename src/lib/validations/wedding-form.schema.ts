@@ -89,6 +89,22 @@ export const weddingInfoSchema = z.object({
     .int('validation.mustBeInteger')
     .min(1, 'validation.minGuests')
     .max(5000, 'validation.maxGuests'),
+  cost_per_plate: z
+    .number({
+      message: 'validation.invalidNumber',
+    })
+    .min(0, 'validation.minCost')
+    .max(10000000, 'validation.maxCost')
+    .optional()
+    .nullable(),
+  venue_cost: z
+    .number({
+      message: 'validation.invalidNumber',
+    })
+    .min(0, 'validation.minCost')
+    .max(10000000, 'validation.maxCost')
+    .optional()
+    .nullable(),
   total_cost: z
     .number({
       message: 'validation.invalidNumber',

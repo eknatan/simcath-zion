@@ -93,6 +93,16 @@ export const weddingInfoSchema = z.object({
     .min(1, 'מספר המוזמנים חייב להיות לפחות 1')
     .max(10000, 'מספר המוזמנים לא יכול לעלות על 10,000')
     .optional(),
+  cost_per_plate: z.coerce
+    .number()
+    .min(0, 'עלות לא יכולה להיות שלילית')
+    .optional()
+    .nullable(),
+  venue_cost: z.coerce
+    .number()
+    .min(0, 'עלות לא יכולה להיות שלילית')
+    .optional()
+    .nullable(),
   total_cost: z.coerce
     .number()
     .min(0, 'עלות לא יכולה להיות שלילית')

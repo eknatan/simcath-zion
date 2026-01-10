@@ -148,6 +148,8 @@ export type Database = {
           child_name: string | null
           city: string | null
           contact_email: string | null
+          cost_per_plate: number | null
+          venue_cost: number | null
           contact_phone: string | null
           contact_phone2: string | null
           contact_phone3: string | null
@@ -207,6 +209,8 @@ export type Database = {
           child_name?: string | null
           city?: string | null
           contact_email?: string | null
+          cost_per_plate?: number | null
+          venue_cost?: number | null
           contact_phone?: string | null
           contact_phone2?: string | null
           contact_phone3?: string | null
@@ -266,6 +270,8 @@ export type Database = {
           child_name?: string | null
           city?: string | null
           contact_email?: string | null
+          cost_per_plate?: number | null
+          venue_cost?: number | null
           contact_phone?: string | null
           contact_phone2?: string | null
           contact_phone3?: string | null

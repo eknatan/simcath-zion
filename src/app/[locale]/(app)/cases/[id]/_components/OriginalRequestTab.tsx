@@ -204,6 +204,8 @@ export function OriginalRequestTab({ caseData: initialCaseData }: OriginalReques
           city: caseData.city || '',
           venue: caseData.venue || '',
           guests_count: caseData.guests_count || undefined,
+          cost_per_plate: caseData.cost_per_plate || undefined,
+          venue_cost: caseData.venue_cost || undefined,
           total_cost: caseData.total_cost || undefined,
           request_background: caseData.request_background || '',
           // Groom
@@ -389,6 +391,26 @@ export function OriginalRequestTab({ caseData: initialCaseData }: OriginalReques
                 onSave={handleFieldSave}
                 notSpecifiedText={t('notSpecified')}
                 error={formErrors.guests_count?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
+              />
+              <Field
+                name="cost_per_plate"
+                label={t('weddingInfo.costPerPlate')}
+                type="number"
+                value={formValues.cost_per_plate}
+                onSave={handleFieldSave}
+                notSpecifiedText={t('notSpecified')}
+                error={formErrors.cost_per_plate?.message as string}
+                isGlobalEditMode={isGlobalEditMode}
+              />
+              <Field
+                name="venue_cost"
+                label={t('weddingInfo.venueCost')}
+                type="number"
+                value={formValues.venue_cost}
+                onSave={handleFieldSave}
+                notSpecifiedText={t('notSpecified')}
+                error={formErrors.venue_cost?.message as string}
                 isGlobalEditMode={isGlobalEditMode}
               />
               <Field

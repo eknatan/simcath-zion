@@ -159,6 +159,8 @@ export interface WeddingFormData {
   city?: string;
   venue?: string;
   guests_count?: number;
+  cost_per_plate?: number | null;
+  venue_cost?: number | null;
   total_cost?: number;
   request_background?: string;
 

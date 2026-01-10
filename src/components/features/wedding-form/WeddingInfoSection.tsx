@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { UseFormReturn, Controller } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { UseFormReturn, Controller, useWatch } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { FormSection } from '@/components/shared/Forms/FormSection';
 import { Input } from '@/components/ui/input';
@@ -36,8 +36,22 @@ export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }:
   const {
     register,
     control,
+    setValue,
     formState: { errors },
   } = form;
+
+  // Watch cost fields for auto-calculation
+  const guestsCount = useWatch({ control, name: 'wedding_info.guests_count' });
+  const costPerPlate = useWatch({ control, name: 'wedding_info.cost_per_plate' });
+  const venueCost = useWatch({ control, name: 'wedding_info.venue_cost' });
+
+  // Auto-calculate total cost when cost breakdown fields change
+  useEffect(() => {
+    if (costPerPlate != null && guestsCount != null) {
+      const calculatedTotal = (costPerPlate * guestsCount) + (venueCost || 0);
+      setValue('wedding_info.total_cost', calculatedTotal, { shouldValidate: true });
+    }
+  }, [costPerPlate, venueCost, guestsCount, setValue]);
 
   // Only show errors if showErrors is true (user attempted to proceed)
   const weddingErrors = showErrors ? errors.wedding_info : undefined;
@@ -128,6 +142,62 @@ export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }:
           {weddingErrors?.guests_count && (
             <p className="text-sm text-destructive">
               {translateValidationMessage(tValidation, weddingErrors.guests_count.message)}
+            </p>
+          )}
+        </div>
+
+        {/* עלות למנה */}
+        <div className="space-y-2">
+          <Label htmlFor="cost_per_plate">
+            {t('section_wedding_info.cost_per_plate')}
+          </Label>
+          <div className="relative">
+            <Input
+              id="cost_per_plate"
+              type="number"
+              {...register('wedding_info.cost_per_plate', {
+                valueAsNumber: true,
+              })}
+              className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              aria-invalid={!!weddingErrors?.cost_per_plate}
+              min={0}
+              step={10}
+            />
+            <span className="absolute end-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+              ₪
+            </span>
+          </div>
+          {weddingErrors?.cost_per_plate && (
+            <p className="text-sm text-destructive">
+              {translateValidationMessage(tValidation, weddingErrors.cost_per_plate.message)}
+            </p>
+          )}
+        </div>
+
+        {/* עלות אולם */}
+        <div className="space-y-2">
+          <Label htmlFor="venue_cost">
+            {t('section_wedding_info.venue_cost')}
+          </Label>
+          <div className="relative">
+            <Input
+              id="venue_cost"
+              type="number"
+              {...register('wedding_info.venue_cost', {
+                valueAsNumber: true,
+              })}
+              className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              aria-invalid={!!weddingErrors?.venue_cost}
+              min={0}
+              step={100}
+            />
+            <span className="absolute end-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+              ₪
+            </span>
+          </div>
+          {weddingErrors?.venue_cost && (
+            <p className="text-sm text-destructive">
+              {translateValidationMessage(tValidation, weddingErrors.venue_cost.message)}
             </p>
           )}
         </div>
