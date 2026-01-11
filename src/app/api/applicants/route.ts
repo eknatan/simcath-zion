@@ -4,6 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { weddingFormSchema } from '@/lib/validations/wedding-form.schema';
 import { z } from 'zod';
 import { getPublicFormLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { getNextCaseNumber } from '@/lib/utils/case-number';
 
 /**
  * API Route: POST /api/applicants
@@ -187,11 +188,15 @@ export async function POST(request: NextRequest) {
 
     // For cleaning cases - create case directly without approval
     if (case_type === 'cleaning') {
+      // Get next case number for cleaning cases (starts from 50000)
+      const caseNumber = await getNextCaseNumber(supabase, 'cleaning');
+
       // Create case directly
       // Note: form_data has flat structure from sick children form
       const { data: caseData, error: caseError } = await supabase
         .from('cases')
         .insert({
+          case_number: caseNumber,
           case_type: 'cleaning',
           status: 'active',
           family_name: form_data.family_name,

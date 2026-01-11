@@ -14,11 +14,13 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  useFormField,
 } from '@/components/ui/form';
 import { sickChildrenFormSchema, type SickChildrenFormData } from '@/lib/validations/sick-children-form.schema';
+import { translateValidationMessage } from '@/lib/validations/translate';
 import { Send, Loader2, User, Phone, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 /**
  * קומפוננטה SickChildrenForm - טופס חד-עמודי לבקשת תמיכה לילדים חולים
@@ -43,8 +45,37 @@ interface SickChildrenFormProps {
   onSuccess?: (data: SickChildrenFormData) => void;
 }
 
+/**
+ * קומפוננטת FormMessage מותאמת עם תרגום
+ * משתמשת ב-translateValidationMessage לתרגום הודעות Zod
+ */
+function TranslatedFormMessage({
+  className,
+  tValidation,
+  ...props
+}: React.ComponentProps<'p'> & { tValidation: (key: string, values?: Record<string, string | number | Date>) => string }) {
+  const { error, formMessageId } = useFormField();
+  const body = error ? translateValidationMessage(tValidation, error?.message) : props.children;
+
+  if (!body) {
+    return null;
+  }
+
+  return (
+    <p
+      data-slot="form-message"
+      id={formMessageId}
+      className={cn('text-destructive text-sm', className)}
+      {...props}
+    >
+      {body}
+    </p>
+  );
+}
+
 export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildrenFormProps) {
   const t = useTranslations('sick_children_form');
+  const tValidation = useTranslations('validation');
   const locale = useLocale();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -161,7 +192,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -175,7 +206,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -190,7 +221,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <TranslatedFormMessage tValidation={tValidation} />
                   </FormItem>
                 )}
               />
@@ -205,7 +236,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -219,7 +250,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -234,7 +265,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <TranslatedFormMessage tValidation={tValidation} />
                   </FormItem>
                 )}
               />
@@ -248,7 +279,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <TranslatedFormMessage tValidation={tValidation} />
                   </FormItem>
                 )}
               />
@@ -262,7 +293,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <TranslatedFormMessage tValidation={tValidation} />
                   </FormItem>
                 )}
               />
@@ -292,7 +323,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <TranslatedFormMessage tValidation={tValidation} />
                   </FormItem>
                 )}
               />
@@ -307,7 +338,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -321,7 +352,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -336,7 +367,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                     <FormControl>
                       <Input type="email" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <TranslatedFormMessage tValidation={tValidation} />
                   </FormItem>
                 )}
               />
@@ -367,7 +398,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -381,7 +412,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -395,7 +426,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <TranslatedFormMessage tValidation={tValidation} />
                     </FormItem>
                   )}
                 />
@@ -410,7 +441,7 @@ export function SickChildrenForm({ isInternal = false, onSuccess }: SickChildren
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <TranslatedFormMessage tValidation={tValidation} />
                   </FormItem>
                 )}
               />

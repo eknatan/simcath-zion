@@ -20,6 +20,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getNextCaseNumber } from '@/lib/utils/case-number';
 
 interface RouteParams {
   params: Promise<{
@@ -86,35 +87,6 @@ function mapFormDataToCaseFields(formData: any, caseType: string) {
 }
 
 /**
- * Helper: Get next case number
- * מחזיר את מספר התיק הבא (מתחיל מ-7000)
- */
-async function getNextCaseNumber(supabase: any): Promise<number> {
-  // Query ALL case types to get the global max case_number
-  // (case_number is unique across all case types)
-  const { data, error } = await supabase
-    .from('cases')
-    .select('case_number')
-    .order('case_number', { ascending: false })
-    .limit(1)
-    .single();
-
-  if (error && error.code !== 'PGRST116') {
-    // PGRST116 = no rows found
-    console.error('Error fetching latest case number:', error);
-    throw new Error('Failed to get next case number');
-  }
-
-  // אם אין תיקים בכלל, מתחיל מ-7000
-  if (!data) {
-    return 7000;
-  }
-
-  // אחרת, הבא
-  return data.case_number + 1;
-}
-
-/**
  * POST /api/applicants/[id]/approve
  */
 export async function POST(request: NextRequest, context: RouteParams) {
@@ -157,8 +129,11 @@ export async function POST(request: NextRequest, context: RouteParams) {
       );
     }
 
-    // 4. Get next case number (global across all case types)
-    const caseNumber = await getNextCaseNumber(supabase);
+    // 4. Get next case number (per case type to avoid collisions)
+    const caseNumber = await getNextCaseNumber(
+      supabase,
+      applicant.case_type as 'wedding' | 'cleaning'
+    );
 
     // 5. Map form_data to case fields
     const caseFields = mapFormDataToCaseFields(
