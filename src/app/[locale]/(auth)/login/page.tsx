@@ -401,7 +401,7 @@ export default function LoginPage() {
                     required
                     autoComplete="email"
                     autoFocus
-                    className="h-11"
+                    className="h-11 login-email-bg"
                   />
                 </div>
 
@@ -524,6 +524,16 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="mt-6 text-center text-sm text-muted-foreground">
           <p>{t('login.footer')}</p>
+          <div className="mt-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-10 text-base font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all"
+              onClick={() => router.push('/public-forms/lali-games')}
+            >
+              משחקי ללי
+            </Button>
+          </div>
         </div>
       </div>
     </div>

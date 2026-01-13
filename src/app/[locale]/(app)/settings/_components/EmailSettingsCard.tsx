@@ -214,16 +214,7 @@ export function EmailSettingsCard() {
             <div className="flex gap-2">
               <div className="flex-1">
                 <Input
-                  type="email"
-                  placeholder={t('email.settings.addEmailPlaceholder')}
-                  value={newEmail}
-                  onChange={(e) => {
-                    setNewEmail(e.target.value);
-                    setEmailError('');
-                  }}
-                  onKeyPress={handleKeyPress}
-                  disabled={isSaving}
-                  className={`border-2 ${emailError ? 'border-red-300' : 'border-blue-200'} focus:border-blue-500 focus:ring-2 focus:ring-blue-200`}
+                 .   // className={`border-2 ${emailError ? 'border-red-300' : 'border-blue-200'} focus:border-blue-500 focus:ring-2 focus:ring-blue-200`}
                 />
                 {emailError && (
                   <p className="text-xs text-red-600 mt-1 flex items-center gap-1">

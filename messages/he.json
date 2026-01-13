@@ -194,7 +194,7 @@
       "description": "הזן את פרטי ההתחברות שלך",
       "magicLinkDescription": "נשלח לך קישור כניסה למייל",
       "email": "דוא״ל",
-      "emailPlaceholder": "הזן כתובת דוא״ל",
+      // "emailPlaceholder": "ללי בודקת את הטקסט",
       "password": "סיסמה",
       "passwordPlaceholder": "הזן סיסמה",
       "submit": "התחבר",
