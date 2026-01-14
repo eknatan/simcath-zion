@@ -41,8 +41,10 @@ export async function GET(request: NextRequest) {
         wedding_date_gregorian,
         groom_first_name,
         groom_last_name,
+        groom_memorial_day,
         bride_first_name,
         bride_last_name,
+        bride_memorial_day,
         status
       `)
       .eq('case_type', 'wedding')
@@ -90,11 +92,29 @@ export async function GET(request: NextRequest) {
         hebrewDateStr = caseData.wedding_date_hebrew || '';
       }
 
-      const groomFullName = [caseData.groom_first_name, caseData.groom_last_name].filter(Boolean).join(' ');
-      const brideFullName = [caseData.bride_first_name, caseData.bride_last_name].filter(Boolean).join(' ');
-      const title = groomFullName && brideFullName
-        ? `${groomFullName} & ${brideFullName}`
-        : groomFullName || brideFullName || 'חתונה';
+      // Determine orphan(s) by checking memorial_day fields
+      const groomIsOrphan = !!caseData.groom_memorial_day;
+      const brideIsOrphan = !!caseData.bride_memorial_day;
+
+      let title: string;
+      if (groomIsOrphan && brideIsOrphan) {
+        // Both are orphans - show both family names
+        title = `משפחת ${caseData.groom_last_name} ומשפחת ${caseData.bride_last_name} - #${caseData.case_number}`;
+      } else if (groomIsOrphan) {
+        // Only groom is orphan
+        title = `משפחת ${caseData.groom_last_name} - #${caseData.case_number}`;
+      } else if (brideIsOrphan) {
+        // Only bride is orphan
+        title = `משפחת ${caseData.bride_last_name} - #${caseData.case_number}`;
+      } else {
+        // Neither has memorial_day - show names with "not specified"
+        const groomFullName = [caseData.groom_first_name, caseData.groom_last_name].filter(Boolean).join(' ');
+        const brideFullName = [caseData.bride_first_name, caseData.bride_last_name].filter(Boolean).join(' ');
+        const names = groomFullName && brideFullName
+          ? `${groomFullName} & ${brideFullName}`
+          : groomFullName || brideFullName || 'חתונה';
+        title = `${names} - לא צוין`;
+      }
 
       events.push({
         id: caseData.id,
