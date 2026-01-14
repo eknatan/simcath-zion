@@ -92,9 +92,9 @@ export async function GET(request: NextRequest) {
         hebrewDateStr = caseData.wedding_date_hebrew || '';
       }
 
-      // Determine orphan(s) by checking memorial_day fields
-      const groomIsOrphan = !!caseData.groom_memorial_day;
-      const brideIsOrphan = !!caseData.bride_memorial_day;
+      // Determine orphan(s) by checking memorial_day fields (check for non-empty string)
+      const groomIsOrphan = !!(caseData.groom_memorial_day && caseData.groom_memorial_day.trim());
+      const brideIsOrphan = !!(caseData.bride_memorial_day && caseData.bride_memorial_day.trim());
 
       let title: string;
       if (groomIsOrphan && brideIsOrphan) {
