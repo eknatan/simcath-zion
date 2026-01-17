@@ -19,6 +19,7 @@ import { MasavSettingsCard } from './_components/MasavSettingsCard';
 import { MonthlyCapSettingsCard } from './_components/MonthlyCapSettingsCard';
 import { WelcomeCardSettingsCard } from './_components/WelcomeCardSettingsCard';
 import { TranslationSettingsCard } from './_components/TranslationSettingsCard';
+import packageJson from '../../../../../package.json';
 
 export async function generateMetadata({
   params,
@@ -54,7 +55,10 @@ export default async function SettingsPage({
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
               {t('settings.title')}
             </h1>
-            <p className="text-muted-foreground">{t('settings.description')}</p>
+            <p className="text-muted-foreground">
+                {t('settings.description')}
+                <span className="mr-2 text-xs opacity-60">v{packageJson.version}</span>
+              </p>
           </div>
         </div>
       </div>
