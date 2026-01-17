@@ -13,7 +13,16 @@ const nextConfig: NextConfig = {
 
   // Optimize bundle splitting
   experimental: {
-    optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
+    optimizePackageImports: [
+      'lucide-react',
+      '@supabase/supabase-js',
+      'exceljs',
+      '@tanstack/react-query',
+      '@tanstack/react-table',
+      'date-fns',
+      '@react-pdf/renderer',
+      '@hebcal/core',
+    ],
   },
 };
 
