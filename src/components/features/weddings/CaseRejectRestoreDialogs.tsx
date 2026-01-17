@@ -12,6 +12,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -51,6 +52,7 @@ export function RejectCaseDialog({
 }: RejectCaseDialogProps) {
   const t = useTranslations('case.rejectDialog');
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [reason, setReason] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -80,6 +82,9 @@ export function RejectCaseDialog({
       setReason('');
       onOpenChange(false);
       onSuccess?.();
+      // Invalidate calendar queries so the rejected case disappears from calendar
+      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
+      queryClient.invalidateQueries({ queryKey: ['calendar-events-yearly'] });
       router.refresh();
     } catch (error: any) {
       toast.error(t('errorTitle'), {
@@ -195,6 +200,7 @@ export function RestoreCaseDialog({
 }: RestoreCaseDialogProps) {
   const t = useTranslations('case.restoreDialog');
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
   const displayName = groomName && brideName
@@ -227,6 +233,9 @@ export function RestoreCaseDialog({
 
       onOpenChange(false);
       onSuccess?.();
+      // Invalidate calendar queries so the restored case appears in calendar
+      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
+      queryClient.invalidateQueries({ queryKey: ['calendar-events-yearly'] });
       router.refresh();
     } catch (error: any) {
       toast.error(t('errorTitle'), {
@@ -326,6 +335,7 @@ export function CloseCaseDialog({
 }: CloseCaseDialogProps) {
   const t = useTranslations('case.closeDialog');
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
   const displayName = groomName && brideName
@@ -351,6 +361,9 @@ export function CloseCaseDialog({
 
       onOpenChange(false);
       onSuccess?.();
+      // Invalidate calendar queries so the closed case is updated in calendar
+      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
+      queryClient.invalidateQueries({ queryKey: ['calendar-events-yearly'] });
       router.refresh();
     } catch (error: any) {
       toast.error(t('errorTitle'), {
