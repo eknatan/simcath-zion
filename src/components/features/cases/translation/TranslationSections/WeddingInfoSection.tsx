@@ -5,7 +5,7 @@ import {
   Calendar,
   MapPin,
   Users,
-  DollarSign,
+  Banknote,
   FileText
 } from 'lucide-react';
 import type { TranslatedContent } from '@/types/case.types';
@@ -23,7 +23,7 @@ export function WeddingInfoSection({ weddingInfo, isEditing, onSaveField }: Wedd
     { key: 'city', label: 'City', icon: MapPin },
     { key: 'venue', label: 'Venue', icon: MapPin },
     { key: 'guests_count', label: 'Number of Guests', icon: Users },
-    { key: 'total_cost', label: 'Total Cost (USD)', icon: DollarSign },
+    { key: 'total_cost', label: 'Total Cost (ILS)', icon: Banknote },
     { key: 'request_background', label: 'Background Information', icon: FileText },
   ];
 
@@ -31,21 +31,37 @@ export function WeddingInfoSection({ weddingInfo, isEditing, onSaveField }: Wedd
     return await onSaveField('wedding_info', field, value);
   };
 
+  // Format currency values with ILS symbol
+  const formatValue = (key: string, value: any) => {
+    if (key === 'total_cost' && value) {
+      const numValue = typeof value === 'string' ? parseFloat(value) : value;
+      if (!isNaN(numValue)) {
+        return `₪${numValue.toLocaleString()}`;
+      }
+    }
+    return value || '';
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4" dir="ltr" style={{ direction: 'ltr' }}>
-      {fields.map(({ key, label, icon: Icon }) => (
-        <div key={key} dir="ltr" style={{ direction: 'ltr' }}>
-          <FormField
-            name={key}
-            label={label}
-            type={key === 'request_background' ? 'textarea' : key.includes('count') || key.includes('cost') ? 'number' : 'text'}
-            value={weddingInfo?.[key as keyof typeof weddingInfo] || ''}
-            onSave={isEditing ? (value) => handleSaveField(key, value) : undefined}
-            notSpecifiedText="Not specified"
-            icon={<Icon className="h-4 w-4" />}
-          />
-        </div>
-      ))}
+      {fields.map(({ key, label, icon: Icon }) => {
+        const rawValue = weddingInfo?.[key as keyof typeof weddingInfo];
+        const displayValue = formatValue(key, rawValue);
+
+        return (
+          <div key={key} dir="ltr" style={{ direction: 'ltr' }}>
+            <FormField
+              name={key}
+              label={label}
+              type={key === 'request_background' ? 'textarea' : key.includes('count') || key.includes('cost') ? 'number' : 'text'}
+              value={displayValue}
+              onSave={isEditing ? (value) => handleSaveField(key, value) : undefined}
+              notSpecifiedText="Not specified"
+              icon={<Icon className="h-4 w-4" />}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
