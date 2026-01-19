@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { MonthNavigationProps } from './types';
 import { HDate } from '@hebcal/core';
-import { getHebrewMonthName } from '@/lib/hebcal-utils';
+import { getHebrewMonthName, getGregorianMonthsRange } from '@/lib/hebcal-utils';
 
 export default function MonthNavigation({
   currentMonth,
@@ -70,7 +70,7 @@ export default function MonthNavigation({
           {language === 'he' ? formatHebrewYear(currentYear) : currentYear}
         </p>
         <p className="text-xs text-muted-foreground mt-0.5">
-          {language === 'he' ? `${monthNameEn} ${currentYear}` : `${monthNameHe}`}
+          {getGregorianMonthsRange(currentMonth, currentYear, language)}
         </p>
       </div>
 

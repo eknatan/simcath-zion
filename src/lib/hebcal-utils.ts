@@ -237,3 +237,42 @@ export function numberToHebrewLetters(num: number): string {
 
   return result;
 }
+
+/**
+ * Get the Gregorian months range for a Hebrew month
+ * Returns formatted string like "January 2026" or "January-February 2026"
+ */
+export function getGregorianMonthsRange(hebrewMonth: number, hebrewYear: number, language: Language): string {
+  // Get first day of Hebrew month
+  const firstDay = new HDate(1, hebrewMonth, hebrewYear);
+  const firstGregDate = firstDay.greg();
+
+  // Get last day of Hebrew month
+  const daysInMonth = HDate.daysInMonth(hebrewMonth, hebrewYear);
+  const lastDay = new HDate(daysInMonth, hebrewMonth, hebrewYear);
+  const lastGregDate = lastDay.greg();
+
+  const firstMonth = firstGregDate.getMonth();
+  const firstYear = firstGregDate.getFullYear();
+  const lastMonth = lastGregDate.getMonth();
+  const lastYear = lastGregDate.getFullYear();
+
+  const locale = language === 'he' ? 'he-IL' : 'en-US';
+
+  // Same month and year
+  if (firstMonth === lastMonth && firstYear === lastYear) {
+    return firstGregDate.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+  }
+
+  // Different years
+  if (firstYear !== lastYear) {
+    const firstStr = firstGregDate.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+    const lastStr = lastGregDate.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+    return `${firstStr} - ${lastStr}`;
+  }
+
+  // Same year, different months
+  const firstMonthName = firstGregDate.toLocaleDateString(locale, { month: 'long' });
+  const lastMonthName = lastGregDate.toLocaleDateString(locale, { month: 'long' });
+  return `${firstMonthName}-${lastMonthName} ${firstYear}`;
+}
