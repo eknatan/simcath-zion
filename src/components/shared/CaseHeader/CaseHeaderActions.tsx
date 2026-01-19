@@ -1,9 +1,11 @@
 'use client';
 
+import { useMemo } from 'react';
 import { CaseWithRelations, CaseType } from '@/types/case.types';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { ExportPDFButton } from '@/components/shared/ExportDocument';
 import { AuditLogTimeline } from '@/components/shared/AuditLogTimeline';
+import { useCaseTranslation } from '@/components/features/cases/hooks/useCaseTranslation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,6 +40,20 @@ export function CaseHeaderActions({
   const t = useTranslations('case');
   const isWedding = caseData.case_type === CaseType.WEDDING;
   const isCleaning = caseData.case_type === CaseType.CLEANING;
+
+  // Get latest translations from React Query (updates when user edits in EnglishTab)
+  const { translations } = useCaseTranslation({ caseId: caseData.id });
+
+  // Merge caseData with updated translations for PDF export
+  const caseDataWithUpdatedTranslations = useMemo(() => {
+    if (!translations || translations.length === 0) {
+      return caseData;
+    }
+    return {
+      ...caseData,
+      translations,
+    };
+  }, [caseData, translations]);
 
   const getExportFilename = () => {
     if (isWedding) {
@@ -130,10 +146,10 @@ export function CaseHeaderActions({
         </>
       )}
 
-      {/* Export PDF Button */}
+      {/* Export PDF Button - uses caseDataWithUpdatedTranslations for latest edits */}
       <ExportPDFButton
         documentType="case"
-        data={caseData}
+        data={caseDataWithUpdatedTranslations}
         filename={getExportFilename()}
         variant="outline"
         size="sm"
