@@ -413,6 +413,11 @@
     "section_wedding_info": {
       "title": "Wedding Information",
       "description": "General event details",
+      "submitter_title": "Submitter Information",
+      "submitter_name": "Submitter Name",
+      "submitter_relation": "Related To",
+      "submitter_relation_placeholder": "e.g., Father of the groom",
+      "submitter_phone": "Submitter Phone",
       "date_hebrew": "Hebrew Date",
       "date_hebrew_placeholder": "Example: 20th of Tishrei 5785",
       "date_hebrew_helper": "Enter the complete Hebrew date",
@@ -964,6 +969,12 @@
         "pending": "Pending Approval",
         "rejected": "Rejected"
       },
+      "submitter_info": {
+        "title": "Submitter Information",
+        "name": "Submitter Name",
+        "relation": "Related To",
+        "phone": "Phone"
+      },
       "wedding_info": {
         "title": "Wedding Information",
         "date_hebrew": "Hebrew Date",
@@ -998,6 +1009,8 @@
       "title": "Approve Case Creation",
       "question": "Approve the application of:",
       "and": "and",
+      "submitter_label": "Submitter",
+      "submitter_phone_label": "Phone",
       "description": "This application will become an official case in the system",
       "case_number_label": "Case Number",
       "automatic": "automatic",
@@ -1211,6 +1224,12 @@
       "save": "Save Changes",
       "saving": "Saving...",
       "saved": "Saved",
+      "submitterInfo": {
+        "title": "Submitter Information",
+        "name": "Submitter Name",
+        "relation": "Related To",
+        "phone": "Phone"
+      },
       "weddingInfo": {
         "title": "Wedding Information",
         "dateHebrew": "Hebrew Date",

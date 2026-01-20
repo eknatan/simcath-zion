@@ -41,6 +41,7 @@ export function ApproveDialog({
   const formData = applicant.form_data as any;
   const groomName = `${formData.groom_info?.first_name || ''} ${formData.groom_info?.last_name || ''}`.trim();
   const brideName = `${formData.bride_info?.first_name || ''} ${formData.bride_info?.last_name || ''}`.trim();
+  const submitterInfo = formData.submitter_info;
 
   const handleApprove = async () => {
     try {
@@ -99,6 +100,24 @@ export function ApproveDialog({
                 <span className="text-slate-500 text-xs ms-2">({t('automatic')})</span>
               </p>
             </div>
+            {/* פרטי מגיש הבקשה */}
+            {submitterInfo?.submitter_name && (
+              <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-3">
+                <p className="text-sm text-amber-900">
+                  <span className="font-semibold">{t('submitter_label')}:</span>{' '}
+                  {submitterInfo.submitter_name}
+                  {submitterInfo.submitter_relation && (
+                    <span className="text-amber-700"> ({submitterInfo.submitter_relation})</span>
+                  )}
+                </p>
+                {submitterInfo.submitter_phone && (
+                  <p className="text-sm text-amber-800 mt-1">
+                    <span className="font-semibold">{t('submitter_phone_label')}:</span>{' '}
+                    <span dir="ltr">{submitterInfo.submitter_phone}</span>
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-3">

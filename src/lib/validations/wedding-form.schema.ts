@@ -64,6 +64,22 @@ const hebrewDateStructuredSchema = z.object({
 // === Section Schemas ===
 
 /**
+ * פרטי מגיש הבקשה
+ * Single Responsibility - אחראי רק על נתוני מגיש הבקשה
+ */
+export const submitterInfoSchema = z.object({
+  submitter_name: z
+    .string()
+    .min(2, 'validation.minLength|min=2')
+    .max(100, 'validation.maxLength|max=100'),
+  submitter_relation: z
+    .string()
+    .max(100, 'validation.maxLength|max=100')
+    .optional(),
+  submitter_phone: israeliPhoneSchema,
+});
+
+/**
  * סקשן א': מידע החתונה
  * Single Responsibility - אחראי רק על נתוני החתונה הבסיסיים
  */
@@ -157,9 +173,10 @@ export const personInfoSchema = z.object({
 
 /**
  * Schema מלא לטופס חתונה
- * Interface Segregation - מורכב משלושה schemas ממוקדים
+ * Interface Segregation - מורכב מארבעה schemas ממוקדים
  */
 export const weddingFormSchema = z.object({
+  submitter_info: submitterInfoSchema,
   wedding_info: weddingInfoSchema,
   groom_info: personInfoSchema,
   bride_info: personInfoSchema,
@@ -174,6 +191,7 @@ export const weddingFormSchema = z.object({
 export type WeddingFormData = z.infer<typeof weddingFormSchema>;
 export type WeddingInfo = z.infer<typeof weddingInfoSchema>;
 export type PersonInfo = z.infer<typeof personInfoSchema>;
+export type SubmitterInfo = z.infer<typeof submitterInfoSchema>;
 
 /**
  * Type לשמירה ב-DB (applicants table)

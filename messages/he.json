@@ -452,6 +452,11 @@
     "section_wedding_info": {
       "title": "מידע על החתונה",
       "description": "פרטים כלליים על האירוע",
+      "submitter_title": "פרטי מגיש הבקשה",
+      "submitter_name": "מגיש הבקשה",
+      "submitter_relation": "קשור ל",
+      "submitter_relation_placeholder": "לדוגמה: אבא של החתן",
+      "submitter_phone": "טלפון מגיש הבקשה",
       "date_hebrew": "תאריך עברי",
       "date_hebrew_placeholder": "לדוגמה: כ' בתשרי תשפ\"ה",
       "date_hebrew_helper": "הזן את התאריך העברי במלואו",
@@ -1142,6 +1147,12 @@
       "save": "שמור שינויים",
       "saving": "שומר...",
       "saved": "נשמר",
+      "submitterInfo": {
+        "title": "פרטי מגיש הבקשה",
+        "name": "מגיש הבקשה",
+        "relation": "קשור ל",
+        "phone": "טלפון"
+      },
       "weddingInfo": {
         "title": "מידע על החתונה",
         "dateHebrew": "תאריך עברי",
@@ -1361,6 +1372,12 @@
         "pending": "ממתין לאישור",
         "rejected": "נדחה"
       },
+      "submitter_info": {
+        "title": "פרטי מגיש הבקשה",
+        "name": "מגיש הבקשה",
+        "relation": "קשור ל",
+        "phone": "טלפון"
+      },
       "wedding_info": {
         "title": "מידע על החתונה",
         "date_hebrew": "תאריך עברי",
@@ -1395,6 +1412,8 @@
       "title": "אישור יצירת תיק",
       "question": "האם לאשר את הבקשה של:",
       "and": "ו",
+      "submitter_label": "מגיש הבקשה",
+      "submitter_phone_label": "טלפון",
       "description": "בקשה זו תהפוך לתיק רשמי במערכת",
       "case_number_label": "מספר תיק",
       "automatic": "אוטומטי",

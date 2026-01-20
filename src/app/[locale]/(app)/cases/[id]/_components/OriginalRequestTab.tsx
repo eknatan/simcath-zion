@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Heart, Users, Calendar, Edit3, Check, X, Loader2, FileText, Building2, DollarSign } from 'lucide-react';
+import { Heart, Users, Calendar, Edit3, Check, X, Loader2, FileText, Building2, DollarSign, UserCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { HDate } from '@hebcal/core';
 import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
@@ -670,6 +670,43 @@ export function OriginalRequestTab({ caseData: initialCaseData }: OriginalReques
               />
             </CardContent>
           </Card>
+
+          {/* Section 5: Submitter Info (from raw_form_json) */}
+          {(() => {
+            const rawFormJson = caseData.raw_form_json as any;
+            const submitterInfo = rawFormJson?.submitter_info;
+            if (!submitterInfo?.submitter_name) return null;
+            return (
+              <Card className="shadow-md border border-amber-200 bg-amber-50/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <UserCheck className="h-5 w-5 text-amber-600" />
+                    {t('submitterInfo.title')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-4 md:grid-cols-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-slate-600">{t('submitterInfo.name')}</Label>
+                    <div className="text-sm text-slate-900">
+                      {submitterInfo?.submitter_name || <span className="text-slate-400">{t('notSpecified')}</span>}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-slate-600">{t('submitterInfo.relation')}</Label>
+                    <div className="text-sm text-slate-900">
+                      {submitterInfo?.submitter_relation || <span className="text-slate-400">{t('notSpecified')}</span>}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-slate-600">{t('submitterInfo.phone')}</Label>
+                    <div className="text-sm text-slate-900" dir="ltr">
+                      {submitterInfo?.submitter_phone || <span className="text-slate-400">{t('notSpecified')}</span>}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
         </>
       )}
 

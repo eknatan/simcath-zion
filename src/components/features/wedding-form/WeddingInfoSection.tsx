@@ -55,6 +55,7 @@ export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }:
 
   // Only show errors if showErrors is true (user attempted to proceed)
   const weddingErrors = showErrors ? errors.wedding_info : undefined;
+  const submitterErrors = showErrors ? errors.submitter_info : undefined;
 
   return (
     <FormSection
@@ -248,6 +249,67 @@ export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }:
           <p className="text-xs text-muted-foreground">
             {t('section_wedding_info.request_background_helper')}
           </p>
+        </div>
+
+        {/* פרטי מגיש הבקשה */}
+        <div className="md:col-span-2 bg-amber-50/50 border-2 border-amber-200 rounded-lg p-4">
+          <h3 className="text-base font-semibold text-amber-900 mb-4">
+            {t('section_wedding_info.submitter_title')}
+          </h3>
+          <div className="grid gap-4 md:grid-cols-3">
+            {/* שם מגיש הבקשה */}
+            <div className="space-y-2">
+              <Label htmlFor="submitter_name">
+                {t('section_wedding_info.submitter_name')}
+                <span className="text-destructive ms-1">*</span>
+              </Label>
+              <Input
+                id="submitter_name"
+                {...register('submitter_info.submitter_name')}
+                className="border-2 focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
+                aria-invalid={!!submitterErrors?.submitter_name}
+              />
+              {submitterErrors?.submitter_name && (
+                <p className="text-sm text-destructive">
+                  {translateValidationMessage(tValidation, submitterErrors.submitter_name.message)}
+                </p>
+              )}
+            </div>
+
+            {/* קשור ל */}
+            <div className="space-y-2">
+              <Label htmlFor="submitter_relation">
+                {t('section_wedding_info.submitter_relation')}
+              </Label>
+              <Input
+                id="submitter_relation"
+                {...register('submitter_info.submitter_relation')}
+                className="border-2 focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
+                placeholder={t('section_wedding_info.submitter_relation_placeholder')}
+              />
+            </div>
+
+            {/* טלפון מגיש הבקשה */}
+            <div className="space-y-2">
+              <Label htmlFor="submitter_phone">
+                {t('section_wedding_info.submitter_phone')}
+                <span className="text-destructive ms-1">*</span>
+              </Label>
+              <Input
+                id="submitter_phone"
+                type="tel"
+                dir="ltr"
+                {...register('submitter_info.submitter_phone')}
+                className="border-2 focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
+                aria-invalid={!!submitterErrors?.submitter_phone}
+              />
+              {submitterErrors?.submitter_phone && (
+                <p className="text-sm text-destructive">
+                  {translateValidationMessage(tValidation, submitterErrors.submitter_phone.message)}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </FormSection>

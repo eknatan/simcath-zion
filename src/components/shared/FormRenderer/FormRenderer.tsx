@@ -16,7 +16,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, User } from 'lucide-react';
+import { Calendar, User, UserCheck } from 'lucide-react';
 import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 
 // Type for structured Hebrew date (new format)
@@ -29,6 +29,11 @@ interface HebrewDateValue {
 
 // Types
 export interface WeddingFormData {
+  submitter_info?: {
+    submitter_name?: string;
+    submitter_relation?: string;
+    submitter_phone?: string;
+  };
   wedding_info?: {
     // New structured format
     hebrew_date?: HebrewDateValue;
@@ -129,6 +134,7 @@ function WeddingFormView({
   t: any;
   exportMode: boolean;
 }) {
+  const submitterInfo = formData.submitter_info || {};
   const weddingInfo = formData.wedding_info || {};
   const groomInfo = formData.groom_info || {};
   const brideInfo = formData.bride_info || {};
@@ -514,6 +520,25 @@ function WeddingFormView({
               {additionalInfo.notes && (
                 <FormField label="הערות" value={additionalInfo.notes} fullWidth multiline />
               )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Submitter Info - פרטי מגיש הבקשה */}
+      {(submitterInfo.submitter_name || submitterInfo.submitter_phone) && (
+        <Card className="border-2 border-amber-200 bg-amber-50/30 shadow-md">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-amber-900 flex items-center gap-2">
+              <UserCheck className="h-5 w-5" />
+              {t('submitter_info.title')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <FormField label={t('submitter_info.name')} value={submitterInfo.submitter_name} />
+              <FormField label={t('submitter_info.relation')} value={submitterInfo.submitter_relation} />
+              <FormField label={t('submitter_info.phone')} value={submitterInfo.submitter_phone} />
             </div>
           </CardContent>
         </Card>
