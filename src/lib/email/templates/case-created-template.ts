@@ -6,6 +6,38 @@
 import { getBaseTemplate } from './base-template';
 
 /**
+ * Hebrew month names for formatting
+ */
+const HEBREW_MONTHS = [
+  '', 'ניסן', 'אייר', 'סיון', 'תמוז', 'אב', 'אלול',
+  'תשרי', 'חשון', 'כסלו', 'טבת', 'שבט', 'אדר', 'אדר ב׳'
+];
+
+/**
+ * Helper function to format Hebrew date from structured object
+ */
+function formatHebrewDate(hebrewDate: { day?: number | null; month?: number | null; year?: number | null } | undefined): string {
+  if (!hebrewDate || hebrewDate.day == null || hebrewDate.month == null || hebrewDate.year == null) {
+    return '';
+  }
+  const monthName = HEBREW_MONTHS[hebrewDate.month] || '';
+  return `${hebrewDate.day} ${monthName} ${hebrewDate.year}`;
+}
+
+/**
+ * Helper function to format Gregorian date
+ */
+function formatGregorianDate(dateStr: string | null | undefined): string {
+  if (!dateStr) return '';
+  try {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
+/**
  * Helper function to format wedding details table
  */
 function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
@@ -13,17 +45,21 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
 
   const { wedding_info, groom_info, bride_info } = formData;
 
+  // Extract dates from the structured hebrew_date object
+  const hebrewDateStr = formatHebrewDate(wedding_info.hebrew_date);
+  const gregorianDateStr = formatGregorianDate(wedding_info.hebrew_date?.gregorianDate);
+
   if (locale === 'en') {
     return `
       <h3 style="color: #333; margin: 24px 0 16px 0;">Wedding Details:</h3>
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
         <tr>
           <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; width: 40%;">Hebrew Date</td>
-          <td style="padding: 12px; border: 1px solid #e0e0e0;">${wedding_info.date_hebrew || 'N/A'}</td>
+          <td style="padding: 12px; border: 1px solid #e0e0e0;">${hebrewDateStr || 'N/A'}</td>
         </tr>
         <tr>
           <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600;">Gregorian Date</td>
-          <td style="padding: 12px; border: 1px solid #e0e0e0;">${wedding_info.date_gregorian || 'N/A'}</td>
+          <td style="padding: 12px; border: 1px solid #e0e0e0;">${gregorianDateStr || 'N/A'}</td>
         </tr>
         <tr>
           <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600;">City</td>
@@ -63,11 +99,11 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
     <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; direction: rtl;">
       <tr>
         <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; width: 40%; text-align: right;">תאריך עברי</td>
-        <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${wedding_info.date_hebrew || 'לא צוין'}</td>
+        <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${hebrewDateStr || 'לא צוין'}</td>
       </tr>
       <tr>
         <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; text-align: right;">תאריך לועזי</td>
-        <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${wedding_info.date_gregorian || 'לא צוין'}</td>
+        <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: right;">${gregorianDateStr || 'לא צוין'}</td>
       </tr>
       <tr>
         <td style="padding: 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; font-weight: 600; text-align: right;">עיר</td>

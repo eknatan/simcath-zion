@@ -56,6 +56,11 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
 
   // Default form values
   const defaultValues: WeddingFormData = {
+    submitter_info: {
+      submitter_name: '',
+      submitter_phone: '',
+      submitter_relation: '',
+    },
     wedding_info: {
       hebrew_date: {
         day: null,
