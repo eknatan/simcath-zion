@@ -62,6 +62,13 @@ const dateSchema = z
   .or(z.literal(''));
 
 /**
+ * Required date validation (for wedding date)
+ */
+const requiredDateSchema = z
+  .string()
+  .min(1, 'נדרש תאריך חתונה');
+
+/**
  * Hebrew date validation (basic - you might want to enhance this)
  */
 const hebrewDateSchema = z
@@ -84,7 +91,7 @@ export const weddingInfoSchema = z.object({
   hebrew_year: z.number().min(5700).max(6000).nullable().optional(),
   // Legacy field (for backward compatibility)
   wedding_date_hebrew: hebrewDateSchema,
-  wedding_date_gregorian: dateSchema,
+  wedding_date_gregorian: requiredDateSchema,
   city: nameSchema,
   venue: z.string().optional().or(z.literal('')),
   guests_count: z.coerce
