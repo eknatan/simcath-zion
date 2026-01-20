@@ -51,11 +51,13 @@ import {
   UserX,
   UserCheck,
   KeyRound,
+  Lock,
   Loader2,
 } from 'lucide-react';
 import { useUsers, useDeleteUser, useSuspendUser, useActivateUser, useSendResetPassword } from '@/lib/hooks/useUsers';
 import { useIsManager } from '@/lib/hooks/useIsManager';
 import { UserDialog } from './UserDialog';
+import { SetPasswordDialog } from './SetPasswordDialog';
 import type { Profile, UserRole, UserStatus } from '@/types/user.types';
 import { formatDate } from '@/lib/utils/date';
 
@@ -78,6 +80,10 @@ export function UsersTab() {
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [alertAction, setAlertAction] = useState<'delete' | 'suspend' | 'activate'>('delete');
   const [alertUser, setAlertUser] = useState<Profile | null>(null);
+
+  // Set password dialog state
+  const [setPasswordDialogOpen, setSetPasswordDialogOpen] = useState(false);
+  const [setPasswordUser, setSetPasswordUser] = useState<Profile | null>(null);
 
   // Mutations
   const deleteMutation = useDeleteUser();
@@ -188,6 +194,15 @@ export function UsersTab() {
               >
                 <KeyRound className="me-2 h-4 w-4" />
                 {t('users.actions.resetPassword')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSetPasswordUser(user);
+                  setSetPasswordDialogOpen(true);
+                }}
+              >
+                <Lock className="me-2 h-4 w-4" />
+                {t('users.actions.setPassword')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {user.status === 'active' ? (
@@ -438,6 +453,13 @@ export function UsersTab() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Set Password Dialog */}
+      <SetPasswordDialog
+        open={setPasswordDialogOpen}
+        onOpenChange={setSetPasswordDialogOpen}
+        user={setPasswordUser}
+      />
     </div>
   );
 }

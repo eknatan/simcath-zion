@@ -175,6 +175,8 @@
     "nameTooShort": "השם קצר מדי (מינימום 2 תווים)",
     "nameTooLong": "השם ארוך מדי (מקסימום 100 תווים)",
     "notesTooLong": "ההערות ארוכות מדי (מקסימום 1000 תווים)",
+    "passwordTooShort": "הסיסמה קצרה מדי (מינימום 6 תווים)",
+    "passwordTooLong": "הסיסמה ארוכה מדי (מקסימום 72 תווים)",
     "invalidRole": "תפקיד לא חוקי",
     "invalidBankCode": "קוד בנק לא תקין (2-3 ספרות)",
     "invalidBranchCode": "קוד סניף לא תקין (3 ספרות)",
@@ -825,6 +827,7 @@
       "suspend": "השהה",
       "activate": "הפעל",
       "resetPassword": "איפוס סיסמה",
+      "setPassword": "קביעת סיסמה",
       "viewDetails": "הצג פרטים"
     },
     "messages": {
@@ -850,6 +853,16 @@
         "title": "עריכת משתמש",
         "description": "עדכן את פרטי המשתמש"
       }
+    },
+    "setPassword": {
+      "title": "קביעת סיסמה",
+      "description": "קביעת סיסמה חדשה עבור {name}",
+      "newPassword": "סיסמה חדשה",
+      "placeholder": "הזן סיסמה חדשה",
+      "helper": "מינימום 6 תווים",
+      "submit": "שמור סיסמה",
+      "showPassword": "הצג סיסמה",
+      "hidePassword": "הסתר סיסמה"
     },
     "table": {
       "showing": "מציג {from} - {to} מתוך {total} משתמשים",

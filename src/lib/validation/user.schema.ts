@@ -65,6 +65,14 @@ export const notesSchema = z
   .nullable();
 
 /**
+ * Password Schema - סיסמה לקביעה ידנית
+ */
+export const passwordSchema = z
+  .string({ message: 'validation.required' })
+  .min(6, { message: 'validation.passwordTooShort' })
+  .max(72, { message: 'validation.passwordTooLong' }); // מגבלת bcrypt
+
+/**
  * Create User Schema - ולידציה ליצירת משתמש חדש
  */
 export const createUserSchema = z.object({
@@ -99,8 +107,16 @@ export const userFiltersSchema = z.object({
 });
 
 /**
+ * Set Password Schema - קביעת סיסמה ידנית
+ */
+export const setPasswordSchema = z.object({
+  password: passwordSchema,
+});
+
+/**
  * Types - ייצוא types מה-schemas
  */
 export type CreateUserSchema = z.infer<typeof createUserSchema>;
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 export type UserFiltersSchema = z.infer<typeof userFiltersSchema>;
+export type SetPasswordSchema = z.infer<typeof setPasswordSchema>;

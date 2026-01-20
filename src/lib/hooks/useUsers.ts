@@ -200,6 +200,36 @@ export function useSendResetPassword() {
 }
 
 /**
+ * Hook לקביעת סיסמה ישירות (ללא שליחת מייל)
+ */
+export function useSetPassword() {
+  return useMutation({
+    mutationFn: async ({ userId, password }: { userId: string; password: string }) => {
+      const res = await fetch(`/api/users/${userId}/set-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to set password');
+      }
+
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success('הסיסמה נקבעה בהצלחה');
+    },
+    onError: (error: Error) => {
+      toast.error('שגיאה', {
+        description: error.message,
+      });
+    },
+  });
+}
+
+/**
  * Hook להשהיית משתמש
  */
 export function useSuspendUser() {
