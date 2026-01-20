@@ -4,38 +4,7 @@
  */
 
 import { getBaseTemplate } from './base-template';
-
-/**
- * Hebrew month names for formatting
- */
-const HEBREW_MONTHS = [
-  '', 'ניסן', 'אייר', 'סיון', 'תמוז', 'אב', 'אלול',
-  'תשרי', 'חשון', 'כסלו', 'טבת', 'שבט', 'אדר', 'אדר ב׳'
-];
-
-/**
- * Helper function to format Hebrew date from structured object
- */
-function formatHebrewDate(hebrewDate: { day?: number | null; month?: number | null; year?: number | null } | undefined): string {
-  if (!hebrewDate || hebrewDate.day == null || hebrewDate.month == null || hebrewDate.year == null) {
-    return '';
-  }
-  const monthName = HEBREW_MONTHS[hebrewDate.month] || '';
-  return `${hebrewDate.day} ${monthName} ${hebrewDate.year}`;
-}
-
-/**
- * Helper function to format Gregorian date
- */
-function formatGregorianDate(dateStr: string | null | undefined): string {
-  if (!dateStr) return '';
-  try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' });
-  } catch {
-    return dateStr;
-  }
-}
+import { formatHebrewDateForDisplay } from '@/lib/utils/hebrew-date-parser';
 
 /**
  * Helper function to format wedding details table
@@ -46,8 +15,13 @@ function getWeddingDetailsHTML(formData: any, locale: 'he' | 'en'): string {
   const { wedding_info, groom_info, bride_info } = formData;
 
   // Extract dates from the structured hebrew_date object
-  const hebrewDateStr = formatHebrewDate(wedding_info.hebrew_date);
-  const gregorianDateStr = formatGregorianDate(wedding_info.hebrew_date?.gregorianDate);
+  const { hebrew_date } = wedding_info;
+  const hebrewDateStr = hebrew_date?.day && hebrew_date?.month && hebrew_date?.year
+    ? formatHebrewDateForDisplay(hebrew_date.day, hebrew_date.month, hebrew_date.year, locale)
+    : '';
+  const gregorianDateStr = hebrew_date?.gregorianDate
+    ? new Date(hebrew_date.gregorianDate).toLocaleDateString(locale === 'he' ? 'he-IL' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : '';
 
   if (locale === 'en') {
     return `
