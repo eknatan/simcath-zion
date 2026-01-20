@@ -22,8 +22,9 @@ export function CasesContent({ cases }: CasesContentProps) {
   const t = useTranslations('cases');
   const [activeTab, setActiveTab] = useState('wedding');
 
+  // Filter out completed/rejected wedding cases (transferred, rejected, expired)
   const weddingCases = useMemo(
-    () => cases.filter((c) => c.case_type === 'wedding'),
+    () => cases.filter((c) => c.case_type === 'wedding' && !['transferred', 'rejected', 'expired'].includes(c.status)),
     [cases]
   );
   // Only pass active cleaning cases as initial data

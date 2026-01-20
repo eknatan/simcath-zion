@@ -74,8 +74,8 @@ export default async function CasesPage() {
 
   const stats = {
     total: cases.length,
-    wedding: cases.filter((c) => c.case_type === 'wedding').length,
-    cleaning: cases.filter((c) => c.case_type === 'cleaning').length,
+    wedding: activeWeddings,
+    cleaning: activeCleaning,
     active: activeWeddings + activeCleaning,
     pendingTransfer: cases.filter((c) => c.status === 'pending_transfer').length,
   };
