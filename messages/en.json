@@ -1022,7 +1022,11 @@
       "success_title": "Case Created Successfully!",
       "success_description": "You are being redirected to the new case...",
       "error_title": "Error Approving Application",
-      "error_description": "Could not approve the application. Please try again later."
+      "error_description": "Could not approve the application. Please try again later.",
+      "already_approved_title": "Application Already Approved",
+      "already_approved_description": "This application was already approved and a case was created. Refresh the list to see updates.",
+      "already_processed_title": "Application Already Processed",
+      "already_processed_description": "This application was already processed. Refresh the list to see updates."
     },
     "reject_dialog": {
       "title": "Reject Application",

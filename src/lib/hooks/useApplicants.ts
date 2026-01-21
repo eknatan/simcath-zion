@@ -357,6 +357,21 @@ export function useApplicants(initialFilters: ApplicantsFilters = {}) {
 // ========================================
 
 /**
+ * Custom error class for applicant approval errors
+ */
+class ApproveApplicantError extends Error {
+  code?: string;
+  currentStatus?: string;
+
+  constructor(message: string, code?: string, currentStatus?: string) {
+    super(message);
+    this.name = 'ApproveApplicantError';
+    this.code = code;
+    this.currentStatus = currentStatus;
+  }
+}
+
+/**
  * Hook לאישור בקשה (backward compatible)
  */
 export function useApproveApplicant() {
@@ -369,8 +384,12 @@ export function useApproveApplicant() {
         headers: { 'Content-Type': 'application/json' },
       });
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || 'Failed to approve applicant');
+        const errorData = await res.json();
+        throw new ApproveApplicantError(
+          errorData.message || 'Failed to approve applicant',
+          errorData.code,
+          errorData.currentStatus
+        );
       }
       return res.json() as Promise<ApproveResponse>;
     },
@@ -384,6 +403,8 @@ export function useApproveApplicant() {
     isPending: mutation.isPending,
   };
 }
+
+export { ApproveApplicantError };
 
 /**
  * Hook לדחיית בקשה (backward compatible)

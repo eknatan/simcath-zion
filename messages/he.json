@@ -1429,7 +1429,11 @@
       "success_title": "תיק נוצר בהצלחה!",
       "success_description": "עכשיו אתה מועבר לתיק החדש...",
       "error_title": "שגיאה באישור בקשה",
-      "error_description": "לא ניתן לאשר את הבקשה. נסה שוב מאוחר יותר."
+      "error_description": "לא ניתן לאשר את הבקשה. נסה שוב מאוחר יותר.",
+      "already_approved_title": "הבקשה כבר אושרה",
+      "already_approved_description": "בקשה זו כבר אושרה ונוצר לה תיק. רענן את הרשימה לצפייה בעדכונים.",
+      "already_processed_title": "הבקשה כבר עובדה",
+      "already_processed_description": "בקשה זו כבר טופלה במערכת. רענן את הרשימה לצפייה בעדכונים."
     },
     "reject_dialog": {
       "title": "דחיית בקשה",

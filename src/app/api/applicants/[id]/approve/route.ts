@@ -124,7 +124,14 @@ export async function POST(request: NextRequest, context: RouteParams) {
     // 3. Validate status
     if (applicant.status && applicant.status !== 'pending_approval') {
       return NextResponse.json(
-        { error: 'Applicant already processed', currentStatus: applicant.status },
+        {
+          error: 'Applicant already processed',
+          code: 'ALREADY_PROCESSED',
+          currentStatus: applicant.status,
+          message: applicant.status === 'approved'
+            ? 'הבקשה כבר אושרה ונוצר לה תיק'
+            : 'הבקשה כבר עובדה',
+        },
         { status: 400 }
       );
     }

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { CheckCircle2, X, Loader2 } from 'lucide-react';
-import { useApproveApplicant, Applicant } from '@/lib/hooks/useApplicants';
+import { useApproveApplicant, ApproveApplicantError, Applicant } from '@/lib/hooks/useApplicants';
 import { toast } from 'sonner';
 
 interface ApproveDialogProps {
@@ -57,9 +57,27 @@ export function ApproveDialog({
 
       // Navigate to case
       onSuccess(result.case.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      // Check if this is an "already processed" error
+      if (error instanceof ApproveApplicantError && error.code === 'ALREADY_PROCESSED') {
+        if (error.currentStatus === 'approved') {
+          toast.info(t('already_approved_title'), {
+            description: t('already_approved_description'),
+          });
+        } else {
+          toast.warning(t('already_processed_title'), {
+            description: t('already_processed_description'),
+          });
+        }
+        // Close dialog and refresh the list
+        onOpenChange(false);
+        return;
+      }
+
+      // Generic error
+      const errorMessage = error instanceof Error ? error.message : t('error_description');
       toast.error(t('error_title'), {
-        description: error.message || t('error_description'),
+        description: errorMessage,
       });
     }
   };
