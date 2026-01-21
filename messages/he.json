@@ -476,7 +476,9 @@
       "total_cost_helper": "מחושב אוטומטית לפי מנה ואולם, ניתן לשנות ידנית",
       "request_background": "רקע על הבקשה (אופציונלי)",
       "request_background_placeholder": "ספר לנו קצת על הבקשה...",
-      "request_background_helper": "מידע נוסף על הבקשה שיעזור לנו להבין את המצב טוב יותר"
+      "request_background_helper": "מידע נוסף על הבקשה שיעזור לנו להבין את המצב טוב יותר",
+      "words": "מילים",
+      "request_background_over_limit": "רקע על הבקשה ארוך מדי. מקסימום {limit} מילים (כתבת {current})"
     },
     "section_groom_info": {
       "title": "פרטי החתן",
@@ -562,7 +564,9 @@
     },
     "errors": {
       "submission_failed": "שליחת הבקשה נכשלה. אנא נסה שוב.",
-      "network_error": "בעיית תקשורת. בדוק את החיבור לאינטרנט."
+      "network_error": "בעיית תקשורת. בדוק את החיבור לאינטרנט.",
+      "background_word_limit": "רקע על הבקשה ארוך מדי",
+      "background_word_limit_detail": "מקסימום {limit} מילים (כתבת {current})"
     },
     "public_page": {
       "header": {
@@ -2101,6 +2105,14 @@
     },
     "emailLanguage": "שפת המייל",
     "hebrew": "עברית",
-    "english": "English"
+    "english": "English",
+    "settings": {
+      "weddingFormTitle": "הגדרות טופס חתונה",
+      "weddingFormDescription": "הגדר מגבלת מילים לרקע על הבקשה",
+      "backgroundWordLimit": "מגבלת מילים לרקע על הבקשה",
+      "save": "שמור",
+      "saveSuccess": "ההגדרות נשמרו בהצלחה",
+      "saveError": "שגיאה בשמירת ההגדרות"
+    }
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { UseFormReturn, Controller, useWatch } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { FormSection } from '@/components/shared/Forms/FormSection';
@@ -10,6 +10,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { HebrewDatePicker } from '@/components/shared/HebrewDatePicker';
 import { WeddingFormData } from '@/lib/validations/wedding-form.schema';
 import { translateValidationMessage } from '@/lib/validations/translate';
+import { cn } from '@/lib/utils';
+
+/**
+ * Helper function to count words in a string
+ */
+function countWords(text: string): number {
+  if (!text || text.trim() === '') return 0;
+  return text.trim().split(/\s+/).length;
+}
 
 /**
  * קומפוננטת WeddingInfoSection - סקשן א' בטופס החתונה
@@ -27,9 +36,11 @@ interface WeddingInfoSectionProps {
   stepNumber?: number;
   /** Whether to show validation errors (only after user attempts to proceed) */
   showErrors?: boolean;
+  /** Word limit for request background field */
+  backgroundWordLimit?: number;
 }
 
-export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }: WeddingInfoSectionProps) {
+export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false, backgroundWordLimit }: WeddingInfoSectionProps) {
   const t = useTranslations('wedding_form');
   const tValidation = useTranslations('validation');
 
@@ -39,6 +50,11 @@ export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }:
     setValue,
     formState: { errors },
   } = form;
+
+  // Watch request_background for word count
+  const requestBackground = useWatch({ control, name: 'wedding_info.request_background' });
+  const wordCount = useMemo(() => countWords(requestBackground || ''), [requestBackground]);
+  const isOverLimit = backgroundWordLimit ? wordCount > backgroundWordLimit : false;
 
   // Watch cost fields for auto-calculation
   const guestsCount = useWatch({ control, name: 'wedding_info.guests_count' });
@@ -243,12 +259,30 @@ export function WeddingInfoSection({ form, stepNumber = 1, showErrors = false }:
           <Textarea
             id="request_background"
             {...register('wedding_info.request_background')}
-            className="border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 min-h-[120px]"
+            className={cn(
+              'border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 min-h-[120px]',
+              isOverLimit && 'border-destructive focus:border-destructive'
+            )}
             rows={5}
           />
-          <p className="text-xs text-muted-foreground">
-            {t('section_wedding_info.request_background_helper')}
-          </p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs text-muted-foreground">
+              {t('section_wedding_info.request_background_helper')}
+            </p>
+            {backgroundWordLimit && (
+              <p className={cn(
+                'text-xs font-medium',
+                isOverLimit ? 'text-destructive' : 'text-muted-foreground'
+              )}>
+                {wordCount}/{backgroundWordLimit} {t('section_wedding_info.words')}
+              </p>
+            )}
+          </div>
+          {isOverLimit && backgroundWordLimit && (
+            <p className="text-sm text-destructive">
+              {t('section_wedding_info.request_background_over_limit', { limit: backgroundWordLimit, current: wordCount })}
+            </p>
+          )}
         </div>
 
         {/* פרטי מגיש הבקשה */}

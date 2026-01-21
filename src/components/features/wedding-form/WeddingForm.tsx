@@ -50,9 +50,28 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
   const [isInitialized, setIsInitialized] = useState(false);
   // Track which steps have been validated (attempted to move forward from)
   const [validatedSteps, setValidatedSteps] = useState<Set<number>>(new Set());
+  // Wedding form settings (word limit)
+  const [backgroundWordLimit, setBackgroundWordLimit] = useState<number | undefined>(undefined);
 
   // Get current locale to determine RTL/LTR
   const isRTL = locale === 'he';
+
+  // Fetch wedding form settings on mount
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('/api/settings/wedding-form');
+        if (response.ok) {
+          const data = await response.json();
+          setBackgroundWordLimit(data.settings?.background_word_limit);
+        }
+      } catch (error) {
+        console.error('Error fetching wedding form settings:', error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
   // Default form values
   const defaultValues: WeddingFormData = {
@@ -198,7 +217,7 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
 
     switch (currentStep) {
       case 0:
-        fieldsToValidate = ['wedding_info'];
+        fieldsToValidate = ['wedding_info', 'submitter_info'];
         break;
       case 1:
         fieldsToValidate = ['groom_info'];
@@ -209,6 +228,19 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
     }
 
     const result = await form.trigger(fieldsToValidate);
+
+    // Additional validation for word limit on step 0
+    if (currentStep === 0 && backgroundWordLimit) {
+      const requestBackground = form.getValues('wedding_info.request_background') || '';
+      const wordCount = countWords(requestBackground);
+      if (wordCount > backgroundWordLimit) {
+        toast.error(t('errors.background_word_limit'), {
+          description: t('errors.background_word_limit_detail', { limit: backgroundWordLimit, current: wordCount }),
+        });
+        return false;
+      }
+    }
+
     return result;
   };
 
@@ -285,12 +317,18 @@ export function WeddingForm({ isInternal = false, onSuccess }: WeddingFormProps)
     }
   };
 
+  // Helper function to count words
+  const countWords = (text: string): number => {
+    if (!text || text.trim() === '') return 0;
+    return text.trim().split(/\s+/).length;
+  };
+
   // Render current step
   // Using key prop to force React to remount PersonInfoSection when switching between groom/bride
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <WeddingInfoSection form={form} stepNumber={1} showErrors={validatedSteps.has(0)} />;
+        return <WeddingInfoSection form={form} stepNumber={1} showErrors={validatedSteps.has(0)} backgroundWordLimit={backgroundWordLimit} />;
       case 1:
         return <PersonInfoSection key="groom" form={form} personType="groom" stepNumber={2} showErrors={validatedSteps.has(1)} />;
       case 2:

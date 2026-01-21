@@ -10,14 +10,17 @@
  * - Dependency Inversion: משתמש בקומפוננטות משותפות
  */
 
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { FileText, Heart, ExternalLink } from 'lucide-react';
+import { FileText, Heart, ExternalLink, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { CopyLinkButton, SendEmailDialog } from '@/components/shared/FormLinkActions';
 import type { FormType } from '@/components/shared/FormLinkActions';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface FormLinkCardProps {
   formType: FormType;
@@ -30,6 +33,62 @@ export function FormLinkCard({ formType, locale }: FormLinkCardProps) {
   const isWedding = formType === 'wedding';
   const Icon = isWedding ? FileText : Heart;
   const formPath = isWedding ? 'wedding' : 'sick-children';
+
+  // Wedding form settings state - use string to allow empty input while typing
+  const [wordLimitInput, setWordLimitInput] = useState<string>('150');
+  const [originalWordLimit, setOriginalWordLimit] = useState<number>(150);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Fetch wedding form settings on mount (only for wedding)
+  useEffect(() => {
+    if (!isWedding) return;
+
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('/api/settings/wedding-form');
+        if (response.ok) {
+          const data = await response.json();
+          const limit = data.settings?.background_word_limit || 150;
+          setWordLimitInput(String(limit));
+          setOriginalWordLimit(limit);
+        }
+      } catch (error) {
+        console.error('Error fetching wedding form settings:', error);
+      }
+    };
+
+    fetchSettings();
+  }, [isWedding]);
+
+  // Parse current input value
+  const currentValue = parseInt(wordLimitInput) || 0;
+  const isValidValue = currentValue >= 1 && currentValue <= 10000;
+  const hasChanges = isValidValue && currentValue !== originalWordLimit;
+
+  // Save wedding form settings
+  const handleSaveWordLimit = async () => {
+    if (!hasChanges) return;
+
+    setIsSaving(true);
+    try {
+      const response = await fetch('/api/settings/wedding-form', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ settings: { background_word_limit: currentValue } }),
+      });
+
+      if (response.ok) {
+        setOriginalWordLimit(currentValue);
+        toast.success(t('settings.saveSuccess'));
+      } else {
+        toast.error(t('settings.saveError'));
+      }
+    } catch {
+      toast.error(t('settings.saveError'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   // Build full URL
   const formUrl = typeof window !== 'undefined'
@@ -109,6 +168,31 @@ export function FormLinkCard({ formType, locale }: FormLinkCardProps) {
             />
           </div>
         </div>
+
+        {/* Wedding form settings - word limit (inline) */}
+        {isWedding && (
+          <div className="mt-3 pt-3 border-t border-blue-100 flex items-center gap-2 text-sm">
+            <span className="text-slate-600">{t('settings.backgroundWordLimit')}:</span>
+            <Input
+              type="number"
+              min={1}
+              max={10000}
+              value={wordLimitInput}
+              onChange={(e) => setWordLimitInput(e.target.value)}
+              className="w-20 h-7 text-sm border-slate-200"
+            />
+            {hasChanges && (
+              <Button
+                size="sm"
+                onClick={handleSaveWordLimit}
+                disabled={isSaving}
+                className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700"
+              >
+                {isSaving ? <Loader2 className="h-3 w-3 animate-spin" /> : t('settings.save')}
+              </Button>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

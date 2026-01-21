@@ -45,11 +45,18 @@ export interface MasavOrganizationSettings {
 }
 
 /**
+ * Wedding Form Settings
+ */
+export interface WeddingFormSettings {
+  background_word_limit: number; // מגבלת מילים לרקע על הבקשה
+}
+
+/**
  * All system settings
  */
 export interface SystemSettings {
   masav_organization: MasavOrganizationSettings;
-  // Add more settings as needed
+  wedding_form_settings: WeddingFormSettings;
 }
 
 // ========================================
@@ -123,6 +130,22 @@ export async function getMasavOrganizationSettings(): Promise<MasavOrganizationS
         'INVALID_SETTINGS'
       );
     }
+  }
+
+  return settings;
+}
+
+/**
+ * Get wedding form settings
+ */
+export async function getWeddingFormSettings(): Promise<WeddingFormSettings> {
+  const settings = await getSetting('wedding_form_settings');
+
+  // Return defaults if not configured
+  if (!settings) {
+    return {
+      background_word_limit: 150,
+    };
   }
 
   return settings;
